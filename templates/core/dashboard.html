@@ -1,177 +1,153 @@
-
 {% extends 'base/base.html' %}
 
 {% block content %}
-<h2 class="mb-4">Dashboard</h2>
-
-<div class="row mb-4">
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">Monthly Income</div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <h3>${{ monthly_income }}</h3>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">Crypto Assets</div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <h3>${{ crypto_value }}</h3>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-4 mb-3">
-        <div class="card h-100">
-            <div class="card-header">Bank/Cash Assets</div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <h3>${{ bank_value }}</h3>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-md-6 mb-3">
-        <div class="card h-100">
-            <div class="card-header">Total Net Worth</div>
-            <div class="card-body d-flex align-items-center justify-content-center">
-                <h2>${{ total_net_worth }}</h2>
-            </div>
-        </div>
-    </div>
-    
-    <div class="col-md-6 mb-3">
-        <div class="card h-100">
-            <div class="card-header">Portfolio Allocation</div>
-            <div class="card-body">
-                <canvas id="portfolioChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row mb-4">
-    <div class="col-12">
-        <div class="card">
-            <div class="card-header">Monthly Income Trend</div>
-            <div class="card-body">
-                <canvas id="incomeChart"></canvas>
-            </div>
-        </div>
-    </div>
-</div>
+<h1 class="mb-4">Dashboard</h1>
 
 <div class="row">
-    <div class="col-12">
+    <!-- Income Stats -->
+    <div class="col-md-6">
         <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <span>Recent Income</span>
-                <a href="{% url 'income_list' %}" class="btn btn-sm btn-primary">View All</a>
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Income Summary</h5>
             </div>
             <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Amount</th>
-                                <th>Description</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for income in recent_income %}
-                            <tr>
-                                <td>{{ income.date }}</td>
-                                <td>{{ income.category }}</td>
-                                <td>${{ income.amount }}</td>
-                                <td>{{ income.description|truncatechars:30 }}</td>
-                            </tr>
-                            {% empty %}
-                            <tr>
-                                <td colspan="4" class="text-center">No income entries yet.</td>
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                <h3>This Month: ${{ monthly_income }}</h3>
+
+                <h5 class="mt-4">Recent Income</h5>
+                <ul class="list-group">
+                    {% for income in recent_income %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ income.description|default:income.category.name }}
+                        <span class="badge bg-primary rounded-pill">${{ income.amount }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">No recent income entries</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Stats -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Portfolio Summary</h5>
+            </div>
+            <div class="card-body">
+                <h3>Net Worth: ${{ total_net_worth }}</h3>
+
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Crypto Assets</h5>
+                                <h4>${{ crypto_value }}</h4>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card bg-light">
+                            <div class="card-body text-center">
+                                <h5>Bank/Cash</h5>
+                                <h4>${{ bank_value }}</h4>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
+<div class="row mt-4">
+    <!-- Income Chart -->
+    <div class="col-md-7">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5 class="mb-0">Monthly Income ({{ months.10 }} to {{ months.11 }})</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="incomeChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Portfolio Allocation -->
+    <div class="col-md-5">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="mb-0">Portfolio Allocation</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="portfolioChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
 <script>
-    // Monthly Income Chart
-    const incomeCtx = document.getElementById('incomeChart').getContext('2d');
-    const incomeChart = new Chart(incomeCtx, {
+    // Income Chart
+    var incomeCtx = document.getElementById('incomeChart').getContext('2d');
+    var incomeChart = new Chart(incomeCtx, {
         type: 'bar',
         data: {
             labels: {{ months|safe }},
             datasets: [{
-                label: 'Income',
+                label: 'Monthly Income',
                 data: {{ income_data|safe }},
-                backgroundColor: '#7c3aed',
-                borderColor: '#5b21b6',
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
             scales: {
                 y: {
                     beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
                     ticks: {
-                        color: '#a0a0a0'
-                    }
-                },
-                x: {
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.1)'
-                    },
-                    ticks: {
-                        color: '#a0a0a0'
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#e0e0e0'
+                        callback: function(value) {
+                            return '$' + value;
+                        }
                     }
                 }
             }
         }
     });
-    
-    // Portfolio Allocation Chart
-    const portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
-    const portfolioChart = new Chart(portfolioCtx, {
-        type: 'pie',
+
+    // Portfolio Chart
+    var portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
+    var portfolioChart = new Chart(portfolioCtx, {
+        type: 'doughnut',
         data: {
             labels: {{ portfolio_labels|safe }},
             datasets: [{
                 data: {{ portfolio_data|safe }},
                 backgroundColor: [
-                    '#7c3aed',
-                    '#3b82f6'
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
                 ],
-                borderColor: '#1e1e1e',
-                borderWidth: 2
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(75, 192, 192, 1)',
+                ],
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#e0e0e0'
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            var label = context.label || '';
+                            var value = context.raw || 0;
+                            var total = context.dataset.data.reduce(function(acc, val) { return acc + val; }, 0);
+                            var percentage = Math.round((value / total) * 100);
+                            return label + ': $' + value + ' (' + percentage + '%)';
+                        }
                     }
                 }
             }

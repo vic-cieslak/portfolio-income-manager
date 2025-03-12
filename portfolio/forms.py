@@ -5,7 +5,10 @@ from .models import Cryptocurrency, BankAccount
 class CryptocurrencyForm(forms.ModelForm):
     class Meta:
         model = Cryptocurrency
-        fields = ['name', 'symbol', 'quantity', 'acquisition_cost']
+        fields = ['symbol', 'name', 'quantity', 'acquisition_cost']
+        widgets = {
+            'acquisition_cost': forms.NumberInput(attrs={'placeholder': 'Optional - Cost Basis'}),
+        }
 
 class BankAccountForm(forms.ModelForm):
     class Meta:

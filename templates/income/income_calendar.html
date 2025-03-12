@@ -1,70 +1,58 @@
-
 {% extends 'base/base.html' %}
+{% load income_extras %}
 
 {% block content %}
-<div class="card mb-4">
-    <div class="card-header d-flex justify-content-between align-items-center">
-        <h4>Income Calendar - {{ month_name }} {{ year }}</h4>
-        <div>
-            <a href="{% url 'income_calendar' %}?month={{ prev_month }}&year={{ prev_year }}" class="btn btn-sm btn-outline-primary me-1">
-                <i class="fas fa-chevron-left"></i> Previous
-            </a>
-            <a href="{% url 'income_calendar' %}" class="btn btn-sm btn-outline-secondary me-1">
-                Today
-            </a>
-            <a href="{% url 'income_calendar' %}?month={{ next_month }}&year={{ next_year }}" class="btn btn-sm btn-outline-primary">
-                Next <i class="fas fa-chevron-right"></i>
-            </a>
-        </div>
-    </div>
-    <div class="card-body">
-        <div class="row">
-            <div class="col text-center fw-bold">Sun</div>
-            <div class="col text-center fw-bold">Mon</div>
-            <div class="col text-center fw-bold">Tue</div>
-            <div class="col text-center fw-bold">Wed</div>
-            <div class="col text-center fw-bold">Thu</div>
-            <div class="col text-center fw-bold">Fri</div>
-            <div class="col text-center fw-bold">Sat</div>
-        </div>
-        
-        {% with year_month_day=year|stringformat:"d"|add:"-"|add:month|stringformat:"d"|add:"-1" %}
-        {% with first_day_of_month=year_month_day|date:"w" %}
-        
-        <div class="row mt-3">
-            {% for offset in "0123456"|make_list %}
-                {% if forloop.counter0 < first_day_of_month|add:"0" %}
-                    <div class="col"></div>
-                {% endif %}
-            {% endfor %}
-            
-            {% for day in "x"|rjust:num_days|make_list %}
-                {% with day_number=forloop.counter %}
-                <div class="col mb-3">
-                    <div class="card h-100 {% if daily_income|get_item:day_number > 0 %}border border-primary{% endif %}">
-                        <div class="card-header text-center">{{ day_number }}</div>
-                        <div class="card-body p-2 text-center">
-                            {% with day_income=daily_income|get_item:day_number %}
-                                {% if day_income > 0 %}
-                                    <h6>${{ day_income }}</h6>
-                                {% endif %}
-                            {% endwith %}
-                        </div>
-                    </div>
-                </div>
-                
-                {% if forloop.counter|add:first_day_of_month|add:"-1"|divisibleby:"7" and not forloop.last %}
-                    </div><div class="row mt-2">
-                {% endif %}
-                {% endwith %}
-            {% endfor %}
-        </div>
-        
-        {% endwith %}
-        {% endwith %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Income Calendar</h1>
+    <div>
+        <a href="{% url 'income_calendar' %}?month={{ prev_month }}&year={{ prev_year }}" class="btn btn-outline-primary">
+            <i class="fas fa-chevron-left"></i> Previous Month
+        </a>
+        <a href="{% url 'income_calendar' %}?month={{ next_month }}&year={{ next_year }}" class="btn btn-outline-primary">
+            Next Month <i class="fas fa-chevron-right"></i>
+        </a>
     </div>
 </div>
 
+<div class="card">
+    <div class="card-header bg-primary text-white">
+        <h3 class="mb-0">{{ month_name }} {{ year }}</h3>
+    </div>
+    <div class="card-body">
+        <table class="table table-bordered">
+            <thead>
+                <tr class="text-center">
+                    <th>Sun</th>
+                    <th>Mon</th>
+                    <th>Tue</th>
+                    <th>Wed</th>
+                    <th>Thu</th>
+                    <th>Fri</th>
+                    <th>Sat</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for week in month_days %}
+                <tr>
+                    {% for day, is_current_month in week %}
+                    <td class="{% if not is_current_month %}text-muted{% endif %}" style="height: 100px; width: 14.28%; position: relative;">
+                        {% if day != 0 %}
+                        <div style="position: absolute; top: 5px; left: 5px;">{{ day }}</div>
+
+                        {% if is_current_month and day in daily_income %}
+                        <div style="position: absolute; top: 30px; left: 5px; right: 5px;" class="bg-success text-white rounded p-1">
+                            ${{ daily_income|get_item:day }}
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                    </td>
+                    {% endfor %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4>This Month's Income</h4>

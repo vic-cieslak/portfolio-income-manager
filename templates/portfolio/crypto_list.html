@@ -3,27 +3,26 @@
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>Cryptocurrency Portfolio</h2>
+    <h1>Cryptocurrency Portfolio</h1>
     <a href="{% url 'crypto_create' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-2"></i> Add Cryptocurrency
+        <i class="fas fa-plus me-1"></i> Add Cryptocurrency
     </a>
 </div>
 
 <div class="card mb-4">
-    <div class="card-header">Total Portfolio Value</div>
-    <div class="card-body">
-        <h3>${{ total_value }}</h3>
+    <div class="card-header bg-info text-white">
+        <h4 class="mb-0">Total Value: ${{ total_value }}</h4>
     </div>
 </div>
 
 <div class="card">
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table">
+            <table class="table table-striped table-hover">
                 <thead>
                     <tr>
-                        <th>Name</th>
                         <th>Symbol</th>
+                        <th>Name</th>
                         <th>Quantity</th>
                         <th>Current Price</th>
                         <th>Value</th>
@@ -34,24 +33,24 @@
                 <tbody>
                     {% for crypto in cryptocurrencies %}
                     <tr>
-                        <td>{{ crypto.name }}</td>
                         <td>{{ crypto.symbol }}</td>
+                        <td>{{ crypto.name }}</td>
                         <td>{{ crypto.quantity }}</td>
-                        <td>${{ crypto.current_price }}</td>
+                        <td>${{ crypto.current_price|default:"-" }}</td>
                         <td>${{ crypto.current_value }}</td>
-                        <td>{{ crypto.last_updated|date:"M d, Y H:i" }}</td>
+                        <td>{{ crypto.last_updated|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'crypto_update' crypto.id %}" class="btn btn-sm btn-outline-primary me-1">
+                            <a href="{% url 'crypto_update' crypto.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{% url 'crypto_delete' crypto.id %}" class="btn btn-sm btn-outline-danger">
+                            <a href="{% url 'crypto_delete' crypto.id %}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
                     </tr>
                     {% empty %}
                     <tr>
-                        <td colspan="7" class="text-center">No cryptocurrencies in portfolio.</td>
+                        <td colspan="7" class="text-center">No cryptocurrencies in portfolio yet</td>
                     </tr>
                     {% endfor %}
                 </tbody>

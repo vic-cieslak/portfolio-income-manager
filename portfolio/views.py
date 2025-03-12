@@ -6,6 +6,7 @@ from django.utils import timezone
 import requests
 from .models import Cryptocurrency, BankAccount
 from .forms import CryptocurrencyForm, BankAccountForm
+import json
 
 @login_required
 def crypto_list(request):

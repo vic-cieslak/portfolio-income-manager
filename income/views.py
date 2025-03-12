@@ -84,6 +84,9 @@ def income_calendar(request):
         next_month = 1
         next_year = year + 1
     
+    # Generate month calendar
+    month_days = calendar.monthcalendar(year, month)
+    
     context = {
         'year': year,
         'month': month,
@@ -94,6 +97,7 @@ def income_calendar(request):
         'prev_year': prev_year,
         'next_month': next_month,
         'next_year': next_year,
+        'month_days': month_days,
     }
     
     return render(request, 'income/income_calendar.html', context)
@@ -115,3 +119,18 @@ def category_create(request):
         form = IncomeCategoryForm()
     
     return render(request, 'income/category_form.html', {'form': form, 'title': 'Add Category'})
+
+@login_required
+def category_update(request, pk):
+    category = get_object_or_404(IncomeCategory, pk=pk)
+    
+    if request.method == 'POST':
+        form = IncomeCategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Category updated successfully!')
+            return redirect('category_list')
+    else:
+        form = IncomeCategoryForm(instance=category)
+    
+    return render(request, 'income/category_form.html', {'form': form, 'title': 'Update Category'})
