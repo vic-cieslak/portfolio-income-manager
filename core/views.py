@@ -23,7 +23,7 @@ def dashboard(request):
     ).aggregate(Sum('amount'))['amount__sum'] or 0
     
     # Recent income entries
-    recent_income = Income.objects.all()[:5]
+    recent_income = Income.objects.all().order_by('-date')[:5]
     
     # Portfolio value
     crypto_value = sum(crypto.current_value for crypto in Cryptocurrency.objects.all())

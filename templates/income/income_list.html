@@ -30,10 +30,10 @@
                         <td>{{ income.category.name }}</td>
                         <td>{{ income.description|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'income_update' income.id %}" class="btn btn-sm btn-info">
+                            <a href="{% url 'income:update' income.id %}" class="btn btn-sm btn-info">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a href="{% url 'income_delete' income.id %}" class="btn btn-sm btn-danger">
+                            <a href="{% url 'income:delete' income.id %}" class="btn btn-sm btn-danger">
                                 <i class="fas fa-trash"></i>
                             </a>
                         </td>
