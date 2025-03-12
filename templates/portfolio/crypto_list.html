@@ -1,3 +1,4 @@
+
 {% extends 'base/base.html' %}
 
 {% block content %}
@@ -10,7 +11,7 @@
 
 <div class="card card-cyber mb-4">
     <div class="card-header bg-cyber text-neon">
-        <h4 class="mb-0">Total Portfolio Value: {{ total_value|format_currency }}</h4>
+        <h4 class="mb-0">Total Portfolio Value: PLN {{ total_value|floatformat:2 }}</h4>
     </div>
 </div>
 
@@ -41,8 +42,8 @@
                         {% endif %}
                     </td>
                     <td>{{ crypto.quantity }}</td>
-                    <td>${{ crypto.current_price|default:"-"|floatformat:2 }}</td>
-                    <td class="text-highlight">${{ crypto.current_value|floatformat:2 }}</td>
+                    <td>PLN {{ crypto.current_price|default:"-"|floatformat:2 }}</td>
+                    <td class="text-highlight">PLN {{ crypto.current_value|floatformat:2 }}</td>
                     <td>{{ crypto.last_updated|date:"M d, H:i" }}</td>
                     <td>
                         <a href="{% url 'crypto_update' crypto.id %}" class="btn btn-sm btn-info btn-cyber-sm">
@@ -64,13 +65,15 @@
 </div>
 
 {% if cryptocurrencies %}
-<div class="card card-cyber mt-4">
-    <div class="card-header bg-cyber text-neon">
-        <h4 class="mb-0">Portfolio Distribution</h4>
-    </div>
-    <div class="card-body">
-        <div style="height: 180px; width: 180px; margin: 0 auto;">
-            <canvas id="cryptoChart"></canvas>
+<div class="row mt-4">
+    <div class="col-md-6 mx-auto">
+        <div class="card card-cyber">
+            <div class="card-header bg-cyber">
+                <h4 class="mb-0 text-neon">Portfolio Distribution</h4>
+            </div>
+            <div class="card-body">
+                <canvas id="cryptoChart"></canvas>
+            </div>
         </div>
     </div>
 </div>
@@ -128,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             const value = context.raw || 0;
                             const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
                             const percentage = Math.round((value / total) * 100);
-                            return `${label}: $${value.toFixed(2)} (${percentage}%)`;
+                            return `${label}: PLN ${value.toFixed(2)} (${percentage}%)`;
                         }
                     }
                 }

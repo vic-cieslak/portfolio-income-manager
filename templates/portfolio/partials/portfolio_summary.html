@@ -6,18 +6,18 @@
     <div class="card-body portfolio-summary">
         <div class="net-worth-container">
             <div class="value-label">Net Worth:</div>
-            <div class="value-amount">{{ net_worth|currency_format }}</div>
+            <div class="value-amount">PLN {{ net_worth|floatformat:2 }}</div>
         </div>
         
         <div class="assets-container">
             <div class="asset-box">
                 <div class="asset-label">Crypto Assets</div>
-                <div class="asset-value">{{ crypto_value|currency_format }}</div>
+                <div class="asset-value">PLN {{ crypto_value|floatformat:2 }}</div>
             </div>
             
             <div class="asset-box">
                 <div class="asset-label">Bank/Cash</div>
-                <div class="asset-value">{{ bank_value|currency_format }}</div>
+                <div class="asset-value">PLN {{ bank_value|floatformat:2 }}</div>
             </div>
         </div>
     </div>
