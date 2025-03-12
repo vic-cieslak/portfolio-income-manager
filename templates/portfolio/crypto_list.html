@@ -1,4 +1,3 @@
-
 {% extends 'base/base.html' %}
 
 {% block content %}
@@ -11,7 +10,7 @@
 
 <div class="card card-cyber mb-4">
     <div class="card-header bg-cyber text-neon">
-        <h4 class="mb-0">Total Portfolio Value: ${{ total_value|floatformat:2 }}</h4>
+        <h4 class="mb-0">Total Portfolio Value: {{ total_value|floatformat:2 }} PLN</h4>
     </div>
 </div>
 
@@ -80,26 +79,26 @@
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const ctx = document.getElementById('cryptoChart').getContext('2d');
-    
+
     // Extract data from Django template
     const cryptoNames = [
         {% for crypto in cryptocurrencies %}
             "{{ crypto.symbol }}",
         {% endfor %}
     ];
-    
+
     const cryptoValues = [
         {% for crypto in cryptocurrencies %}
             {{ crypto.current_value }},
         {% endfor %}
     ];
-    
+
     // Define cyberpunk-style colors
     const colors = [
         '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138', 
         '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
     ];
-    
+
     const myChart = new Chart(ctx, {
         type: 'doughnut',
         data: {

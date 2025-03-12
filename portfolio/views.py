@@ -31,11 +31,11 @@ def crypto_create(request):
             try:
                 coin_id = crypto.name  # This is now the CoinGecko ID
                 response = requests.get(
-                    f'https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd'
+                    f'https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=pln'
                 )
                 data = response.json()
                 if coin_id in data:
-                    crypto.current_price = data[coin_id]['usd']
+                    crypto.current_price = data[coin_id]['pln']
                     crypto.last_updated = timezone.now()
                     
                     # Map the symbol based on the selected cryptocurrency
@@ -142,12 +142,12 @@ def update_crypto_prices():
     crypto_ids = ",".join([crypto.name for crypto in cryptocurrencies])
     
     try:
-        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_ids}&vs_currencies=usd')
+        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_ids}&vs_currencies=pln')
         data = response.json()
         
         for crypto in cryptocurrencies:
             if crypto.name in data:
-                crypto.current_price = data[crypto.name]['usd']
+                crypto.current_price = data[crypto.name]['pln']
                 crypto.last_updated = timezone.now()
                 crypto.save()
     except Exception as e:
