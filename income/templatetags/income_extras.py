@@ -22,3 +22,20 @@ def split(value, delimiter=' '):
 
 # Only keep the template tag functions in this file
 # The view function has been moved to views.py
+from django import template
+
+register = template.Library()
+
+@register.filter
+def split(value, delimiter):
+    """
+    Returns the string split by delimiter.
+    """
+    return value.split(delimiter)
+
+@register.filter
+def get_item(dictionary, key):
+    """
+    Gets an item from a dictionary using the key.
+    """
+    return dictionary.get(key)
