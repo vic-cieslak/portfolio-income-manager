@@ -35,12 +35,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if '/income/' in request.path and not '/calendar/' in request.path %} active{% endif %}" href="{% url 'income_list' %}">
+                        <a class="nav-link{% if '/income/' in request.path and not '/calendar/' in request.path %} active{% endif %}" href="{% url 'income:list' %}">
                             <i class="fas fa-money-bill-wave"></i> Income
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link{% if '/calendar/' in request.path %} active{% endif %}" href="{% url 'income_calendar' %}">
+                        <a class="nav-link{% if '/calendar/' in request.path %} active{% endif %}" href="{% url 'income:calendar' %}">
                             <i class="fas fa-calendar-alt"></i> Calendar
                         </a>
                     </li>
