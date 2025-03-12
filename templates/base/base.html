@@ -104,10 +104,10 @@
                     <a href="{% url 'dashboard' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
                         <i class="fas fa-tachometer-alt me-2"></i> Dashboard
                     </a>
-                    <a href="{% url 'income_list' %}" class="nav-link {% if '/income/' in request.path and '/calendar/' not in request.path %}active{% endif %}">
+                    <a href="{% url 'income:list' %}" class="nav-link {% if '/income/' in request.path and '/calendar/' not in request.path %}active{% endif %}">
                         <i class="fas fa-money-bill-wave me-2"></i> Income
                     </a>
-                    <a href="{% url 'income_calendar' %}" class="nav-link {% if '/income/calendar/' in request.path %}active{% endif %}">
+                    <a href="{% url 'income:calendar' %}" class="nav-link {% if '/income/calendar/' in request.path %}active{% endif %}">
                         <i class="fas fa-calendar-alt me-2"></i> Calendar
                     </a>
                     <a href="{% url 'crypto_list' %}" class="nav-link {% if '/portfolio/crypto/' in request.path %}active{% endif %}">
