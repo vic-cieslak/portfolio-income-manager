@@ -27,15 +27,25 @@ def crypto_create(request):
         form = CryptocurrencyForm(request.POST)
         if form.is_valid():
             crypto = form.save(commit=False)
-            # Get initial price
+            # Get initial price using CoinGecko ID (which is now stored in name field)
             try:
+                coin_id = crypto.name  # This is now the CoinGecko ID
                 response = requests.get(
-                    f'https://api.coingecko.com/api/v3/simple/price?ids={crypto.name.lower()}&vs_currencies=usd'
+                    f'https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=usd'
                 )
                 data = response.json()
-                if crypto.name.lower() in data:
-                    crypto.current_price = data[crypto.name.lower()]['usd']
+                if coin_id in data:
+                    crypto.current_price = data[coin_id]['usd']
                     crypto.last_updated = timezone.now()
+                    
+                    # Map the symbol based on the selected cryptocurrency
+                    symbols = {
+                        'bitcoin': 'BTC',
+                        'shiba-inu': 'SHIB',
+                        'bonk': 'BONK',
+                        'monero': 'XMR'
+                    }
+                    crypto.symbol = symbols.get(coin_id, crypto.symbol)
             except Exception as e:
                 messages.warning(request, f'Could not fetch price: {str(e)}')
             
@@ -128,16 +138,16 @@ def update_crypto_prices():
     if not cryptocurrencies:
         return
     
-    # Get all crypto IDs
-    crypto_ids = ",".join([crypto.name.lower() for crypto in cryptocurrencies])
+    # Get all crypto IDs (name field now contains CoinGecko ID)
+    crypto_ids = ",".join([crypto.name for crypto in cryptocurrencies])
     
     try:
         response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_ids}&vs_currencies=usd')
         data = response.json()
         
         for crypto in cryptocurrencies:
-            if crypto.name.lower() in data:
-                crypto.current_price = data[crypto.name.lower()]['usd']
+            if crypto.name in data:
+                crypto.current_price = data[crypto.name]['usd']
                 crypto.last_updated = timezone.now()
                 crypto.save()
     except Exception as e:

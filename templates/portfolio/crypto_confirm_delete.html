@@ -4,21 +4,33 @@
 {% block content %}
 <div class="row justify-content-center">
     <div class="col-md-6">
-        <div class="card">
+        <div class="card card-cyber">
             <div class="card-header bg-danger text-white">
-                <h3 class="mb-0">Confirm Delete</h3>
+                <h3 class="mb-0 text-neon">Confirm Delete</h3>
             </div>
             <div class="card-body">
-                <p>Are you sure you want to delete this cryptocurrency from your portfolio?</p>
-                <p><strong>Symbol:</strong> {{ crypto.symbol }}</p>
-                <p><strong>Name:</strong> {{ crypto.name }}</p>
-                <p><strong>Quantity:</strong> {{ crypto.quantity }}</p>
-                <p><strong>Value:</strong> PLN {{ crypto.current_value }}</p>
+                <div class="alert alert-cyber">
+                    <p>Are you sure you want to delete this cryptocurrency from your portfolio?</p>
+                </div>
+                
+                <div class="mb-4">
+                    <p><strong class="text-highlight">Symbol:</strong> {{ crypto.symbol }}</p>
+                    <p><strong class="text-highlight">Name:</strong> 
+                        {% if crypto.name == 'bitcoin' %}Bitcoin
+                        {% elif crypto.name == 'shiba-inu' %}Shiba Inu
+                        {% elif crypto.name == 'bonk' %}Bonk
+                        {% elif crypto.name == 'monero' %}Monero
+                        {% else %}{{ crypto.name }}
+                        {% endif %}
+                    </p>
+                    <p><strong class="text-highlight">Quantity:</strong> {{ crypto.quantity }}</p>
+                    <p><strong class="text-highlight">Value:</strong> ${{ crypto.current_value|floatformat:2 }}</p>
+                </div>
                 
                 <form method="POST">
                     {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Delete</button>
-                    <a href="{% url 'crypto_list' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-danger btn-cyber">Confirm Delete</button>
+                    <a href="{% url 'crypto_list' %}" class="btn btn-secondary btn-cyber">Cancel</a>
                 </form>
             </div>
         </div>
