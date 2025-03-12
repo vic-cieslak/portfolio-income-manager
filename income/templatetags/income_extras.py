@@ -19,8 +19,7 @@ def split(value, delimiter=' '):
     """Split a string into a list by delimiter"""
     return value.split(delimiter)
 
-# Assumed view (replace with your actual view)
-from django.shortcuts import render
+# You can add more custom template filters or tags here
 
 def income_calendar(request, year=None, month=None):
     now = datetime.now()
