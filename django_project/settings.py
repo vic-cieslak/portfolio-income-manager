@@ -16,7 +16,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-key-for-development'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True  # Set to True for development
 
 ALLOWED_HOSTS = ['*']  # Allowing all hosts for development on Replit
 
