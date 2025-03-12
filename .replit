@@ -17,3 +17,14 @@ deploymentTarget = "gce"
 [[ports]]
 localPort = 3000
 externalPort = 80
+
+[workflows]
+runButton = "Run Django Server"
+
+[[workflows.workflow]]
+name = "Run Django Server"
+author = 38631525
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python manage.py runserver 0.0.0.0:8000"
