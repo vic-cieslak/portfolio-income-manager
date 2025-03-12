@@ -11,14 +11,14 @@
                 <h5 class="mb-0">Income Summary</h5>
             </div>
             <div class="card-body">
-                <h3>This Month: ${{ monthly_income }}</h3>
+                <h3>This Month: PLN{{ monthly_income }}</h3>
 
                 <h5 class="mt-4">Recent Income</h5>
                 <ul class="list-group">
                     {% for income in recent_income %}
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         {{ income.description|default:income.category.name }}
-                        <span class="badge bg-primary rounded-pill">${{ income.amount }}</span>
+                        <span class="badge bg-primary rounded-pill">PLN{{ income.amount }}</span>
                     </li>
                     {% empty %}
                     <li class="list-group-item">No recent income entries</li>
@@ -35,14 +35,14 @@
                 <h5 class="mb-0">Portfolio Summary</h5>
             </div>
             <div class="card-body">
-                <h3>Net Worth: ${{ total_net_worth }}</h3>
+                <h3>Net Worth: PLN{{ total_net_worth }}</h3>
 
                 <div class="row mt-3">
                     <div class="col-md-6">
                         <div class="card bg-light">
                             <div class="card-body text-center">
                                 <h5>Crypto Assets</h5>
-                                <h4>${{ crypto_value }}</h4>
+                                <h4>PLN{{ crypto_value }}</h4>
                             </div>
                         </div>
                     </div>
@@ -50,7 +50,7 @@
                         <div class="card bg-light">
                             <div class="card-body text-center">
                                 <h5>Bank/Cash</h5>
-                                <h4>${{ bank_value }}</h4>
+                                <h4>PLN{{ bank_value }}</h4>
                             </div>
                         </div>
                     </div>
@@ -109,7 +109,7 @@
                     beginAtZero: true,
                     ticks: {
                         callback: function(value) {
-                            return '$' + value;
+                            return 'PLN' + value;
                         }
                     }
                 }
@@ -146,7 +146,7 @@
                             var value = context.raw || 0;
                             var total = context.dataset.data.reduce(function(acc, val) { return acc + val; }, 0);
                             var percentage = Math.round((value / total) * 100);
-                            return label + ': $' + value + ' (' + percentage + '%)';
+                            return label + ': PLN' + value + ' (' + percentage + '%)';
                         }
                     }
                 }
