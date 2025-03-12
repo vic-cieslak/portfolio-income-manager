@@ -1,20 +1,23 @@
+
 from django import template
-from django.template.defaultfilters import floatformat
 
 register = template.Library()
 
 @register.filter
-def currency_format(value):
-    """Format a number as PLN currency with 2 decimal places"""
-    if value is None:
-        return "PLN0.00"
-
-    formatted_value = floatformat(value, 2)
-    return f"PLN{formatted_value}"
-
-@register.filter
-def percentage(value):
-    """Format value as percentage"""
-    if value is None:
-        return "0%"
-    return f"{value:.1f}%"
+def format_currency(value):
+    """
+    Format currency values in a human-readable way.
+    Examples: 
+        1234 -> PLN 1.2k
+        1234567 -> PLN 1.2M
+    """
+    try:
+        value = float(value)
+        if value >= 1000000:
+            return f"PLN {value/1000000:.1f}M"
+        elif value >= 1000:
+            return f"PLN {value/1000:.1f}k"
+        else:
+            return f"PLN {value:.0f}"
+    except (ValueError, TypeError):
+        return value

@@ -87,7 +87,7 @@
                 <h5 class="mb-0">Portfolio Allocation</h5>
             </div>
             <div class="card-body">
-                <div class="chart-container">
+                <div style="height: 180px; width: 180px; margin: 0 auto;">
                     <canvas id="portfolioChart"></canvas>
                 </div>
             </div>
@@ -97,43 +97,6 @@
 {% endblock %}
 
 {% block scripts %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Portfolio chart
-    const ctx = document.getElementById('portfolioChart').getContext('2d');
-    
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Crypto', 'Bank/Cash'],
-            datasets: [{
-                data: [{{ crypto_value }}, {{ bank_value }}],
-                backgroundColor: [
-                    'rgba(0, 255, 170, 0.7)',
-                    'rgba(0, 149, 255, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(0, 255, 170, 1)',
-                    'rgba(0, 149, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#c4e0e5'
-                    }
-                }
-            }
-        }
-    });
-});
-</script>
 <script>
     // Monthly Income Chart
     var incomeCtx = document.getElementById('incomeChart').getContext('2d');

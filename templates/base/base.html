@@ -3,81 +3,137 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Crypto Finance Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="stylesheet" href="/static/css/custom.css">
-    <!-- Add Chart.js library -->
+    <!-- jQuery must be loaded before form.media -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    {% block extrahead %}{% endblock %}
+
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <title>Income & Portfolio Tracker</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+    {% block extra_css %}{% endblock %}
 </head>
-<body class="cyber-bg">
+<body>
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <div class="col-md-2 sidebar">
-                <div class="sidebar-header">
-                    <h3 class="text-neon">CyberFinance</h3>
+            <div class="col-md-2 col-lg-2 d-md-block sidebar py-4">
+                <div class="text-center mb-4">
+                    <h3 class="fw-bold" style="letter-spacing: -0.5px;">
+                        <i class="fas fa-chart-line text-primary me-2"></i>MyFinance
+                    </h3>
+                    <div class="mt-2 text-muted small">Personal Finance Manager</div>
                 </div>
-                <ul class="nav flex-column">
-                    <li class="nav-item">
-                        <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/">
-                            <i class="fas fa-home"></i> Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/crypto/' in request.path %} active{% endif %}" href="{% url 'crypto_list' %}">
-                            <i class="fab fa-bitcoin"></i> Cryptocurrencies
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/banks/' in request.path %} active{% endif %}" href="{% url 'bank_list' %}">
-                            <i class="fas fa-university"></i> Bank Accounts
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/income/' in request.path and not '/calendar/' in request.path %} active{% endif %}" href="{% url 'income:list' %}">
-                            <i class="fas fa-money-bill-wave"></i> Income
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/calendar/' in request.path %} active{% endif %}" href="{% url 'income:calendar' %}">
-                            <i class="fas fa-calendar-alt"></i> Calendar
-                        </a>
-                    </li>
-                </ul>
+                <div class="nav flex-column">
+                    <a href="{% url 'dashboard' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt"></i> Dashboard
+                    </a>
+                    <a href="{% url 'income:list' %}" class="nav-link {% if '/income/' in request.path and '/calendar/' not in request.path %}active{% endif %}">
+                        <i class="fas fa-money-bill-wave"></i> Income
+                    </a>
+                    <a href="{% url 'income:calendar' %}" class="nav-link {% if '/income/calendar/' in request.path %}active{% endif %}">
+                        <i class="fas fa-calendar-alt"></i> Calendar
+                    </a>
+                    <a href="{% url 'crypto_list' %}" class="nav-link {% if '/portfolio/crypto/' in request.path %}active{% endif %}">
+                        <i class="fab fa-bitcoin"></i> Crypto
+                    </a>
+                    <a href="{% url 'bank_list' %}" class="nav-link {% if '/portfolio/bank/' in request.path %}active{% endif %}">
+                        <i class="fas fa-university"></i> Bank Accounts
+                    </a>
+                    <a href="{% url 'income:category_list' %}" class="nav-link {% if '/income/categories/' in request.path %}active{% endif %}">
+                        <i class="fas fa-tags"></i> Categories
+                    </a>
+                    <div class="border-top mt-4 pt-3 mb-3 border-secondary opacity-25"></div>
+                    <a href="{% url 'logout' %}" class="nav-link">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </a>
+                </div>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-md-10 content">
-                <div class="p-4">
-                    {% if messages %}
-                        <div class="messages mb-4">
-                            {% for message in messages %}
-                                <div class="alert alert-{{ message.tags }} shadow-sm border-0 animate__animated animate__fadeIn" role="alert">
-                                    <div class="d-flex align-items-center">
-                                        {% if message.tags == 'success' %}
-                                            <i class="fas fa-check-circle me-2 text-success"></i>
-                                        {% elif message.tags == 'error' %}
-                                            <i class="fas fa-exclamation-circle me-2 text-danger"></i>
-                                        {% elif message.tags == 'warning' %}
-                                            <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
-                                        {% elif message.tags == 'info' %}
-                                            <i class="fas fa-info-circle me-2 text-info"></i>
-                                        {% endif %}
-                                        {{ message }}
-                                    </div>
-                                </div>
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    {% block content %}{% endblock %}
+            <!-- Mobile Nav -->
+            <nav class="navbar navbar-dark bg-dark d-md-none">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">Finance Manager</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'income:list' %}" class="nav-link">Income</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'income:calendar' %}" class="nav-link">Calendar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'crypto_list' %}" class="nav-link">Crypto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'bank_list' %}" class="nav-link">Bank Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'income:category_list' %}" class="nav-link">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
+            </nav>
+
+            <!-- Main Content -->
+            <div class="col-md-10 col-lg-10 ms-sm-auto px-md-4 py-4">
+                {% if messages %}
+                <div class="messages mb-4">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} shadow-sm border-0 animate__animated animate__fadeIn" role="alert">
+                        <div class="d-flex align-items-center">
+                            {% if message.tags == 'success' %}
+                                <i class="fas fa-check-circle me-2 text-success"></i>
+                            {% elif message.tags == 'error' %}
+                                <i class="fas fa-exclamation-circle me-2 text-danger"></i>
+                            {% elif message.tags == 'warning' %}
+                                <i class="fas fa-exclamation-triangle me-2 text-warning"></i>
+                            {% elif message.tags == 'info' %}
+                                <i class="fas fa-info-circle me-2 text-info"></i>
+                            {% endif %}
+                            {{ message }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                {% block content %}{% endblock %}
+
+                <footer class="mt-5 pt-4 pb-3 text-center text-muted small border-top border-secondary border-opacity-25">
+                    <p>&copy; {% now "Y" %} MyFinance | Personal Finance Management</p>
+                </footer>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Cyberpunk effects JS -->
+    <script src="/static/js/cyberpunk.js"></script>
+    <!-- Animation -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <!-- Custom Scripts -->
     <script>
         // Add smooth scrolling
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -97,6 +153,7 @@
             });
         });
     </script>
+
     {% block scripts %}{% endblock %}
 </body>
 </html>
