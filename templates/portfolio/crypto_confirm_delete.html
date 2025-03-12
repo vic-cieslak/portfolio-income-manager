@@ -1,0 +1,21 @@
+
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Delete Cryptocurrency</h4>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete {{ crypto.name }} ({{ crypto.symbol }}) from your portfolio?</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex">
+                <a href="{% url 'crypto_list' %}" class="btn btn-secondary me-2">Cancel</a>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

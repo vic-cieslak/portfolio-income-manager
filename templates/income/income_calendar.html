@@ -1,0 +1,113 @@
+
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>Income Calendar - {{ month_name }} {{ year }}</h4>
+        <div>
+            <a href="{% url 'income_calendar' %}?month={{ prev_month }}&year={{ prev_year }}" class="btn btn-sm btn-outline-primary me-1">
+                <i class="fas fa-chevron-left"></i> Previous
+            </a>
+            <a href="{% url 'income_calendar' %}" class="btn btn-sm btn-outline-secondary me-1">
+                Today
+            </a>
+            <a href="{% url 'income_calendar' %}?month={{ next_month }}&year={{ next_year }}" class="btn btn-sm btn-outline-primary">
+                Next <i class="fas fa-chevron-right"></i>
+            </a>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col text-center fw-bold">Sun</div>
+            <div class="col text-center fw-bold">Mon</div>
+            <div class="col text-center fw-bold">Tue</div>
+            <div class="col text-center fw-bold">Wed</div>
+            <div class="col text-center fw-bold">Thu</div>
+            <div class="col text-center fw-bold">Fri</div>
+            <div class="col text-center fw-bold">Sat</div>
+        </div>
+        
+        {% with year_month_day=year|stringformat:"d"|add:"-"|add:month|stringformat:"d"|add:"-1" %}
+        {% with first_day_of_month=year_month_day|date:"w" %}
+        
+        <div class="row mt-3">
+            {% for offset in "0123456"|make_list %}
+                {% if forloop.counter0 < first_day_of_month|add:"0" %}
+                    <div class="col"></div>
+                {% endif %}
+            {% endfor %}
+            
+            {% for day in "x"|rjust:num_days|make_list %}
+                {% with day_number=forloop.counter %}
+                <div class="col mb-3">
+                    <div class="card h-100 {% if daily_income|get_item:day_number > 0 %}border border-primary{% endif %}">
+                        <div class="card-header text-center">{{ day_number }}</div>
+                        <div class="card-body p-2 text-center">
+                            {% with day_income=daily_income|get_item:day_number %}
+                                {% if day_income > 0 %}
+                                    <h6>${{ day_income }}</h6>
+                                {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+                </div>
+                
+                {% if forloop.counter|add:first_day_of_month|add:"-1"|divisibleby:"7" and not forloop.last %}
+                    </div><div class="row mt-2">
+                {% endif %}
+                {% endwith %}
+            {% endfor %}
+        </div>
+        
+        {% endwith %}
+        {% endwith %}
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <h4>This Month's Income</h4>
+        <a href="{% url 'income_create' %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i> Add Income
+        </a>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Amount</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for income in month_incomes %}
+                    <tr>
+                        <td>{{ income.date }}</td>
+                        <td>{{ income.category }}</td>
+                        <td>${{ income.amount }}</td>
+                        <td>{{ income.description|truncatechars:30 }}</td>
+                        <td>
+                            <a href="{% url 'income_update' income.id %}" class="btn btn-sm btn-outline-primary me-1">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{% url 'income_delete' income.id %}" class="btn btn-sm btn-outline-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center">No income entries for this month.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

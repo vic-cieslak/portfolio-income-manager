@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Income & Portfolio Manager</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-darker: #0a0a0a;
+            --card-bg: #1e1e1e;
+            --text-primary: #e0e0e0;
+            --text-secondary: #a0a0a0;
+            --accent: #5b21b6;
+            --accent-light: #7c3aed;
+        }
+        
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            background-color: var(--bg-darker);
+            min-height: 100vh;
+            position: sticky;
+            top: 0;
+        }
+        
+        .sidebar .nav-link {
+            color: var(--text-secondary);
+            border-radius: 5px;
+            margin: 5px 0;
+            padding: 10px 15px;
+        }
+        
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: var(--accent);
+            color: white;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            background-color: rgba(0, 0, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background-color: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--accent-light);
+            border-color: var(--accent-light);
+        }
+        
+        .table {
+            color: var(--text-primary);
+        }
+        
+        .table thead {
+            color: var(--text-secondary);
+        }
+        
+        .form-control, .form-select {
+            background-color: var(--bg-darker);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            background-color: var(--bg-darker);
+            color: var(--text-primary);
+            border-color: var(--accent);
+            box-shadow: 0 0 0 0.25rem rgba(91, 33, 182, 0.25);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-2 sidebar py-4 d-none d-md-block">
+                <h5 class="mb-4 text-center">Finance Manager</h5>
+                <div class="nav flex-column">
+                    <a href="{% url 'dashboard' %}" class="nav-link {% if request.path == '/' %}active{% endif %}">
+                        <i class="fas fa-tachometer-alt me-2"></i> Dashboard
+                    </a>
+                    <a href="{% url 'income_list' %}" class="nav-link {% if '/income/' in request.path and '/calendar/' not in request.path %}active{% endif %}">
+                        <i class="fas fa-money-bill-wave me-2"></i> Income
+                    </a>
+                    <a href="{% url 'income_calendar' %}" class="nav-link {% if '/income/calendar/' in request.path %}active{% endif %}">
+                        <i class="fas fa-calendar-alt me-2"></i> Calendar
+                    </a>
+                    <a href="{% url 'crypto_list' %}" class="nav-link {% if '/portfolio/crypto/' in request.path %}active{% endif %}">
+                        <i class="fab fa-bitcoin me-2"></i> Crypto
+                    </a>
+                    <a href="{% url 'bank_list' %}" class="nav-link {% if '/portfolio/bank/' in request.path %}active{% endif %}">
+                        <i class="fas fa-university me-2"></i> Bank Accounts
+                    </a>
+                    <a href="{% url 'category_list' %}" class="nav-link {% if '/income/categories/' in request.path %}active{% endif %}">
+                        <i class="fas fa-tags me-2"></i> Categories
+                    </a>
+                    <a href="{% url 'logout' %}" class="nav-link mt-4">
+                        <i class="fas fa-sign-out-alt me-2"></i> Logout
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Mobile Nav -->
+            <nav class="navbar navbar-dark bg-dark d-md-none">
+                <div class="container-fluid">
+                    <a class="navbar-brand" href="{% url 'dashboard' %}">Finance Manager</a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a href="{% url 'dashboard' %}" class="nav-link">Dashboard</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'income_list' %}" class="nav-link">Income</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'income_calendar' %}" class="nav-link">Calendar</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'crypto_list' %}" class="nav-link">Crypto</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'bank_list' %}" class="nav-link">Bank Accounts</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'category_list' %}" class="nav-link">Categories</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+            
+            <!-- Main Content -->
+            <div class="col-md-10 p-4">
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

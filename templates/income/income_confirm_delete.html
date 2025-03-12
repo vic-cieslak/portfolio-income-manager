@@ -1,0 +1,21 @@
+
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h4>Delete Income Entry</h4>
+    </div>
+    <div class="card-body">
+        <p>Are you sure you want to delete the income entry from {{ income.date }} for ${{ income.amount }}?</p>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="d-flex">
+                <a href="{% url 'income_list' %}" class="btn btn-secondary me-2">Cancel</a>
+                <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
