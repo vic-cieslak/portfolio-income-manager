@@ -219,12 +219,40 @@ body {
   font-family: 'Share Tech Mono', monospace;
 }
 
-/* Fix for the Chart.js issue in the dashboard */
+/* Enhanced chart container styling */
 .chart-container {
   position: relative;
   margin: 0 auto;
-  height: 180px;
-  width: 180px;
+  height: 220px;
+  width: 220px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.chart-container canvas {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+.chart-legend {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  flex-wrap: wrap;
+}
+
+.chart-legend-item {
+  display: flex;
+  align-items: center;
+  margin: 0 0.5rem;
+}
+
+.chart-legend-color {
+  width: 12px;
+  height: 12px;
+  margin-right: 0.5rem;
+  border-radius: 2px;
 }
 
 @keyframes shine {

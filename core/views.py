@@ -47,6 +47,11 @@ def dashboard(request):
     # Portfolio allocation for chart
     portfolio_labels = ['Crypto', 'Bank/Cash']
     portfolio_data = [float(crypto_value), float(bank_value)]
+    
+    # Calculate percentages for display
+    total = crypto_value + bank_value
+    crypto_percentage = (crypto_value / total * 100) if total > 0 else 0
+    bank_percentage = (bank_value / total * 100) if total > 0 else 0
 
     context = {
         'monthly_income': monthly_income,
@@ -54,6 +59,8 @@ def dashboard(request):
         'total_net_worth': total_net_worth,
         'crypto_value': crypto_value,
         'bank_value': bank_value,
+        'crypto_percentage': crypto_percentage,
+        'bank_percentage': bank_percentage,
         'months': months,
         'income_data': income_data,
         'portfolio_labels': portfolio_labels,
