@@ -1,65 +1,30 @@
 {% extends 'base/base.html' %}
+{% load static %}
 
 {% block content %}
-<h1 class="mb-4 glitch-text" data-text="Dashboard">Dashboard <small class="text-muted">//:</small></h1>
-
-<div class="row mb-4">
-    <!-- Portfolio Summary -->
-    <div class="col-md-12">
-        {% include 'portfolio/partials/portfolio_summary.html' with net_worth=net_worth crypto_value=crypto_value bank_value=bank_value %}
-    </div>
-</div>
-
 <div class="row">
-    <!-- Income Stats -->
+    <!-- Income Summary Card -->
     <div class="col-md-6">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Income Summary</h5>
             </div>
             <div class="card-body">
-                <h3>This Month: PLN{{ monthly_income }}</h3>
-
-                <h5 class="mt-4">Recent Income</h5>
-                <ul class="list-group">
-                    {% for income in recent_income %}
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        {{ income.description|default:income.category.name }}
-                        <span class="badge bg-primary rounded-pill">PLN{{ income.amount }}</span>
-                    </li>
-                    {% empty %}
-                    <li class="list-group-item">No recent income entries</li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <!-- Portfolio Stats -->
-    <div class="col-md-6">
-        <div class="card">
-            <div class="card-header bg-success text-white">
-                <h5 class="mb-0">Portfolio Summary</h5>
-            </div>
-            <div class="card-body">
-                <h3>Net Worth: PLN{{ total_net_worth }}</h3>
-
-                <div class="row mt-3">
-                    <div class="col-md-6">
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <h5>Crypto Assets</h5>
-                                <h4>PLN{{ crypto_value }}</h4>
+                <h3>This Month: PLN{{ this_month_income }}</h3>
+                <div class="recent-transactions">
+                    <h5 class="mb-3 mt-3">Recent Income</h5>
+                    <div class="list-group">
+                        {% for income in recent_income %}
+                        <div class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h5 class="mb-1">{{ income.description }}</h5>
+                                <span class="badge bg-success">PLN{{ income.amount }}</span>
                             </div>
+                            <small class="text-muted">{{ income.date|date:"M d, Y" }}</small>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="card bg-light">
-                            <div class="card-body text-center">
-                                <h5>Bank/Cash</h5>
-                                <h4>PLN{{ bank_value }}</h4>
-                            </div>
-                        </div>
+                        {% empty %}
+                        <div class="list-group-item">No recent income transactions</div>
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -98,6 +63,7 @@
 
 {% block scripts %}
 <script>
+document.addEventListener('DOMContentLoaded', function() {
     // Monthly Income Chart
     var incomeCtx = document.getElementById('incomeChart').getContext('2d');
     var incomeChart = new Chart(incomeCtx, {
@@ -105,219 +71,72 @@
         data: {
             labels: {{ months|safe }},
             datasets: [{
-                label: 'Monthly Income',
-                data: {{ income_data|safe }},
-                backgroundColor: 'rgba(124, 77, 255, 0.7)',
-                borderColor: 'rgba(124, 77, 255, 1)',
-                borderWidth: 0,
-                borderRadius: 6,
-                hoverBackgroundColor: 'rgba(124, 77, 255, 0.9)',
-                barPercentage: 0.7,
-                categoryPercentage: 0.8
+                label: 'Income (PLN)',
+                data: {{ monthly_income|safe }},
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1
             }]
         },
         options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'top',
-                    labels: {
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 12
-                        },
-                        color: '#b0b0b0',
-                        boxWidth: 15,
-                        padding: 20
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(20, 20, 20, 0.9)',
-                    titleFont: {
-                        family: 'Inter, sans-serif',
-                        size: 13
-                    },
-                    bodyFont: {
-                        family: 'Inter, sans-serif',
-                        size: 14
-                    },
-                    padding: 12,
-                    cornerRadius: 8,
-                    displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            return 'PLN ' + context.raw.toLocaleString();
-                        }
-                    }
-                }
-            },
             scales: {
-                x: {
-                    grid: {
-                        display: false,
-                        drawBorder: false
-                    },
-                    ticks: {
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 12
-                        },
-                        color: '#707070'
-                    }
-                },
                 y: {
                     beginAtZero: true,
-                    grid: {
-                        color: 'rgba(255, 255, 255, 0.05)',
-                        drawBorder: false
-                    },
                     ticks: {
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 12
-                        },
-                        color: '#707070',
                         callback: function(value) {
-                            return 'PLN ' + value.toLocaleString();
+                            return 'PLN' + value;
                         }
                     }
                 }
             },
-            animation: {
-                duration: 2000,
-                easing: 'easeOutQuart'
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            return 'PLN' + context.raw;
+                        }
+                    }
+                }
             }
         }
     });
 
-    // Portfolio Allocation Chart
+    // Portfolio Distribution Chart
     var portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
     var portfolioChart = new Chart(portfolioCtx, {
         type: 'doughnut',
         data: {
-            labels: {{ portfolio_labels|safe }},
+            labels: ['Crypto', 'Bank/Cash'],
             datasets: [{
-                data: {{ portfolio_data|safe }},
+                data: [{{ crypto_percentage }}, {{ bank_percentage }}],
                 backgroundColor: [
-                    'rgba(255, 171, 0, 0.8)',  // Crypto - yellow/gold
-                    'rgba(33, 150, 243, 0.8)', // Bank - blue
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(75, 192, 192, 0.7)'
                 ],
                 borderColor: [
-                    'rgba(255, 171, 0, 1)',
-                    'rgba(33, 150, 243, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(75, 192, 192, 1)'
                 ],
-                borderWidth: 2,
-                hoverBackgroundColor: [
-                    'rgba(255, 171, 0, 0.9)',
-                    'rgba(33, 150, 243, 0.9)',
-                ],
-                hoverBorderWidth: 3,
-                hoverOffset: 8
+                borderWidth: 1
             }]
         },
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            cutout: '65%',
             plugins: {
                 legend: {
-                    position: 'bottom',
-                    labels: {
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 13,
-                            weight: 500
-                        },
-                        color: '#b0b0b0',
-                        padding: 20,
-                        generateLabels: function(chart) {
-                            var data = chart.data;
-                            return data.labels.map(function(label, i) {
-                                var value = data.datasets[0].data[i];
-                                var total = data.datasets[0].data.reduce(function(acc, val) { return acc + val; }, 0);
-                                var percentage = Math.round((value / total) * 100);
-                                return {
-                                    text: label + ': ' + percentage + '%',
-                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                    strokeStyle: data.datasets[0].borderColor[i],
-                                    lineWidth: data.datasets[0].borderWidth,
-                                    hidden: false,
-                                    index: i
-                                };
-                            });
-                        }
-                    }
+                    position: 'bottom'
                 },
                 tooltip: {
-                    backgroundColor: 'rgba(20, 20, 20, 0.9)',
-                    titleFont: {
-                        family: 'Inter, sans-serif',
-                        size: 13
-                    },
-                    bodyFont: {
-                        family: 'Inter, sans-serif',
-                        size: 14,
-                        weight: 500
-                    },
-                    padding: 12,
-                    cornerRadius: 8,
-                    displayColors: false,
                     callbacks: {
                         label: function(context) {
-                            var label = context.label || '';
-                            var value = context.raw || 0;
-                            var total = context.dataset.data.reduce(function(acc, val) { return acc + val; }, 0);
-                            var percentage = Math.round((value / total) * 100);
-                            return label + ': PLN ' + value.toLocaleString() + ' (' + percentage + '%)';
+                            return context.label + ': ' + context.raw + '%';
                         }
                     }
                 }
-            },
-            animation: {
-                animateRotate: true,
-                animateScale: true,
-                duration: 2000,
-                easing: 'easeOutCirc'
             }
         }
     });
-
-    // Add center text to doughnut chart
-    Chart.register({
-        id: 'doughnutCenterText',
-        beforeDraw: function(chart) {
-            if (chart.config.type === 'doughnut') {
-                // Get total
-                var total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
-
-                // Get ctx and config
-                var ctx = chart.ctx;
-                var width = chart.width;
-                var height = chart.height;
-
-                // Center text
-                ctx.restore();
-                var fontSize = (height / 114).toFixed(2);
-                ctx.font = fontSize + "em Inter, sans-serif";
-                ctx.textBaseline = "middle";
-
-                var text = "PLN " + total.toLocaleString();
-                var textX = Math.round((width - ctx.measureText(text).width) / 2);
-                var textY = height / 2;
-
-                ctx.fillStyle = "#f5f5f5";
-                ctx.fillText(text, textX, textY - fontSize * 6);
-
-                // Label
-                ctx.font = (fontSize * 0.6) + "em Inter, sans-serif";
-                ctx.fillStyle = "#707070";
-                var label = "TOTAL ASSETS";
-                var labelX = Math.round((width - ctx.measureText(label).width) / 2);
-                ctx.fillText(label, labelX, textY + fontSize * 6);
-                ctx.save();
-            }
-        }
-    });
+});
 </script>
 {% endblock %}
