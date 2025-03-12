@@ -26,7 +26,7 @@
                     {% for income in incomes %}
                     <tr>
                         <td>{{ income.date }}</td>
-                        <td>${{ income.amount }}</td>
+                        <td>PLN {{ income.amount }}</td>
                         <td>{{ income.category.name }}</td>
                         <td>{{ income.description|default:"-" }}</td>
                         <td>

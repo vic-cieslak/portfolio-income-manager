@@ -13,7 +13,7 @@
                 <p><strong>Symbol:</strong> {{ crypto.symbol }}</p>
                 <p><strong>Name:</strong> {{ crypto.name }}</p>
                 <p><strong>Quantity:</strong> {{ crypto.quantity }}</p>
-                <p><strong>Value:</strong> ${{ crypto.current_value }}</p>
+                <p><strong>Value:</strong> PLN {{ crypto.current_value }}</p>
                 
                 <form method="POST">
                     {% csrf_token %}

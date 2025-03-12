@@ -11,7 +11,7 @@
 
 <div class="card mb-4">
     <div class="card-header bg-success text-white">
-        <h4 class="mb-0">Total Balance: ${{ total_balance }}</h4>
+        <h4 class="mb-0">Total Balance: PLN {{ total_balance }}</h4>
     </div>
 </div>
 
@@ -31,7 +31,7 @@
                     {% for account in accounts %}
                     <tr>
                         <td>{{ account.name }}</td>
-                        <td>${{ account.balance }}</td>
+                        <td>PLN {{ account.balance }}</td>
                         <td>{{ account.last_updated }}</td>
                         <td>
                             <a href="{% url 'bank_update' account.id %}" class="btn btn-sm btn-info">

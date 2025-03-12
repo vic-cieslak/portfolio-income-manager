@@ -23,7 +23,7 @@
             {% for income_day, amount in daily_income_list %}
               {% if income_day == day %}
               <div style="position: absolute; top: 30px; left: 5px; right: 5px;" class="bg-success text-white rounded p-1">
-                ${{ amount }}
+                PLN {{ amount }}
               </div>
               {% endif %}
             {% endfor %}

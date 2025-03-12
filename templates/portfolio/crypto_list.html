@@ -11,7 +11,7 @@
 
 <div class="card mb-4">
     <div class="card-header bg-info text-white">
-        <h4 class="mb-0">Total Value: ${{ total_value }}</h4>
+        <h4 class="mb-0">Total Value: PLN {{ total_value }}</h4>
     </div>
 </div>
 
@@ -36,8 +36,8 @@
                         <td>{{ crypto.symbol }}</td>
                         <td>{{ crypto.name }}</td>
                         <td>{{ crypto.quantity }}</td>
-                        <td>${{ crypto.current_price|default:"-" }}</td>
-                        <td>${{ crypto.current_value }}</td>
+                        <td>PLN {{ crypto.current_price|default:"-" }}</td>
+                        <td>PLN {{ crypto.current_value }}</td>
                         <td>{{ crypto.last_updated|default:"-" }}</td>
                         <td>
                             <a href="{% url 'crypto_update' crypto.id %}" class="btn btn-sm btn-info">
