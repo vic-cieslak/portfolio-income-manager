@@ -84,10 +84,27 @@ def income_calendar(request):
         next_month = 1
         next_year = year + 1
     
-    # Generate month calendar
-    month_days = calendar.monthcalendar(year, month)
+    # Generate month calendar with proper formatting
+    cal = calendar.monthcalendar(year, month)
+    month_days = []
+    
+    for week in cal:
+        week_days = []
+        for day in week:
+            # For each day, create a tuple (day_number, is_in_month)
+            # 0 means the day doesn't belong to this month
+            is_in_month = day != 0
+            week_days.append((day, is_in_month))
+        month_days.append(week_days)
+    
+    # Get all income entries for this month for the month_incomes table
+    month_incomes = Income.objects.filter(
+        date__year=year, 
+        date__month=month
+    ).order_by('-date')
     
     context = {
+        'month_incomes': month_incomes,
         'year': year,
         'month': month,
         'month_name': month_name,
