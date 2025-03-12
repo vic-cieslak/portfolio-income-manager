@@ -1,0 +1,38 @@
+
+{% extends 'base/base.html' %}
+{% load income_extras %}
+
+{% block title %}Income Calendar{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h1>Income Calendar - {{ year }} {{ month_name }}</h1>
+  
+  <div class="d-flex justify-content-between mb-3">
+    <a href="{% url 'income:calendar' year=prev_year month=prev_month %}" class="btn btn-outline-primary">
+      &laquo; Previous Month
+    </a>
+    <a href="{% url 'income:calendar' %}" class="btn btn-primary">Today</a>
+    <a href="{% url 'income:calendar' year=next_year month=next_month %}" class="btn btn-outline-primary">
+      Next Month &raquo;
+    </a>
+  </div>
+
+  {% include 'income/partials/calendar_table.html' %}
+
+  <div class="mt-4">
+    <h3>Monthly Summary</h3>
+    <p>Total Income for {{ month_name }} {{ year }}: <strong>${{ total_income }}</strong></p>
+    
+    <h4>Breakdown by Category</h4>
+    <ul class="list-group">
+      {% for category, amount in category_breakdown.items %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+          {{ category }}
+          <span class="badge bg-primary rounded-pill">${{ amount }}</span>
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
