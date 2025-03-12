@@ -14,6 +14,10 @@ def month_days(year, month):
     cal = calendar.monthcalendar(year, month)
     return cal
 
+@register.filter
+def split(value, delimiter=' '):
+    """Split a string into a list by delimiter"""
+    return value.split(delimiter)
 
 # Assumed view (replace with your actual view)
 from django.shortcuts import render
@@ -32,7 +36,6 @@ def income_calendar(request, year=None, month=None):
         'year': year,
     }
     return render(request, 'income/income_calendar.html', context)
-
 
 # Assumed template (replace with your actual template)
 
