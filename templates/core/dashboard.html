@@ -3,6 +3,13 @@
 {% block content %}
 <h1 class="mb-4 glitch-text" data-text="Dashboard">Dashboard <small class="text-muted">//:</small></h1>
 
+<div class="row mb-4">
+    <!-- Portfolio Summary -->
+    <div class="col-md-12">
+        {% include 'portfolio/partials/portfolio_summary.html' with net_worth=net_worth crypto_value=crypto_value bank_value=bank_value %}
+    </div>
+</div>
+
 <div class="row">
     <!-- Income Stats -->
     <div class="col-md-6">

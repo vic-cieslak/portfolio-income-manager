@@ -1,4 +1,3 @@
-
 :root {
   --primary-color: #00ff9d;
   --primary-light: #6effb1;
@@ -411,4 +410,14 @@ body {
   pointer-events: none;
   z-index: -1;
   opacity: 0.1;
+}
+
+.bg-darker {
+    background-color: #0a0a0d;
+}
+
+/* Portfolio Summary Components */
+.card-cyber .card-body h4 {
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px #00ff9d, 0 0 10px #00ff9d;
 }
