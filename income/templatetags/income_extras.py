@@ -21,6 +21,8 @@ def split(value, delimiter=' '):
 
 # You can add more custom template filters or tags here
 
+from django.shortcuts import render
+
 def income_calendar(request, year=None, month=None):
     now = datetime.now()
     year = int(year) if year else now.year
@@ -36,11 +38,7 @@ def income_calendar(request, year=None, month=None):
     }
     return render(request, 'income/income_calendar.html', context)
 
-# Assumed template (replace with your actual template)
-
 #income/income_calendar.html
-
-{% load custom_tags %}
 
 <h1>Income Calendar - {{ year }} {{ month_name }}</h1>
 
