@@ -6,6 +6,7 @@ register = template.Library()
 
 @register.filter
 def get_item(dictionary, key):
+    """Get an item from a dictionary by key"""
     return dictionary.get(key)
 
 @register.filter
@@ -19,42 +20,5 @@ def split(value, delimiter=' '):
     """Split a string into a list by delimiter"""
     return value.split(delimiter)
 
-# You can add more custom template filters or tags here
-
-from django.shortcuts import render
-
-def income_calendar(request, year=None, month=None):
-    now = datetime.now()
-    year = int(year) if year else now.year
-    month = int(month) if month else now.month
-
-    cal = calendar.monthcalendar(year, month)
-    month_name = calendar.month_name[month]
-
-    context = {
-        'month_days': cal,
-        'month_name': month_name,
-        'year': year,
-    }
-    return render(request, 'income/income_calendar.html', context)
-
-# End of file
-
-<table>
-  <thead>
-    <tr>
-      {% for day in "Mon Tue Wed Thu Fri Sat Sun"|split:" " %}
-        <th>{{ day }}</th>
-      {% endfor %}
-    </tr>
-  </thead>
-  <tbody>
-    {% for week in month_days %}
-      <tr>
-        {% for day in week %}
-          <td>{% if day > 0 %}{{ day }}{% endif %}</td>
-        {% endfor %}
-      </tr>
-    {% endfor %}
-  </tbody>
-</table>
+# Only keep the template tag functions in this file
+# The view function has been moved to views.py

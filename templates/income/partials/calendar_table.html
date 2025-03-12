@@ -1,0 +1,29 @@
+
+<table class="table table-bordered">
+  <thead>
+    <tr class="text-center">
+      {% for day in "Sun Mon Tue Wed Thu Fri Sat"|split:" " %}
+        <th>{{ day }}</th>
+      {% endfor %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for week in month_days %}
+      <tr>
+        {% for day, is_current_month in week %}
+        <td class="{% if not is_current_month %}text-muted{% endif %}" style="height: 100px; width: 14.28%; position: relative;">
+          {% if day != 0 %}
+          <div style="position: absolute; top: 5px; left: 5px;">{{ day }}</div>
+
+          {% if is_current_month and day in daily_income %}
+          <div style="position: absolute; top: 30px; left: 5px; right: 5px;" class="bg-success text-white rounded p-1">
+            ${{ daily_income|get_item:day }}
+          </div>
+          {% endif %}
+          {% endif %}
+        </td>
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
