@@ -1,29 +1,23 @@
 
-{% load portfolio_extras %}
-
 <div class="card card-cyber mb-4">
-    <div class="card-header bg-cyber text-neon">
-        <h3 class="mb-0">PORTFOLIO SUMMARY</h3>
+    <div class="card-header bg-success text-white">
+        <h4 class="mb-0 text-neon" data-text="PORTFOLIO SUMMARY">PORTFOLIO SUMMARY</h4>
     </div>
-    <div class="card-body bg-dark text-neon p-4">
-        <h4 class="mb-4">Net Worth: {{ net_worth|format_currency }}</h4>
+    <div class="card-body portfolio-summary">
+        <div class="net-worth-container">
+            <div class="value-label">Net Worth:</div>
+            <div class="value-amount">{{ net_worth|currency_format }}</div>
+        </div>
         
-        <div class="row">
-            <div class="col-md-6 mb-3">
-                <div class="card bg-darker">
-                    <div class="card-body text-center p-4">
-                        <h5 class="mb-3">Crypto Assets</h5>
-                        <h4>{{ crypto_value|format_currency }}</h4>
-                    </div>
-                </div>
+        <div class="assets-container">
+            <div class="asset-box">
+                <div class="asset-label">Crypto Assets</div>
+                <div class="asset-value">{{ crypto_value|currency_format }}</div>
             </div>
-            <div class="col-md-6 mb-3">
-                <div class="card bg-darker">
-                    <div class="card-body text-center p-4">
-                        <h5 class="mb-3">Bank/Cash</h5>
-                        <h4>{{ bank_value|format_currency }}</h4>
-                    </div>
-                </div>
+            
+            <div class="asset-box">
+                <div class="asset-label">Bank/Cash</div>
+                <div class="asset-value">{{ bank_value|currency_format }}</div>
             </div>
         </div>
     </div>
