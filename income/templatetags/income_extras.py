@@ -38,9 +38,7 @@ def income_calendar(request, year=None, month=None):
     }
     return render(request, 'income/income_calendar.html', context)
 
-#income/income_calendar.html
-
-<h1>Income Calendar - {{ year }} {{ month_name }}</h1>
+# End of file
 
 <table>
   <thead>
