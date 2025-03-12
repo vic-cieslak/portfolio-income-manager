@@ -9,6 +9,8 @@ def get_item(dictionary, key):
     """
     Gets an item from a dictionary using the key.
     """
+    if dictionary is None:
+        return None
     return dictionary.get(key)
 
 @register.filter

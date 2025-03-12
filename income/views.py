@@ -84,6 +84,9 @@ def income_calendar(request, year=None, month=None):
             daily_income[day] += income.amount
         else:
             daily_income[day] = income.amount
+            
+    # Convert dictionary to list for template access (no need for get_item filter)
+    daily_income_list = [(day, amount) for day, amount in daily_income.items()]
 
     # Create category breakdown
     category_breakdown = {}
@@ -117,6 +120,7 @@ def income_calendar(request, year=None, month=None):
         'next_month': next_month,
         'next_year': next_year,
         'daily_income': daily_income,
+        'daily_income_list': daily_income_list,
         'total_income': total_income,
         'category_breakdown': category_breakdown,
         'month_incomes': month_incomes, #Added this line to keep the original context

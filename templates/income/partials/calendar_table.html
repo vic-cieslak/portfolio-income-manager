@@ -19,10 +19,14 @@
           {% if day != 0 %}
           <div style="position: absolute; top: 5px; left: 5px;">{{ day }}</div>
 
-          {% if is_current_month and day in daily_income %}
-          <div style="position: absolute; top: 30px; left: 5px; right: 5px;" class="bg-success text-white rounded p-1">
-            ${{ daily_income|get_item:day }}
-          </div>
+          {% if is_current_month %}
+            {% for income_day, amount in daily_income_list %}
+              {% if income_day == day %}
+              <div style="position: absolute; top: 30px; left: 5px; right: 5px;" class="bg-success text-white rounded p-1">
+                ${{ amount }}
+              </div>
+              {% endif %}
+            {% endfor %}
           {% endif %}
           {% endif %}
         </td>
