@@ -1,0 +1,1896 @@
+
+TemplateSyntaxError at /income/calendar/
+
+Invalid filter: 'split'
+
+Request Method: 	GET
+Request URL: 	http://98f62072-3b27-4b66-a9a5-c6043239b91b-00-3upf78qvulkdy.worf.replit.dev/income/calendar/
+Django Version: 	5.0.2
+Exception Type: 	TemplateSyntaxError
+Exception Value: 	
+
+Invalid filter: 'split'
+
+Exception Location: 	/home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 603, in find_filter
+Raised during: 	income.views.income_calendar
+Python Executable: 	/home/runner/workspace/.pythonlibs/bin/python
+Python Version: 	3.10.16
+Python Path: 	
+
+['/home/runner/workspace',
+ '/nix/store/lc7qv2ldzrs1aq3hbyzmbgvn0h2w26pl-sitecustomize/lib/python/site-packages',
+ '/nix/store/izqbpf8fkd2741sqwdca4a9kfy3ss2dx-python3.10-pip-24.0/lib/python3.10/site-packages',
+ '/nix/store/qlb1pg370bb647nj4dhc81y2jszvciz7-python3-3.10.16/lib/python310.zip',
+ '/nix/store/qlb1pg370bb647nj4dhc81y2jszvciz7-python3-3.10.16/lib/python3.10',
+ '/nix/store/qlb1pg370bb647nj4dhc81y2jszvciz7-python3-3.10.16/lib/python3.10/lib-dynload',
+ '/home/runner/workspace/.pythonlibs/lib/python3.10/site-packages',
+ '/nix/store/qlb1pg370bb647nj4dhc81y2jszvciz7-python3-3.10.16/lib/python3.10/site-packages',
+ '/home/runner/workspace/.pythonlibs/lib/python3.10/site-packages',
+ '/nix/store/9ym4wlfl13w339g1jqpgp9llwrqml3jx-python3.10-setuptools-75.1.1/lib/python3.10/site-packages']
+
+Server time: 	Wed, 12 Mar 2025 18:21:17 +0000
+Error during template rendering
+
+In template /home/runner/workspace/templates/income/partials/calendar_table.html, error at line 5
+Invalid filter: 'split'
+1 	
+2 	<table class="table table-bordered">
+3 	  <thead>
+4 	    <tr class="text-center">
+5 	      {% for day in "Sun Mon Tue Wed Thu Fri Sat"|split:" " %}
+6 	        <th>{{ day }}</th>
+7 	      {% endfor %}
+8 	    </tr>
+9 	  </thead>
+10 	  <tbody>
+11 	    {% for week in month_days %}
+12 	      <tr>
+13 	        {% for day, is_current_month in week %}
+14 	        <td class="{% if not is_current_month %}text-muted{% endif %}" style="height: 100px; width: 14.28%; position: relative;">
+15 	          {% if day != 0 %}
+Traceback Switch to copy-and-paste view
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/core/handlers/exception.py, line 55, in inner
+
+                        response = get_response(request)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/core/handlers/base.py, line 197, in _get_response
+
+                        response = wrapped_callback(request, *callback_args, **callback_kwargs)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/income/views.py, line 124, in income_calendar
+
+            return render(request, 'income/income_calendar.html', context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/shortcuts.py, line 25, in render
+
+            content = loader.render_to_string(template_name, context, request, using=using)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loader.py, line 62, in render_to_string
+
+            return template.render(context, request)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/backends/django.py, line 61, in render
+
+                    return self.template.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 171, in render
+
+                            return self._render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 163, in _render
+
+                return self.nodelist.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in render
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in <listcomp>
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 961, in render_annotated
+
+                    return self.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loader_tags.py, line 159, in render
+
+                    return compiled_parent._render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 163, in _render
+
+                return self.nodelist.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in render
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in <listcomp>
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 961, in render_annotated
+
+                    return self.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loader_tags.py, line 65, in render
+
+                        result = block.nodelist.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in render
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 1000, in <listcomp>
+
+                return SafeString("".join([node.render_annotated(context) for node in self]))
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 961, in render_annotated
+
+                    return self.render(context)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loader_tags.py, line 199, in render
+
+                        template = context.template.engine.select_template(template_name)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/engine.py, line 208, in select_template
+
+                        return self.get_template(template_name)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/engine.py, line 177, in get_template
+
+                template, origin = self.find_template(template_name)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/engine.py, line 159, in find_template
+
+                        template = loader.get_template(name, skip=skip)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loaders/cached.py, line 57, in get_template
+
+                    template = super().get_template(template_name, skip)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/loaders/base.py, line 28, in get_template
+
+                        return Template(
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 154, in __init__
+
+                self.nodelist = self.compile_nodelist()
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 196, in compile_nodelist
+
+                    return parser.parse()
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 510, in parse
+
+                            raise self.error(token, e)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 508, in parse
+
+                            compiled_result = compile_func(self, token)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/defaulttags.py, line 860, in do_for
+
+            sequence = parser.compile_filter(bits[in_index + 1])
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 597, in compile_filter
+
+                return FilterExpression(token, self)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 693, in __init__
+
+                        filter_func = parser.find_filter(filter_name)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    	
+
+    /home/runner/workspace/.pythonlibs/lib/python3.10/site-packages/django/template/base.py, line 603, in find_filter
+
+                    raise TemplateSyntaxError("Invalid filter: '%s'" % filter_name)
+
+         …
+    Local vars
+    	
+    	
+
+    	
+
+Request information
+USER
+
+admin
+GET
+
+No GET data
+POST
+
+No POST data
+FILES
+
+No FILES data
+COOKIES
+Variable 	Value
+sessionid 	
+
+'********************'
+
+META
+Variable 	Value
+COLORTERM 	
+
+'truecolor'
+
+CONTENT_LENGTH 	
+
+''
+
+CONTENT_TYPE 	
+
+'text/plain'
+
+DIRENV_CONFIG 	
+
+'/etc/direnv'
+
+DISPLAY 	
+
+':0'
+
+DJANGO_SETTINGS_MODULE 	
+
+'django_project.settings'
+
+DOCKER_CONFIG 	
+
+'/home/runner/workspace/.config/docker'
+
+GATEWAY_INTERFACE 	
+
+'CGI/1.1'
+
+GIT_ASKPASS 	
+
+'********************'
+
+GIT_EDITOR 	
+
+'replit-git-editor'
+
+HOME 	
+
+'/home/runner'
+
+HOSTNAME 	
+
+'65a4fcbbefa4'
+
+HTTP_ACCEPT 	
+
+'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+
+HTTP_ACCEPT_ENCODING 	
+
+'gzip, deflate, br, zstd'
+
+HTTP_ACCEPT_LANGUAGE 	
+
+'pl,en-US;q=0.7,en;q=0.3'
+
+HTTP_COOKIE 	
+
+'********************'
+
+HTTP_HOST 	
+
+'98f62072-3b27-4b66-a9a5-c6043239b91b-00-3upf78qvulkdy.worf.replit.dev'
+
+HTTP_PRIORITY 	
+
+'u=0, i'
+
+HTTP_REFERER 	
+
+'https://98f62072-3b27-4b66-a9a5-c6043239b91b-00-3upf78qvulkdy.worf.replit.dev:8000/income/'
+
+HTTP_SEC_FETCH_DEST 	
+
+'document'
+
+HTTP_SEC_FETCH_MODE 	
+
+'navigate'
+
+HTTP_SEC_FETCH_SITE 	
+
+'same-origin'
+
+HTTP_SEC_FETCH_USER 	
+
+'?1'
+
+HTTP_UPGRADE_INSECURE_REQUESTS 	
+
+'1'
+
+HTTP_USER_AGENT 	
+
+'Mozilla/5.0 (X11; Linux x86_64; rv:136.0) Gecko/20100101 Firefox/136.0'
+
+HTTP_X_FORWARDED_FOR 	
+
+'5.173.20.58, 10.83.0.8'
+
+HTTP_X_FORWARDED_PROTO 	
+
+'https'
+
+HTTP_X_REPLIT_USER_BIO 	
+
+''
+
+HTTP_X_REPLIT_USER_ID 	
+
+''
+
+HTTP_X_REPLIT_USER_NAME 	
+
+''
+
+HTTP_X_REPLIT_USER_PROFILE_IMAGE 	
+
+''
+
+HTTP_X_REPLIT_USER_ROLES 	
+
+''
+
+HTTP_X_REPLIT_USER_TEAMS 	
+
+''
+
+HTTP_X_REPLIT_USER_URL 	
+
+''
+
+LANG 	
+
+'en_US.UTF-8'
+
+LD_AUDIT 	
+
+'/nix/store/n5x1kgbz8zjh63ymsijbislyi1n1hir6-replit_rtld_loader-1/rtld_loader.so'
+
+LIBGL_DRIVERS_PATH 	
+
+'/nix/store/1z62rda9iqnxi4ryvgmyvfaj979hgk7s-mesa-24.2.8-drivers/lib/dri'
+
+LOCALE_ARCHIVE 	
+
+'/usr/lib/locale/locale-archive'
+
+LS_COLORS 	
+
+'rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.7z=01;31:*.ace=01;31:*.alz=01;31:*.apk=01;31:*.arc=01;31:*.arj=01;31:*.bz=01;31:*.bz2=01;31:*.cab=01;31:*.cpio=01;31:*.crate=01;31:*.deb=01;31:*.drpm=01;31:*.dwm=01;31:*.dz=01;31:*.ear=01;31:*.egg=01;31:*.esd=01;31:*.gz=01;31:*.jar=01;31:*.lha=01;31:*.lrz=01;31:*.lz=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.lzo=01;31:*.pyz=01;31:*.rar=01;31:*.rpm=01;31:*.rz=01;31:*.sar=01;31:*.swm=01;31:*.t7z=01;31:*.tar=01;31:*.taz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tgz=01;31:*.tlz=01;31:*.txz=01;31:*.tz=01;31:*.tzo=01;31:*.tzst=01;31:*.udeb=01;31:*.war=01;31:*.whl=01;31:*.wim=01;31:*.xz=01;31:*.z=01;31:*.zip=01;31:*.zoo=01;31:*.zst=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:'
+
+NIXPKGS_ALLOW_UNFREE 	
+
+'1'
+
+NIX_PATH 	
+
+'nixpkgs=/home/runner/.nix-defexpr/channels/nixpkgs-stable-24_05:/home/runner/.nix-defexpr/channels'
+
+NIX_PROFILES 	
+
+'/nix/var/nix/profiles/default /home/runner/.nix-profile'
+
+PATH 	
+
+'/home/runner/workspace/.pythonlibs/bin:/nix/store/ydajxp8cp7zncacwnya5r0d87a76pcv1-python-wrapped-0.1.0/bin:/nix/store/srljq7qx2467i4pk3piqmlnibvkd8hp4-pip-wrapper/bin:/nix/store/m7d0k1w3fxvyc6wcbzlh88n05yavsnwv-poetry-wrapper/bin:/nix/store/5y7nb5lskxfh7xw742ks8nmdslw7saw5-uv-0.5.11/bin:/nix/store/x6ny862k52pg9v1akqkksamnz2xd8q0g-pid1/bin:/nix/store/r4q2nhl6xzpfcrmad55cpk37i2an84db-replit-runtime-path/bin:/home/runner/.nix-profile/bin:/home/runner/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+
+PATH_INFO 	
+
+'/income/calendar/'
+
+POETRY_CACHE_DIR 	
+
+'/home/runner/workspace/.cache/pypoetry'
+
+POETRY_CONFIG_DIR 	
+
+'/nix/store/9yrffddwdb6k6i5nxjh8ardgmclc3c5y-poetry-config'
+
+POETRY_DOWNLOAD_WITH_CURL 	
+
+'1'
+
+POETRY_INSTALLER_MODERN_INSTALLATION 	
+
+'1'
+
+POETRY_PIP_FROM_PATH 	
+
+'1'
+
+POETRY_PIP_NO_ISOLATE 	
+
+'1'
+
+POETRY_PIP_NO_PREFIX 	
+
+'1'
+
+POETRY_PIP_USE_PIP_CACHE 	
+
+'1'
+
+POETRY_USE_USER_SITE 	
+
+'1'
+
+POETRY_VIRTUALENVS_CREATE 	
+
+'0'
+
+PROMPT_DIRTRIM 	
+
+'2'
+
+PS1 	
+
+'\\[\\033[01;34m\\]\\w\\[\\033[00m\\]\\$ '
+
+PWD 	
+
+'/home/runner/workspace'
+
+PYTHONPATH 	
+
+'/nix/store/lc7qv2ldzrs1aq3hbyzmbgvn0h2w26pl-sitecustomize/lib/python/site-packages:/nix/store/izqbpf8fkd2741sqwdca4a9kfy3ss2dx-python3.10-pip-24.0/lib/python3.10/site-packages'
+
+PYTHONUSERBASE 	
+
+'/home/runner/workspace/.pythonlibs'
+
+QUERY_STRING 	
+
+''
+
+REMOTE_ADDR 	
+
+'172.31.128.56'
+
+REMOTE_HOST 	
+
+''
+
+REPLIT_BASHRC 	
+
+'/nix/store/s4lshwgjxfy4lmilpjpg82swj27lb9ql-replit-bashrc/bashrc'
+
+REPLIT_CLI 	
+
+'/nix/store/3gchimacikc24wgvg66z7hklz9qj4rw8-pid1-0.0.1/bin/replit'
+
+REPLIT_CLUSTER 	
+
+'worf'
+
+REPLIT_DB_URL 	
+
+'https://kv.replit.com/v0/eyJhbGciOiJIUzUxMiIsImlzcyI6ImNvbm1hbiIsImtpZCI6InByb2Q6MSIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJjb25tYW4iLCJleHAiOjE3NDE5MTE0NzAsImlhdCI6MTc0MTc5OTg3MCwiZGF0YWJhc2VfaWQiOiI5OGY2MjA3Mi0zYjI3LTRiNjYtYTlhNS1jNjA0MzIzOWI5MWIifQ.Xr3HqMxfgJlsr3ZDHocC2VYgLDX17US5HsIyGsCY1uW72QyevPoRpsa_mQRFIzkRyZynKpAxF9k4XLamrqUfXw'
+
+REPLIT_DEV_DOMAIN 	
+
+'98f62072-3b27-4b66-a9a5-c6043239b91b-00-3upf78qvulkdy.worf.replit.dev'
+
+REPLIT_DOMAINS 	
+
+'98f62072-3b27-4b66-a9a5-c6043239b91b-00-3upf78qvulkdy.worf.replit.dev'
+
+REPLIT_ENVIRONMENT 	
+
+'production'
+
+REPLIT_LD_AUDIT 	
+
+'/nix/store/n5x1kgbz8zjh63ymsijbislyi1n1hir6-replit_rtld_loader-1/rtld_loader.so'
+
+REPLIT_LD_LIBRARY_PATH 	
+
+'/nix/store/cgac6vgdqpymd47frmlgv85ckhy85zs7-cpplibs/lib:/nix/store/bzk3q2l71qwhycsip23y6rl5n881la4n-zlib-1.3.1/lib:/nix/store/26hcp8h792wl0h52c5r94qakhvk6q717-glib-2.82.1/lib:/nix/store/ikjw6a952jd9wn5k06mkj710xzabssr0-libX11-1.8.10/lib:/nix/store/d5y0sl4vwsb9m99r18zh1mx4fw9y70g6-libXext-1.3.6/lib:/nix/store/zz9384x4kbwanpviwwm5lkh3cvnh4nix-libXinerama-1.1.5/lib:/nix/store/622maagcm5lmh4g21y0ks10zgrkjwq4y-libXcursor-1.2.2/lib:/nix/store/1741axgq503c1r4bzwy1ysp847rsfrf0-libXrandr-1.5.4/lib:/nix/store/mcr8zrlyg2r6idl6ks60858q5q0i6i2a-libXi-1.8.2/lib:/nix/store/y0qjc54zqhb8ksc8iddsadmddkg9vyk9-libXxf86vm-1.1.5/lib:/nix/store/cgac6vgdqpymd47frmlgv85ckhy85zs7-cpplibs/lib:/nix/store/bzk3q2l71qwhycsip23y6rl5n881la4n-zlib-1.3.1/lib:/nix/store/26hcp8h792wl0h52c5r94qakhvk6q717-glib-2.82.1/lib:/nix/store/ikjw6a952jd9wn5k06mkj710xzabssr0-libX11-1.8.10/lib:/nix/store/d5y0sl4vwsb9m99r18zh1mx4fw9y70g6-libXext-1.3.6/lib:/nix/store/zz9384x4kbwanpviwwm5lkh3cvnh4nix-libXinerama-1.1.5/lib:/nix/store/622maagcm5lmh4g21y0ks10zgrkjwq4y-libXcursor-1.2.2/lib:/nix/store/1741axgq503c1r4bzwy1ysp847rsfrf0-libXrandr-1.5.4/lib:/nix/store/mcr8zrlyg2r6idl6ks60858q5q0i6i2a-libXi-1.8.2/lib:/nix/store/y0qjc54zqhb8ksc8iddsadmddkg9vyk9-libXxf86vm-1.1.5/lib'
+
+REPLIT_MODE 	
+
+'workflow'
+
+REPLIT_NIX_CHANNEL 	
+
+'stable-24_05'
+
+REPLIT_PID1_FLAG_NIXMODULES_BEFORE_REPLIT_NIX 	
+
+'1'
+
+REPLIT_PID1_FLAG_REPLIT_RTLD_LOADER 	
+
+'1'
+
+REPLIT_PID1_VERSION 	
+
+'0.0.0-be01487'
+
+REPLIT_PID2 	
+
+'true'
+
+REPLIT_PYTHONPATH 	
+
+'/home/runner/workspace/.pythonlibs/lib/python3.10/site-packages:/nix/store/9ym4wlfl13w339g1jqpgp9llwrqml3jx-python3.10-setuptools-75.1.1/lib/python3.10/site-packages'
+
+REPLIT_PYTHON_LD_LIBRARY_PATH 	
+
+'/nix/store/cgac6vgdqpymd47frmlgv85ckhy85zs7-cpplibs/lib:/nix/store/bzk3q2l71qwhycsip23y6rl5n881la4n-zlib-1.3.1/lib:/nix/store/26hcp8h792wl0h52c5r94qakhvk6q717-glib-2.82.1/lib:/nix/store/ikjw6a952jd9wn5k06mkj710xzabssr0-libX11-1.8.10/lib:/nix/store/d5y0sl4vwsb9m99r18zh1mx4fw9y70g6-libXext-1.3.6/lib:/nix/store/zz9384x4kbwanpviwwm5lkh3cvnh4nix-libXinerama-1.1.5/lib:/nix/store/622maagcm5lmh4g21y0ks10zgrkjwq4y-libXcursor-1.2.2/lib:/nix/store/1741axgq503c1r4bzwy1ysp847rsfrf0-libXrandr-1.5.4/lib:/nix/store/mcr8zrlyg2r6idl6ks60858q5q0i6i2a-libXi-1.8.2/lib:/nix/store/y0qjc54zqhb8ksc8iddsadmddkg9vyk9-libXxf86vm-1.1.5/lib'
+
+REPLIT_RIPPKGS_INDICES 	
+
+'/nix/store/l5gcmdp908sji4wchfp8csflhjcgnmm3-rippkgs-indices'
+
+REPLIT_RTLD_LOADER 	
+
+'1'
+
+REPLIT_SESSION 	
+
+'wiktorcie1-jGTV'
+
+REPLIT_SUBCLUSTER 	
+
+'paid'
+
+REPLIT_USER 	
+
+'wiktorcie1'
+
+REPLIT_USERID 	
+
+'38631525'
+
+REPL_HOME 	
+
+'/home/runner/workspace'
+
+REPL_ID 	
+
+'98f62072-3b27-4b66-a9a5-c6043239b91b'
+
+REPL_IDENTITY 	
+
+'v2.public.Q2lRNU9HWTJNakEzTWkwellqSTNMVFJpTmpZdFlUbGhOUzFqTmpBME16SXpPV0k1TVdJU0NuZHBhM1J2Y21OcFpURWFGRVJxWVc1bmIwbHVZMjl0WlZSeVlXTnJhVzVuSWlRNU9HWTJNakEzTWkwellqSTNMVFJpTmpZdFlUbGhOUzFqTmpBME16SXpPV0k1TVdJNDVmQzFFbG9NQ2dSM2IzSm1FZ1J3WVdsa7MaEtAYA3dediAYxHfbmCQ1dOgAsS1U2SkZms3mF2iQPP6EBqjNxfvP8f4U9HiVcGsqUEesIOOVheU6FKyypwo.R0FFaUJtTnZibTFoYmhLR0NIWXlMbkIxWW14cFl5NVJNbVF6VTFoSk1GVkZhREphTVd4U1pETk9iRkV6VmpOU1ZrNUZVVmR2Y2s5VVp6SkxNRXB2VVRGcmQxTlZjek5SVmtwMlVUQmtRbFpYUmt0YU1qbHlWREZTYjJKVk5YRlRXR1JQWld0c01GUlVTa3BsVlRVMVRVUkNXbUZzYTNsVVJtUkdUbFpzVlZaWVVscGxiR3d6Vkd0U1RtVlZNVFppUjJ4UVZrVmFjRkl5WkROVk1FNTFXa2hDYUUweFNqSlpNakZQWTBad1ZWSlhSa05XUjNCelQwVjRWbFV3Wkc1WFYyeERVMGRTTWxreU1WcFpWVXB3WWpCV2FsSXdXbmRYYTA1S1RWZEdObE5ZVm1wVFJscHdXV3RrYzJGcmVISlRiVFZXWVhwVmVGWlZWVEJPUlRWSVdUTndhazB3V2toYVJsazBaRVpTUmxkc2FHRldiV2hGV2tjeFlWUnNTWGROVkU1b1lsVlplRmR0Y0V0ak1EVnlUbFpPVUZOR1JYZFVNRlYzVUZsNlJrUlVSVUo2U1VOT05WUnFTV05SWWxwU1RWWlRkMDVDVTE4NFpIQktlV0Z0ZW5KWmMzUXRMWFpGYVVwclVsUnNkbXAyTUhJMVQzUk5kVXBhUVU5VWVuQlFlVE5KWVdKRlZUbHhTRFJ2YW5GUldIZFJMbEl3UmtaaFZVcDBWRzVhYVdKVVJtOVpiV2hOV1d0R2RWZFliRTFpYTBsNFYxY3hOR05HYkRWT1ZrcE9ZbFpKTWxaVVJtdE5SMVowVTJ4YVZHSnVRbGRXYlRFMFZURlNjbFZ0Ums1V2JrSlhWVEowVDFaR1dsbGhSVlpXWld0S2NsVnFRVEZUVmtaeVUyeGFUbEpzY0ZOV2JYQlBXVmRTVjJJemFGTmlWMmhUVm1wS2IyUldWbGhrUjNScFlrVTFXRmxyVms5V2JVcFZZa1ZXVm1GclNraGFSM2h6Vm14S2RWSnNTbGRXV0VKS1ZqSndRMk14WkhOU2JHaG9VMFp3VTFSVlpGTlJNVnBIV2tWa1VtSlZXa2xYYTFWNFZUQXhkRlZyZEZkTlZscFVWVlJLU21ReFVuSmhSa3BYWVRGd2RsWldXbXRpTWtwelZHNUthVk5GV2xoWmJYUjNWREZzVjFWc1pFNU5XRUpJVjJ0V01HRnJNWEpYYkd4WFVtMW9XRlpFUm1Ga1IxWkpZMFprVjJKV1NrbFdSbEpMVkRKTmVWTnFXbFpoZW14WVZGZDRTMkl4V1hsTlZGSlVUV3RhUjFSV1ZtdFdSMHBHVjJ4YVdsWjZSVEJYVmxwelRteEdWVkp0Y0dsU1dFSTJWa1JHVjFsWFJYbFRiR3hXVmtWYVYxbHJXbUZqYkhCSVpVVmFiRkp1UWtaV01qRjNZVWRGZUdOSE9WZGhhMXBVVlhwR1RtVkdXbk5UYkVaWFVrVktNMVl5ZEdGWGJVNTBZMFV4VUZkRk5IcGFSVlphVGxad1JWSllVbWxpVkZaUlZEQmtZVlZ0U2xoaFJFcFVVbFp3ZUZaclZuSmtSMUpGWVVWd2FXSldjRkZYUkVsNFZsVXhkRmw2VW1wWFNFSkdWV3RrVms1R1drVmlSbEpvVFZaS05sZHRlRzlpVjFaeVlucENXRlpWTVRaWGJYTjNaV3hrVms1WVNsUldSMUpaVjFkcmQwNVdTbkpWYlRsUFlWUkdURlJxU1RWU1JYaHpVMWhrVTJFeGNHOVdiRlozVFVaYVNFNVhSbWhXTUhCV1ZXMHdOVmR0U2xoVmFrcFdZV3R3VUZVeFdrOWtWbVIwVW14T1UyVnRaekE9'
+
+REPL_IDENTITY_KEY 	
+
+'********************'
+
+REPL_IMAGE 	
+
+'gcr.io/marine-cycle-160323/nix:bf8590a3e2f0a8b70b7ca175eeed9074dffbfca9'
+
+REPL_LANGUAGE 	
+
+'nix'
+
+REPL_OWNER 	
+
+'wiktorcie1'
+
+REPL_OWNER_ID 	
+
+'38631525'
+
+REPL_PUBKEYS 	
+
+'********************'
+
+REPL_SLUG 	
+
+'workspace'
+
+REQUEST_METHOD 	
+
+'GET'
+
+RUN_MAIN 	
+
+'true'
+
+SCRIPT_NAME 	
+
+''
+
+SERVER_NAME 	
+
+'65a4fcbbefa4'
+
+SERVER_PORT 	
+
+'8000'
+
+SERVER_PROTOCOL 	
+
+'HTTP/1.1'
+
+SERVER_SOFTWARE 	
+
+'WSGIServer/0.2'
+
+SHLVL 	
+
+'0'
+
+TERM 	
+
+'xterm-256color'
+
+TZ 	
+
+'UTC'
+
+USER 	
+
+'runner'
+
+UV_PROJECT_ENVIRONMENT 	
+
+'/home/runner/workspace/.pythonlibs'
+
+UV_PYTHON_DOWNLOADS 	
+
+'never'
+
+UV_PYTHON_PREFERENCE 	
+
+'only-system'
+
+XDG_CACHE_HOME 	
+
+'/home/runner/workspace/.cache'
+
+XDG_CONFIG_HOME 	
+
+'/home/runner/workspace/.config'
+
+XDG_DATA_DIRS 	
+
+'/nix/store/r4q2nhl6xzpfcrmad55cpk37i2an84db-replit-runtime-path/share'
+
+XDG_DATA_HOME 	
+
+'/home/runner/workspace/.local/share'
+
+_ 	
+
+'/home/runner/workspace/.pythonlibs/bin/python'
+
+__EGL_VENDOR_LIBRARY_FILENAMES 	
+
+'/nix/store/1z62rda9iqnxi4ryvgmyvfaj979hgk7s-mesa-24.2.8-drivers/share/glvnd/egl_vendor.d/50_mesa.json'
+
+wsgi.errors 	
+
+<_io.TextIOWrapper name='<stderr>' mode='w' encoding='utf-8'>
+
+wsgi.file_wrapper 	
+
+<class 'wsgiref.util.FileWrapper'>
+
+wsgi.input 	
+
+<django.core.handlers.wsgi.LimitedStream object at 0x7fa3b070f4c0>
+
+wsgi.multiprocess 	
+
+False
+
+wsgi.multithread 	
+
+True
+
+wsgi.run_once 	
+
+False
+
+wsgi.url_scheme 	
+
+'http'
+
+wsgi.version 	
+
+(1, 0)
+
+Settings
+Using settings module django_project.settings
+Setting 	Value
+ABSOLUTE_URL_OVERRIDES 	
+
+{}
+
+ADMINS 	
+
+[]
+
+ALLOWED_HOSTS 	
+
+['*']
+
+APPEND_SLASH 	
+
+True
+
+AUTHENTICATION_BACKENDS 	
+
+['django.contrib.auth.backends.ModelBackend']
+
+AUTH_PASSWORD_VALIDATORS 	
+
+'********************'
+
+AUTH_USER_MODEL 	
+
+'auth.User'
+
+BASE_DIR 	
+
+PosixPath('/home/runner/workspace')
+
+CACHES 	
+
+{'default': {'BACKEND': 'django.core.cache.backends.locmem.LocMemCache'}}
+
+CACHE_MIDDLEWARE_ALIAS 	
+
+'default'
+
+CACHE_MIDDLEWARE_KEY_PREFIX 	
+
+'********************'
+
+CACHE_MIDDLEWARE_SECONDS 	
+
+600
+
+CRISPY_ALLOWED_TEMPLATE_PACKS 	
+
+'bootstrap4'
+
+CRISPY_TEMPLATE_PACK 	
+
+'bootstrap4'
+
+CSRF_COOKIE_AGE 	
+
+31449600
+
+CSRF_COOKIE_DOMAIN 	
+
+None
+
+CSRF_COOKIE_HTTPONLY 	
+
+False
+
+CSRF_COOKIE_NAME 	
+
+'csrftoken'
+
+CSRF_COOKIE_PATH 	
+
+'/'
+
+CSRF_COOKIE_SAMESITE 	
+
+'Lax'
+
+CSRF_COOKIE_SECURE 	
+
+False
+
+CSRF_FAILURE_VIEW 	
+
+'django.views.csrf.csrf_failure'
+
+CSRF_HEADER_NAME 	
+
+'HTTP_X_CSRFTOKEN'
+
+CSRF_TRUSTED_ORIGINS 	
+
+[]
+
+CSRF_USE_SESSIONS 	
+
+False
+
+DATABASES 	
+
+{'default': {'ATOMIC_REQUESTS': False,
+             'AUTOCOMMIT': True,
+             'CONN_HEALTH_CHECKS': False,
+             'CONN_MAX_AGE': 0,
+             'ENGINE': 'django.db.backends.sqlite3',
+             'HOST': '',
+             'NAME': PosixPath('/home/runner/workspace/db.sqlite3'),
+             'OPTIONS': {},
+             'PASSWORD': '********************',
+             'PORT': '',
+             'TEST': {'CHARSET': None,
+                      'COLLATION': None,
+                      'MIGRATE': True,
+                      'MIRROR': None,
+                      'NAME': None},
+             'TIME_ZONE': None,
+             'USER': ''}}
+
+DATABASE_ROUTERS 	
+
+[]
+
+DATA_UPLOAD_MAX_MEMORY_SIZE 	
+
+2621440
+
+DATA_UPLOAD_MAX_NUMBER_FIELDS 	
+
+1000
+
+DATA_UPLOAD_MAX_NUMBER_FILES 	
+
+100
+
+DATETIME_FORMAT 	
+
+'N j, Y, P'
+
+DATETIME_INPUT_FORMATS 	
+
+['%Y-%m-%d %H:%M:%S',
+ '%Y-%m-%d %H:%M:%S.%f',
+ '%Y-%m-%d %H:%M',
+ '%m/%d/%Y %H:%M:%S',
+ '%m/%d/%Y %H:%M:%S.%f',
+ '%m/%d/%Y %H:%M',
+ '%m/%d/%y %H:%M:%S',
+ '%m/%d/%y %H:%M:%S.%f',
+ '%m/%d/%y %H:%M']
+
+DATE_FORMAT 	
+
+'N j, Y'
+
+DATE_INPUT_FORMATS 	
+
+['%Y-%m-%d',
+ '%m/%d/%Y',
+ '%m/%d/%y',
+ '%b %d %Y',
+ '%b %d, %Y',
+ '%d %b %Y',
+ '%d %b, %Y',
+ '%B %d %Y',
+ '%B %d, %Y',
+ '%d %B %Y',
+ '%d %B, %Y']
+
+DEBUG 	
+
+True
+
+DEBUG_PROPAGATE_EXCEPTIONS 	
+
+False
+
+DECIMAL_SEPARATOR 	
+
+'.'
+
+DEFAULT_AUTO_FIELD 	
+
+'django.db.models.BigAutoField'
+
+DEFAULT_CHARSET 	
+
+'utf-8'
+
+DEFAULT_EXCEPTION_REPORTER 	
+
+'django.views.debug.ExceptionReporter'
+
+DEFAULT_EXCEPTION_REPORTER_FILTER 	
+
+'django.views.debug.SafeExceptionReporterFilter'
+
+DEFAULT_FILE_STORAGE 	
+
+'django.core.files.storage.FileSystemStorage'
+
+DEFAULT_FROM_EMAIL 	
+
+'webmaster@localhost'
+
+DEFAULT_INDEX_TABLESPACE 	
+
+''
+
+DEFAULT_TABLESPACE 	
+
+''
+
+DISALLOWED_USER_AGENTS 	
+
+[]
+
+EMAIL_BACKEND 	
+
+'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST 	
+
+'localhost'
+
+EMAIL_HOST_PASSWORD 	
+
+'********************'
+
+EMAIL_HOST_USER 	
+
+''
+
+EMAIL_PORT 	
+
+25
+
+EMAIL_SSL_CERTFILE 	
+
+None
+
+EMAIL_SSL_KEYFILE 	
+
+'********************'
+
+EMAIL_SUBJECT_PREFIX 	
+
+'[Django] '
+
+EMAIL_TIMEOUT 	
+
+None
+
+EMAIL_USE_LOCALTIME 	
+
+False
+
+EMAIL_USE_SSL 	
+
+False
+
+EMAIL_USE_TLS 	
+
+False
+
+FILE_UPLOAD_DIRECTORY_PERMISSIONS 	
+
+None
+
+FILE_UPLOAD_HANDLERS 	
+
+['django.core.files.uploadhandler.MemoryFileUploadHandler',
+ 'django.core.files.uploadhandler.TemporaryFileUploadHandler']
+
+FILE_UPLOAD_MAX_MEMORY_SIZE 	
+
+2621440
+
+FILE_UPLOAD_PERMISSIONS 	
+
+420
+
+FILE_UPLOAD_TEMP_DIR 	
+
+None
+
+FIRST_DAY_OF_WEEK 	
+
+0
+
+FIXTURE_DIRS 	
+
+[]
+
+FORCE_SCRIPT_NAME 	
+
+None
+
+FORMAT_MODULE_PATH 	
+
+None
+
+FORMS_URLFIELD_ASSUME_HTTPS 	
+
+False
+
+FORM_RENDERER 	
+
+'django.forms.renderers.DjangoTemplates'
+
+IGNORABLE_404_URLS 	
+
+[]
+
+INSTALLED_APPS 	
+
+['django.contrib.admin',
+ 'django.contrib.auth',
+ 'django.contrib.contenttypes',
+ 'django.contrib.sessions',
+ 'django.contrib.messages',
+ 'django.contrib.staticfiles',
+ 'crispy_forms',
+ 'crispy_bootstrap4',
+ 'bootstrap_datepicker_plus',
+ 'core',
+ 'income',
+ 'portfolio']
+
+INTERNAL_IPS 	
+
+[]
+
+LANGUAGES 	
+
+[('af', 'Afrikaans'),
+ ('ar', 'Arabic'),
+ ('ar-dz', 'Algerian Arabic'),
+ ('ast', 'Asturian'),
+ ('az', 'Azerbaijani'),
+ ('bg', 'Bulgarian'),
+ ('be', 'Belarusian'),
+ ('bn', 'Bengali'),
+ ('br', 'Breton'),
+ ('bs', 'Bosnian'),
+ ('ca', 'Catalan'),
+ ('ckb', 'Central Kurdish (Sorani)'),
+ ('cs', 'Czech'),
+ ('cy', 'Welsh'),
+ ('da', 'Danish'),
+ ('de', 'German'),
+ ('dsb', 'Lower Sorbian'),
+ ('el', 'Greek'),
+ ('en', 'English'),
+ ('en-au', 'Australian English'),
+ ('en-gb', 'British English'),
+ ('eo', 'Esperanto'),
+ ('es', 'Spanish'),
+ ('es-ar', 'Argentinian Spanish'),
+ ('es-co', 'Colombian Spanish'),
+ ('es-mx', 'Mexican Spanish'),
+ ('es-ni', 'Nicaraguan Spanish'),
+ ('es-ve', 'Venezuelan Spanish'),
+ ('et', 'Estonian'),
+ ('eu', 'Basque'),
+ ('fa', 'Persian'),
+ ('fi', 'Finnish'),
+ ('fr', 'French'),
+ ('fy', 'Frisian'),
+ ('ga', 'Irish'),
+ ('gd', 'Scottish Gaelic'),
+ ('gl', 'Galician'),
+ ('he', 'Hebrew'),
+ ('hi', 'Hindi'),
+ ('hr', 'Croatian'),
+ ('hsb', 'Upper Sorbian'),
+ ('hu', 'Hungarian'),
+ ('hy', 'Armenian'),
+ ('ia', 'Interlingua'),
+ ('id', 'Indonesian'),
+ ('ig', 'Igbo'),
+ ('io', 'Ido'),
+ ('is', 'Icelandic'),
+ ('it', 'Italian'),
+ ('ja', 'Japanese'),
+ ('ka', 'Georgian'),
+ ('kab', 'Kabyle'),
+ ('kk', 'Kazakh'),
+ ('km', 'Khmer'),
+ ('kn', 'Kannada'),
+ ('ko', 'Korean'),
+ ('ky', 'Kyrgyz'),
+ ('lb', 'Luxembourgish'),
+ ('lt', 'Lithuanian'),
+ ('lv', 'Latvian'),
+ ('mk', 'Macedonian'),
+ ('ml', 'Malayalam'),
+ ('mn', 'Mongolian'),
+ ('mr', 'Marathi'),
+ ('ms', 'Malay'),
+ ('my', 'Burmese'),
+ ('nb', 'Norwegian Bokmål'),
+ ('ne', 'Nepali'),
+ ('nl', 'Dutch'),
+ ('nn', 'Norwegian Nynorsk'),
+ ('os', 'Ossetic'),
+ ('pa', 'Punjabi'),
+ ('pl', 'Polish'),
+ ('pt', 'Portuguese'),
+ ('pt-br', 'Brazilian Portuguese'),
+ ('ro', 'Romanian'),
+ ('ru', 'Russian'),
+ ('sk', 'Slovak'),
+ ('sl', 'Slovenian'),
+ ('sq', 'Albanian'),
+ ('sr', 'Serbian'),
+ ('sr-latn', 'Serbian Latin'),
+ ('sv', 'Swedish'),
+ ('sw', 'Swahili'),
+ ('ta', 'Tamil'),
+ ('te', 'Telugu'),
+ ('tg', 'Tajik'),
+ ('th', 'Thai'),
+ ('tk', 'Turkmen'),
+ ('tr', 'Turkish'),
+ ('tt', 'Tatar'),
+ ('udm', 'Udmurt'),
+ ('ug', 'Uyghur'),
+ ('uk', 'Ukrainian'),
+ ('ur', 'Urdu'),
+ ('uz', 'Uzbek'),
+ ('vi', 'Vietnamese'),
+ ('zh-hans', 'Simplified Chinese'),
+ ('zh-hant', 'Traditional Chinese')]
+
+LANGUAGES_BIDI 	
+
+['he', 'ar', 'ar-dz', 'ckb', 'fa', 'ug', 'ur']
+
+LANGUAGE_CODE 	
+
+'en-us'
+
+LANGUAGE_COOKIE_AGE 	
+
+None
+
+LANGUAGE_COOKIE_DOMAIN 	
+
+None
+
+LANGUAGE_COOKIE_HTTPONLY 	
+
+False
+
+LANGUAGE_COOKIE_NAME 	
+
+'django_language'
+
+LANGUAGE_COOKIE_PATH 	
+
+'/'
+
+LANGUAGE_COOKIE_SAMESITE 	
+
+None
+
+LANGUAGE_COOKIE_SECURE 	
+
+False
+
+LOCALE_PATHS 	
+
+[]
+
+LOGGING 	
+
+{}
+
+LOGGING_CONFIG 	
+
+'logging.config.dictConfig'
+
+LOGIN_REDIRECT_URL 	
+
+'/'
+
+LOGIN_URL 	
+
+'/login/'
+
+LOGOUT_REDIRECT_URL 	
+
+'/login/'
+
+MANAGERS 	
+
+[]
+
+MEDIA_ROOT 	
+
+''
+
+MEDIA_URL 	
+
+'/'
+
+MESSAGE_STORAGE 	
+
+'django.contrib.messages.storage.fallback.FallbackStorage'
+
+MIDDLEWARE 	
+
+['django.middleware.security.SecurityMiddleware',
+ 'django.contrib.sessions.middleware.SessionMiddleware',
+ 'django.middleware.common.CommonMiddleware',
+ 'django.contrib.auth.middleware.AuthenticationMiddleware',
+ 'django.contrib.messages.middleware.MessageMiddleware',
+ 'django.middleware.clickjacking.XFrameOptionsMiddleware']
+
+MIGRATION_MODULES 	
+
+{}
+
+MONTH_DAY_FORMAT 	
+
+'F j'
+
+NUMBER_GROUPING 	
+
+0
+
+PASSWORD_HASHERS 	
+
+'********************'
+
+PASSWORD_RESET_TIMEOUT 	
+
+'********************'
+
+PREPEND_WWW 	
+
+False
+
+ROOT_URLCONF 	
+
+'django_project.urls'
+
+SECRET_KEY 	
+
+'********************'
+
+SECRET_KEY_FALLBACKS 	
+
+'********************'
+
+SECURE_CONTENT_TYPE_NOSNIFF 	
+
+True
+
+SECURE_CROSS_ORIGIN_OPENER_POLICY 	
+
+'same-origin'
+
+SECURE_HSTS_INCLUDE_SUBDOMAINS 	
+
+False
+
+SECURE_HSTS_PRELOAD 	
+
+False
+
+SECURE_HSTS_SECONDS 	
+
+0
+
+SECURE_PROXY_SSL_HEADER 	
+
+None
+
+SECURE_REDIRECT_EXEMPT 	
+
+[]
+
+SECURE_REFERRER_POLICY 	
+
+'same-origin'
+
+SECURE_SSL_HOST 	
+
+None
+
+SECURE_SSL_REDIRECT 	
+
+False
+
+SERVER_EMAIL 	
+
+'root@localhost'
+
+SESSION_CACHE_ALIAS 	
+
+'default'
+
+SESSION_COOKIE_AGE 	
+
+1209600
+
+SESSION_COOKIE_DOMAIN 	
+
+None
+
+SESSION_COOKIE_HTTPONLY 	
+
+True
+
+SESSION_COOKIE_NAME 	
+
+'sessionid'
+
+SESSION_COOKIE_PATH 	
+
+'/'
+
+SESSION_COOKIE_SAMESITE 	
+
+'Lax'
+
+SESSION_COOKIE_SECURE 	
+
+False
+
+SESSION_ENGINE 	
+
+'django.contrib.sessions.backends.db'
+
+SESSION_EXPIRE_AT_BROWSER_CLOSE 	
+
+False
+
+SESSION_FILE_PATH 	
+
+None
+
+SESSION_SAVE_EVERY_REQUEST 	
+
+False
+
+SESSION_SERIALIZER 	
+
+'django.contrib.sessions.serializers.JSONSerializer'
+
+SETTINGS_MODULE 	
+
+'django_project.settings'
+
+SHORT_DATETIME_FORMAT 	
+
+'m/d/Y P'
+
+SHORT_DATE_FORMAT 	
+
+'m/d/Y'
+
+SIGNING_BACKEND 	
+
+'django.core.signing.TimestampSigner'
+
+SILENCED_SYSTEM_CHECKS 	
+
+[]
+
+STATICFILES_DIRS 	
+
+['/home/runner/workspace/static']
+
+STATICFILES_FINDERS 	
+
+['django.contrib.staticfiles.finders.FileSystemFinder',
+ 'django.contrib.staticfiles.finders.AppDirectoriesFinder']
+
+STATICFILES_STORAGE 	
+
+'django.contrib.staticfiles.storage.StaticFilesStorage'
+
+STATIC_ROOT 	
+
+None
+
+STATIC_URL 	
+
+'/static/'
+
+STORAGES 	
+
+{'default': {'BACKEND': 'django.core.files.storage.FileSystemStorage'},
+ 'staticfiles': {'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage'}}
+
+TEMPLATES 	
+
+[{'APP_DIRS': True,
+  'BACKEND': 'django.template.backends.django.DjangoTemplates',
+  'DIRS': ['/home/runner/workspace/templates'],
+  'OPTIONS': {'context_processors': ['django.template.context_processors.debug',
+                                     'django.template.context_processors.request',
+                                     'django.contrib.auth.context_processors.auth',
+                                     'django.contrib.messages.context_processors.messages']}}]
+
+TEST_NON_SERIALIZED_APPS 	
+
+[]
+
+TEST_RUNNER 	
+
+'django.test.runner.DiscoverRunner'
+
+THOUSAND_SEPARATOR 	
+
+','
+
+TIME_FORMAT 	
+
+'P'
+
+TIME_INPUT_FORMATS 	
+
+['%H:%M:%S', '%H:%M:%S.%f', '%H:%M']
+
+TIME_ZONE 	
+
+'UTC'
+
+USE_I18N 	
+
+True
+
+USE_THOUSAND_SEPARATOR 	
+
+False
+
+USE_TZ 	
+
+True
+
+USE_X_FORWARDED_HOST 	
+
+False
+
+USE_X_FORWARDED_PORT 	
+
+False
+
+WSGI_APPLICATION 	
+
+'django_project.wsgi.application'
+
+X_FRAME_OPTIONS 	
+
+'DENY'
+
+YEAR_MONTH_FORMAT 	
+
+'F Y'
+
+You’re seeing this error because you have DEBUG = True in your Django settings file. Change that to False, and Django will display a standard page generated by the handler for this status code.
