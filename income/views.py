@@ -136,25 +136,25 @@ def category_create(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Category added successfully!')
-            return redirect('category_list')
+            return redirect('income:category_list')
     else:
         form = IncomeCategoryForm()
-    
+
     return render(request, 'income/category_form.html', {'form': form, 'title': 'Add Category'})
 
 @login_required
 def category_update(request, pk):
     category = get_object_or_404(IncomeCategory, pk=pk)
-    
+
     if request.method == 'POST':
         form = IncomeCategoryForm(request.POST, instance=category)
         if form.is_valid():
             form.save()
             messages.success(request, 'Category updated successfully!')
-            return redirect('category_list')
+            return redirect('income:category_list')
     else:
         form = IncomeCategoryForm(instance=category)
-    
+
     return render(request, 'income/category_form.html', {'form': form, 'title': 'Update Category'})
 
 from django.contrib.auth.decorators import login_required
