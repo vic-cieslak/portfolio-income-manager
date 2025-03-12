@@ -49,6 +49,19 @@ def dashboard(request):
     portfolio_labels = ['Crypto', 'Bank/Cash']
     portfolio_data = [float(crypto_value), float(bank_value)]
     
+    context = {
+        'monthly_income': monthly_income,
+        'recent_income': recent_income,
+        'total_net_worth': total_net_worth,
+        'crypto_value': crypto_value,
+        'bank_value': bank_value,
+        'months': months,
+        'income_data': income_data,
+        'portfolio_labels': portfolio_labels,
+        'portfolio_data': portfolio_data,
+    }
+    
+    return render(request, 'core/dashboard.html', context)
 
 
 def login_view(request):
@@ -74,17 +87,3 @@ def logout_view(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
     return render(request, 'core/logout.html')
-
-    context = {
-        'monthly_income': monthly_income,
-        'recent_income': recent_income,
-        'total_net_worth': total_net_worth,
-        'crypto_value': crypto_value,
-        'bank_value': bank_value,
-        'months': months,
-        'income_data': income_data,
-        'portfolio_labels': portfolio_labels,
-        'portfolio_data': portfolio_data,
-    }
-    
-    return render(request, 'core/dashboard.html', context)
