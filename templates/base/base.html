@@ -116,7 +116,7 @@
                     <a href="{% url 'bank_list' %}" class="nav-link {% if '/portfolio/bank/' in request.path %}active{% endif %}">
                         <i class="fas fa-university me-2"></i> Bank Accounts
                     </a>
-                    <a href="{% url 'category_list' %}" class="nav-link {% if '/income/categories/' in request.path %}active{% endif %}">
+                    <a href="{% url 'income:category_list' %}" class="nav-link {% if '/income/categories/' in request.path %}active{% endif %}">
                         <i class="fas fa-tags me-2"></i> Categories
                     </a>
                     <a href="{% url 'logout' %}" class="nav-link mt-4">
