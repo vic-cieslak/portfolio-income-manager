@@ -1,49 +1,51 @@
 
-<table class="table table-bordered table-cyber">
-  <thead>
-    <tr class="text-center">
-      <th>Sun</th>
-      <th>Mon</th>
-      <th>Tue</th>
-      <th>Wed</th>
-      <th>Thu</th>
-      <th>Fri</th>
-      <th>Sat</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for week in month_days %}
-      <tr>
-        {% for day, is_current_month in week %}
-        <td class="{% if not is_current_month %}text-muted{% endif %} calendar-cell">
-          {% if day != 0 %}
-          <div class="day-number">{{ day }}</div>
-
-          {% if is_current_month %}
-            {% for income in month_incomes %}
-              {% if income.date.day == day %}
-              <div 
-                class="income-entry cursor-pointer {% if income.description %}has-description{% endif %}" 
-                data-income-id="{{ income.id }}"
-                data-amount="{{ income.amount }}"
-                data-date="{{ income.date|date:'Y-m-d' }}"
-                data-description="{{ income.description|default:'' }}"
-              >
-                ${{ income.amount }}
-                {% if income.description %}
-                  <span class="description-indicator" title="Has description">•</span>
-                {% endif %}
-              </div>
-              {% endif %}
-            {% endfor %}
-          {% endif %}
-          {% endif %}
-        </td>
-        {% endfor %}
+<div class="table-responsive">
+  <table class="table table-bordered table-cyber">
+    <thead>
+      <tr class="text-center">
+        <th>Sun</th>
+        <th>Mon</th>
+        <th>Tue</th>
+        <th>Wed</th>
+        <th>Thu</th>
+        <th>Fri</th>
+        <th>Sat</th>
       </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      {% for week in month_days %}
+        <tr>
+          {% for day, is_current_month in week %}
+          <td class="{% if not is_current_month %}text-muted{% endif %} calendar-cell">
+            {% if day != 0 %}
+            <div class="day-number">{{ day }}</div>
+
+            {% if is_current_month %}
+              {% for income in month_incomes %}
+                {% if income.date.day == day %}
+                <div 
+                  class="income-entry cursor-pointer {% if income.description %}has-description{% endif %}" 
+                  data-income-id="{{ income.id }}"
+                  data-amount="{{ income.amount }}"
+                  data-date="{{ income.date|date:'Y-m-d' }}"
+                  data-description="{{ income.description|default:'' }}"
+                >
+                  ${{ income.amount }}
+                  {% if income.description %}
+                    <span class="description-indicator" title="Has description">•</span>
+                  {% endif %}
+                </div>
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+            {% endif %}
+          </td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 <style>
   .table-cyber {
@@ -136,6 +138,39 @@
     100% {
       transform: scale(1);
       opacity: 1;
+    }
+  }
+
+  /* Responsive styles for mobile devices */
+  @media (max-width: 768px) {
+    .calendar-cell {
+      height: 80px;
+      font-size: 0.9em;
+    }
+
+    .day-number {
+      font-size: 0.8em;
+    }
+
+    .income-entry {
+      font-size: 0.8em;
+      padding: 1px 3px;
+      margin-top: 25px;
+    }
+
+    .description-indicator {
+      font-size: 1em;
+    }
+  }
+
+  /* Touch-friendly styles for mobile */
+  @media (hover: none) and (pointer: coarse) {
+    .income-entry:hover {
+      transform: none;
+    }
+
+    .income-entry:active {
+      transform: scale(0.95);
     }
   }
 </style>

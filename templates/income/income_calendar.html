@@ -5,43 +5,59 @@
 {% block title %}Income Calendar{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-  <h1>Income Calendar - {{ year }} {{ month_name }}</h1>
+<div class="container-fluid mt-4">
+  <h1 class="text-center mb-4 responsive-text">Income Calendar - {{ year }} {{ month_name }}</h1>
   
   <div class="d-flex justify-content-between mb-3">
-    <a href="{% url 'income:calendar' year=prev_year month=prev_month %}" class="btn btn-outline-primary">
-      &laquo; Previous Month
+    <a href="{% url 'income:calendar' year=prev_year month=prev_month %}" class="btn btn-outline-primary btn-sm">
+      <i class="fas fa-chevron-left d-none d-md-inline"></i>
+      <span class="d-md-none">Prev</span>
+      <span class="d-none d-md-inline">Previous Month</span>
     </a>
-    <a href="{% url 'income:calendar' %}" class="btn btn-primary">Today</a>
-    <a href="{% url 'income:calendar' year=next_year month=next_month %}" class="btn btn-outline-primary">
-      Next Month &raquo;
+    <a href="{% url 'income:calendar' %}" class="btn btn-primary btn-sm">Today</a>
+    <a href="{% url 'income:calendar' year=next_year month=next_month %}" class="btn btn-outline-primary btn-sm">
+      <span class="d-md-none">Next</span>
+      <span class="d-none d-md-inline">Next Month</span>
+      <i class="fas fa-chevron-right d-none d-md-inline"></i>
     </a>
   </div>
 
-  {% include 'income/partials/calendar_table.html' %}
+  <div class="table-responsive">
+    {% include 'income/partials/calendar_table.html' %}
+  </div>
 
   <div class="mt-4">
-    <h3>Monthly Summary</h3>
-    <p>Total Income for {{ month_name }} {{ year }}: <strong>$<span id="total-income">{{ total_income }}</span></strong></p>
+    <h3 class="responsive-text">Monthly Summary</h3>
+    <p class="responsive-text">Total Income for {{ month_name }} {{ year }}: <strong>$<span id="total-income">{{ total_income }}</span></strong></p>
     
-    <h4>Breakdown by Category</h4>
-    <ul class="list-group" id="category-breakdown">
-      {% for category, amount in category_breakdown.items %}
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-          {{ category }}
-          <span class="badge bg-primary rounded-pill">${{ amount }}</span>
-        </li>
-      {% endfor %}
-    </ul>
+    <h4 class="responsive-text">Breakdown by Category</h4>
+    <div class="table-responsive">
+      <table class="table table-sm table-hover" id="category-breakdown">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for category, amount in category_breakdown.items %}
+            <tr>
+              <td>{{ category }}</td>
+              <td>${{ amount }}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
 <!-- Modal for editing income -->
 <div class="modal fade" id="editIncomeModal" tabindex="-1" aria-labelledby="editIncomeModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
+  <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
     <div class="modal-content custom-modal card-cyber">
       <div class="modal-header custom-modal-header">
-        <h5 class="modal-title text-neon glitch-text" id="editIncomeModalLabel" data-text="Edit Income">
+        <h5 class="modal-title text-neon glitch-text responsive-text" id="editIncomeModalLabel" data-text="Edit Income">
           <i class="fas fa-edit me-2"></i>Edit Income
         </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -49,21 +65,21 @@
       <div class="modal-body custom-modal-body">
         <form id="editIncomeForm">
           <input type="hidden" id="incomeId" name="income_id">
-          <div class="mb-4">
+          <div class="mb-3">
             <label for="incomeAmount" class="form-label text-neon">Amount</label>
             <div class="input-group">
               <span class="input-group-text bg-cyber"><i class="fas fa-dollar-sign"></i></span>
               <input type="number" class="form-control custom-input bg-cyber" id="incomeAmount" name="amount" step="0.01" required>
             </div>
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
             <label for="incomeDate" class="form-label text-neon">Date</label>
             <div class="input-group">
               <span class="input-group-text bg-cyber"><i class="fas fa-calendar-alt"></i></span>
               <input type="date" class="form-control custom-input bg-cyber" id="incomeDate" name="date" required>
             </div>
           </div>
-          <div class="mb-4">
+          <div class="mb-3">
             <label for="incomeDescription" class="form-label text-neon">
               <i class="fas fa-microchip me-2"></i>Description
             </label>
@@ -97,23 +113,23 @@
     background-color: var(--background-darker);
     color: var(--primary-color);
     border-bottom: 1px solid var(--border-color);
-    padding: 1.5rem;
+    padding: 1rem;
   }
   
   .custom-modal-body {
-    padding: 2rem;
+    padding: 1rem;
     background-color: var(--background-dark);
   }
   
   .custom-modal-footer {
     border-top: 1px solid var(--border-color);
-    padding: 1.5rem;
+    padding: 1rem;
     background-color: var(--background-darker);
   }
   
   .custom-input {
     border: 1px solid var(--border-color);
-    padding: 0.75rem;
+    padding: 0.5rem;
     transition: all 0.3s ease;
     color: var(--text-primary);
   }
@@ -291,10 +307,80 @@
       transform: translate(0);
     }
   }
+
+  /* Responsive styles */
+  .responsive-text {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+  }
+
+  @media (max-width: 768px) {
+    .custom-modal-header,
+    .custom-modal-body,
+    .custom-modal-footer {
+      padding: 0.75rem;
+    }
+
+    .custom-input {
+      padding: 0.4rem;
+    }
+
+    .btn {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Improve touch target size for mobile */
+  @media (max-width: 768px) {
+    .btn,
+    .form-control,
+    .input-group-text {
+      min-height: 44px;
+    }
+  }
+
+  /* Additional mobile-friendly styles */
+  @media (max-width: 576px) {
+    .container-fluid {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+
+    .table-responsive {
+      margin-left: -10px;
+      margin-right: -10px;
+    }
+
+    .modal-fullscreen-sm-down {
+      padding: 0;
+    }
+
+    .modal-fullscreen-sm-down .modal-content {
+      border: none;
+      border-radius: 0;
+      min-height: 100vh;
+    }
+  }
+
+  /* Pull-to-refresh styles */
+  .pull-to-refresh {
+    height: 60px;
+    text-align: center;
+    line-height: 60px;
+    color: var(--text-secondary);
+    font-size: 14px;
+    transition: all 0.3s ease;
+  }
+
+  .pull-to-refresh.refreshing {
+    height: 0;
+    opacity: 0;
+  }
 </style>
 {% endblock %}
 
 {% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"></script>
 <script>
   console.log('Income calendar script loaded');
   document.addEventListener('DOMContentLoaded', function() {
@@ -305,6 +391,7 @@
     const modalBody = document.querySelector('.modal-body');
     const descriptionTextarea = document.getElementById('incomeDescription');
     const descriptionCounter = document.getElementById('descriptionCounter');
+    const calendarContainer = document.querySelector('.table-responsive');
 
     console.log('Modal:', editIncomeModal);
     console.log('Form:', editIncomeForm);
@@ -460,6 +547,70 @@
         }
       }
       return cookieValue;
+    }
+
+    // Swipe gesture for navigating between months
+    const hammer = new Hammer(calendarContainer);
+    hammer.on('swipeleft swiperight', function(ev) {
+      if (ev.type === 'swipeleft') {
+        document.querySelector('a[href*="next_month"]').click();
+      } else if (ev.type === 'swiperight') {
+        document.querySelector('a[href*="prev_month"]').click();
+      }
+    });
+
+    // Pull-to-refresh functionality
+    let pullStartY = 0;
+    let pullMoveY = 0;
+    let dist = 0;
+    let threshold = 100;
+
+    calendarContainer.addEventListener('touchstart', function(e) {
+      pullStartY = e.touches[0].screenY;
+    });
+
+    calendarContainer.addEventListener('touchmove', function(e) {
+      if (calendarContainer.scrollTop === 0) {
+        pullMoveY = e.touches[0].screenY;
+        dist = pullMoveY - pullStartY;
+
+        if (dist > 0) {
+          e.preventDefault();
+          showPullToRefresh(dist);
+        }
+      }
+    });
+
+    calendarContainer.addEventListener('touchend', function() {
+      if (dist > threshold) {
+        refreshCalendar();
+      } else {
+        hidePullToRefresh();
+      }
+      dist = 0;
+    });
+
+    function showPullToRefresh(distance) {
+      const pullToRefreshElement = document.querySelector('.pull-to-refresh');
+      pullToRefreshElement.style.height = `${Math.min(distance / 2, 60)}px`;
+      pullToRefreshElement.style.opacity = Math.min(distance / 100, 1);
+    }
+
+    function hidePullToRefresh() {
+      const pullToRefreshElement = document.querySelector('.pull-to-refresh');
+      pullToRefreshElement.style.height = '0';
+      pullToRefreshElement.style.opacity = '0';
+    }
+
+    function refreshCalendar() {
+      const pullToRefreshElement = document.querySelector('.pull-to-refresh');
+      pullToRefreshElement.classList.add('refreshing');
+      pullToRefreshElement.textContent = 'Refreshing...';
+
+      // Simulate a refresh (replace this with actual refresh logic)
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
     }
   });
 </script>
