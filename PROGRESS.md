@@ -31,15 +31,12 @@
 - Add support for more cryptocurrencies and detailed market data
 - Consider alternative data sources if CoinGecko continues to be unreliable
 
-## 6. Add settings page
+## 6. Add settings page [in progress]
 - Add new views and templates in the core app for settings management
 - Create a UserSettings model to store user-specific settings
 - Implement functionality to change currency, set API tokens, and customize site name
 - Ensure settings are applied consistently across the application
 
-## 7. Remove line effect
-- Identify the source of the effect in static/css/custom.css or static/js/cyberpunk.js
-- Modify or remove the relevant CSS or JavaScript code
 
 ## 8. Click-to-edit income in calendar
 - Modify income/views.py and templates/income/income_calendar.html
