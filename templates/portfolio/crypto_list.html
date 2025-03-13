@@ -80,55 +80,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    const ctx = document.getElementById('cryptoChart').getContext('2d');
+// Extract data from Django template
+const cryptoNames = [
+    {% for crypto in cryptocurrencies %}
+        "{{ crypto.symbol }}",
+    {% endfor %}
+];
 
-    // Extract data from Django template
-    const cryptoNames = [
-        {% for crypto in cryptocurrencies %}
-            "{{ crypto.symbol }}",
-        {% endfor %}
-    ];
+const cryptoValues = [
+    {% for crypto in cryptocurrencies %}
+        {{ crypto.current_value }},
+    {% endfor %}
+];
 
-    const cryptoValues = [
-        {% for crypto in cryptocurrencies %}
-            {{ crypto.current_value }},
-        {% endfor %}
-    ];
-
-    // Define cyberpunk-style colors
-    const colors = [
-        '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138', 
-        '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
-    ];
-
-    const myChart = new Chart(ctx, {
-        type: 'doughnut',
-        data: {
-            labels: cryptoNames,
-            datasets: [{
-                data: cryptoValues,
-                backgroundColor: colors.slice(0, cryptoNames.length),
-                borderColor: '#000',
-                borderWidth: 2
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    labels: {
-                        color: '#0ff',
-                        font: {
-                            family: 'monospace',
-                            size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const label = context.label || '';
-                            const value = context.raw || 0;
+// Define cyberpunk-style colors
+const colors = [
+    '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138', 
+    '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
+];
+</script>
+<script src="/static/js/charts.js"></script>w || 0;
                             const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
                             const percentage = Math.round((value / total) * 100);
                             return `${label}: PLN ${value.toFixed(2)} (${percentage}%)`;

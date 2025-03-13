@@ -98,42 +98,11 @@
 
 {% block scripts %}
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Portfolio chart
-    const ctx = document.getElementById('portfolioChart').getContext('2d');
-    
-    new Chart(ctx, {
-        type: 'pie',
-        data: {
-            labels: ['Crypto', 'Bank/Cash'],
-            datasets: [{
-                data: [{{ crypto_value }}, {{ bank_value }}],
-                backgroundColor: [
-                    'rgba(0, 255, 170, 0.7)',
-                    'rgba(0, 149, 255, 0.7)'
-                ],
-                borderColor: [
-                    'rgba(0, 255, 170, 1)',
-                    'rgba(0, 149, 255, 1)'
-                ],
-                borderWidth: 1
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        color: '#c4e0e5'
-                    }
-                }
-            }
-        }
-    });
-});
-</script>
+    // Define data for charts
+    const portfolioLabels = {{ portfolio_labels|safe }};
+    const portfolioData = {{ portfolio_data|safe }};
+    </script>
+<script src="/static/js/charts.js"></script>
 <script>
     // Monthly Income Chart
     var incomeCtx = document.getElementById('incomeChart').getContext('2d');
@@ -224,98 +193,6 @@ document.addEventListener('DOMContentLoaded', function() {
             animation: {
                 duration: 2000,
                 easing: 'easeOutQuart'
-            }
-        }
-    });
-
-    // Portfolio Allocation Chart
-    var portfolioCtx = document.getElementById('portfolioChart').getContext('2d');
-    var portfolioChart = new Chart(portfolioCtx, {
-        type: 'doughnut',
-        data: {
-            labels: {{ portfolio_labels|safe }},
-            datasets: [{
-                data: {{ portfolio_data|safe }},
-                backgroundColor: [
-                    'rgba(255, 171, 0, 0.8)',  // Crypto - yellow/gold
-                    'rgba(33, 150, 243, 0.8)', // Bank - blue
-                ],
-                borderColor: [
-                    'rgba(255, 171, 0, 1)',
-                    'rgba(33, 150, 243, 1)',
-                ],
-                borderWidth: 2,
-                hoverBackgroundColor: [
-                    'rgba(255, 171, 0, 0.9)',
-                    'rgba(33, 150, 243, 0.9)',
-                ],
-                hoverBorderWidth: 3,
-                hoverOffset: 8
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            cutout: '65%',
-            plugins: {
-                legend: {
-                    position: 'bottom',
-                    labels: {
-                        font: {
-                            family: 'Inter, sans-serif',
-                            size: 13,
-                            weight: 500
-                        },
-                        color: '#b0b0b0',
-                        padding: 20,
-                        generateLabels: function(chart) {
-                            var data = chart.data;
-                            return data.labels.map(function(label, i) {
-                                var value = data.datasets[0].data[i];
-                                var total = data.datasets[0].data.reduce(function(acc, val) { return acc + val; }, 0);
-                                var percentage = Math.round((value / total) * 100);
-                                return {
-                                    text: label + ': ' + percentage + '%',
-                                    fillStyle: data.datasets[0].backgroundColor[i],
-                                    strokeStyle: data.datasets[0].borderColor[i],
-                                    lineWidth: data.datasets[0].borderWidth,
-                                    hidden: false,
-                                    index: i
-                                };
-                            });
-                        }
-                    }
-                },
-                tooltip: {
-                    backgroundColor: 'rgba(20, 20, 20, 0.9)',
-                    titleFont: {
-                        family: 'Inter, sans-serif',
-                        size: 13
-                    },
-                    bodyFont: {
-                        family: 'Inter, sans-serif',
-                        size: 14,
-                        weight: 500
-                    },
-                    padding: 12,
-                    cornerRadius: 8,
-                    displayColors: false,
-                    callbacks: {
-                        label: function(context) {
-                            var label = context.label || '';
-                            var value = context.raw || 0;
-                            var total = context.dataset.data.reduce(function(acc, val) { return acc + val; }, 0);
-                            var percentage = Math.round((value / total) * 100);
-                            return label + ': PLN ' + value.toLocaleString() + ' (' + percentage + '%)';
-                        }
-                    }
-                }
-            },
-            animation: {
-                animateRotate: true,
-                animateScale: true,
-                duration: 2000,
-                easing: 'easeOutCirc'
             }
         }
     });
