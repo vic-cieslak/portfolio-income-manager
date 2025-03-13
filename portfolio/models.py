@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 
 class Cryptocurrency(models.Model):
+    # CoinGecko ID (e.g., 'bitcoin', 'ethereum')
+    coin_id = models.CharField(max_length=100, null=True, blank=True)
     name = models.CharField(max_length=100)
     symbol = models.CharField(max_length=10)
     quantity = models.DecimalField(max_digits=18, decimal_places=8)
@@ -19,7 +21,9 @@ class Cryptocurrency(models.Model):
     @property
     def current_value(self):
         if self.current_price:
-            return self.quantity * self.current_price
+            from decimal import Decimal
+            # Convert current_price to Decimal before multiplication
+            return self.quantity * Decimal(str(self.current_price))
         return 0
 
 class BankAccount(models.Model):

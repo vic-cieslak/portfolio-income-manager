@@ -1,19 +1,24 @@
-
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-import requests
 from .models import Cryptocurrency, BankAccount
 from .forms import CryptocurrencyForm, BankAccountForm
+from .services import CoinGeckoService
 import json
 
 @login_required
 def crypto_list(request):
-    # Update crypto prices
-    update_crypto_prices()
-    
+    # Get all cryptocurrencies
     cryptocurrencies = Cryptocurrency.objects.all()
+    
+    try:
+        # Update crypto prices
+        CoinGeckoService.update_crypto_prices(cryptocurrencies)
+    except Exception as e:
+        messages.warning(request, f"Could not update cryptocurrency prices: {str(e)}")
+    
+    # Calculate total value
     total_value = sum(crypto.current_value for crypto in cryptocurrencies)
     
     return render(request, 'portfolio/crypto_list.html', {
@@ -27,31 +32,25 @@ def crypto_create(request):
         form = CryptocurrencyForm(request.POST)
         if form.is_valid():
             crypto = form.save(commit=False)
-            # Get initial price using CoinGecko ID (which is now stored in name field)
-            try:
-                coin_id = crypto.name  # This is now the CoinGecko ID
-                response = requests.get(
-                    f'https://api.coingecko.com/api/v3/simple/price?ids={coin_id}&vs_currencies=pln'
-                )
-                data = response.json()
-                if coin_id in data:
-                    crypto.current_price = data[coin_id]['pln']
-                    crypto.last_updated = timezone.now()
-                    
-                    # Map the symbol based on the selected cryptocurrency
-                    symbols = {
-                        'bitcoin': 'BTC',
-                        'shiba-inu': 'SHIB',
-                        'bonk': 'BONK',
-                        'monero': 'XMR'
-                    }
-                    crypto.symbol = symbols.get(coin_id, crypto.symbol)
-            except Exception as e:
-                messages.warning(request, f'Could not fetch price: {str(e)}')
             
-            crypto.save()
-            messages.success(request, 'Cryptocurrency added successfully!')
-            return redirect('crypto_list')
+            # Get coin data from CoinGecko
+            coin_id = form.cleaned_data['coin_id']
+            coin_data = CoinGeckoService.get_coin_data(coin_id)
+            
+            if coin_data:
+                crypto.coin_id = coin_data['id']
+                crypto.name = coin_data['name']
+                crypto.symbol = coin_data['symbol']
+                crypto.current_price = coin_data['current_price']
+                crypto.last_updated = timezone.now()
+                crypto.save()
+                
+                messages.success(request, 'Cryptocurrency added successfully!')
+                return redirect('crypto_list')
+            else:
+                messages.error(request, 'Could not fetch cryptocurrency data. Please try again.')
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CryptocurrencyForm()
     
@@ -64,7 +63,25 @@ def crypto_update(request, pk):
     if request.method == 'POST':
         form = CryptocurrencyForm(request.POST, instance=crypto)
         if form.is_valid():
-            form.save()
+            updated_crypto = form.save(commit=False)
+            
+            # Get coin data from CoinGecko
+            coin_id = form.cleaned_data['coin_id']
+            
+            # Only update coin details if the coin_id has changed
+            if coin_id != crypto.coin_id:
+                coin_data = CoinGeckoService.get_coin_data(coin_id)
+                
+                if coin_data:
+                    updated_crypto.coin_id = coin_data['id']
+                    updated_crypto.name = coin_data['name']
+                    updated_crypto.symbol = coin_data['symbol']
+                    updated_crypto.current_price = coin_data['current_price']
+                else:
+                    messages.warning(request, 'Could not fetch updated cryptocurrency data, but quantity was updated.')
+            
+            updated_crypto.last_updated = timezone.now()
+            updated_crypto.save()
             messages.success(request, 'Cryptocurrency updated successfully!')
             return redirect('crypto_list')
     else:
@@ -77,8 +94,9 @@ def crypto_delete(request, pk):
     crypto = get_object_or_404(Cryptocurrency, pk=pk)
     
     if request.method == 'POST':
+        name = crypto.name
         crypto.delete()
-        messages.success(request, 'Cryptocurrency deleted successfully!')
+        messages.success(request, f'{name} deleted successfully from your portfolio!')
         return redirect('crypto_list')
     
     return render(request, 'portfolio/crypto_confirm_delete.html', {'crypto': crypto})
@@ -132,23 +150,4 @@ def bank_delete(request, pk):
     
     return render(request, 'portfolio/bank_confirm_delete.html', {'account': account})
 
-def update_crypto_prices():
-    """Update cryptocurrency prices from CoinGecko API"""
-    cryptocurrencies = Cryptocurrency.objects.all()
-    if not cryptocurrencies:
-        return
-    
-    # Get all crypto IDs (name field now contains CoinGecko ID)
-    crypto_ids = ",".join([crypto.name for crypto in cryptocurrencies])
-    
-    try:
-        response = requests.get(f'https://api.coingecko.com/api/v3/simple/price?ids={crypto_ids}&vs_currencies=pln')
-        data = response.json()
-        
-        for crypto in cryptocurrencies:
-            if crypto.name in data:
-                crypto.current_price = data[crypto.name]['pln']
-                crypto.last_updated = timezone.now()
-                crypto.save()
-    except Exception as e:
-        print(f"Error updating crypto prices: {str(e)}")
+# Removed update_crypto_prices function as it's now handled by CoinGeckoService

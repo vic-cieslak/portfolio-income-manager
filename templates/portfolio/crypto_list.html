@@ -33,14 +33,7 @@
                 {% for crypto in cryptocurrencies %}
                 <tr>
                     <td class="text-neon">{{ crypto.symbol }}</td>
-                    <td>
-                        {% if crypto.name == 'bitcoin' %}Bitcoin
-                        {% elif crypto.name == 'shiba-inu' %}Shiba Inu
-                        {% elif crypto.name == 'bonk' %}Bonk
-                        {% elif crypto.name == 'monero' %}Monero
-                        {% else %}{{ crypto.name }}
-                        {% endif %}
-                    </td>
+                    <td>{{ crypto.name }}</td>
                     <td>{{ crypto.quantity }}</td>
                     <td>PLN {{ crypto.current_price|default:"-"|floatformat:2 }}</td>
                     <td class="text-highlight">PLN {{ crypto.current_value|floatformat:2 }}</td>
@@ -80,42 +73,27 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-// Extract data from Django template
-const cryptoNames = [
-    {% for crypto in cryptocurrencies %}
-        "{{ crypto.symbol }}",
-    {% endfor %}
-];
-
-const cryptoValues = [
-    {% for crypto in cryptocurrencies %}
-        {{ crypto.current_value }},
-    {% endfor %}
-];
-
-// Define cyberpunk-style colors
-const colors = [
-    '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138', 
-    '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
-];
-
-// Ensure text is visible
+// Prepare data for chart
 document.addEventListener('DOMContentLoaded', function() {
-    // This will be handled by charts.js, but we're ensuring text color settings are applied
+    // Extract data from Django template
+    const cryptoNames = [{% for crypto in cryptocurrencies %}"{{ crypto.symbol }}"{% if not forloop.last %},{% endif %}{% endfor %}];
+    const cryptoValues = [{% for crypto in cryptocurrencies %}{{ crypto.current_value }}{% if not forloop.last %},{% endif %}{% endfor %}];
+    
+    // Define cyberpunk-style colors
+    const colors = [
+        '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138',
+        '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
+    ];
+    
+    // Set chart defaults
     Chart.defaults.color = '#e0e0ff';
+    
+    // Make data available globally for charts.js
+    window.cryptoNames = cryptoNames;
+    window.cryptoValues = cryptoValues;
+    window.colors = colors;
 });
 </script>
-<script src="/static/js/charts.js"></script>w || 0;
-                            const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
-                            const percentage = Math.round((value / total) * 100);
-                            return `${label}: PLN ${value.toFixed(2)} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-});
-</script>
+<script src="/static/js/charts.js"></script>
 {% endif %}
 {% endblock %}
