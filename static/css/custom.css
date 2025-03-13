@@ -491,29 +491,6 @@ body {
   }
 }
 
-/* Scan line effect */
-.scan-line {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 5px;
-  background: rgba(0, 255, 157, 0.2);
-  z-index: 9999;
-  opacity: 0.75;
-  pointer-events: none;
-  animation: scanline 6s linear infinite;
-}
-
-@keyframes scanline {
-  0% {
-    top: 0%;
-  }
-  100% {
-    top: 100%;
-  }
-}
-
 /* Add a subtle grid pattern to the background */
 .grid-overlay {
   position: fixed;
@@ -661,7 +638,6 @@ body {
   width: 100%;
   height: 2px;
   background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
-  animation: scanline 4s linear infinite;
 }
 
 .card-cyber .card-header {
