@@ -269,6 +269,7 @@ body {
   color: var(--text-primary);
   border-collapse: separate;
   border-spacing: 0 5px;
+  background-color: transparent;
 }
 
 .table thead th {
@@ -297,6 +298,47 @@ body {
   border-top: none;
   padding: 1rem;
   vertical-align: middle;
+  background-color: transparent;
+}
+
+/* Override Bootstrap table striped styles */
+.table-striped > tbody > tr:nth-of-type(odd) {
+  background-color: rgba(16, 21, 34, 0.7);
+  color: var(--text-primary);
+}
+
+.table-striped > tbody > tr:nth-of-type(even) {
+  background-color: rgba(10, 14, 23, 0.9);
+  color: var(--text-primary);
+}
+
+.table-hover tbody tr:hover {
+  background-color: rgba(0, 255, 157, 0.05) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Ensure table cells don't have white background and text is visible */
+.table-striped tbody tr td {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.table-hover tbody tr td {
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+/* Additional styling for all tables */
+.table {
+  color: var(--text-primary) !important;
+}
+
+.table tbody tr {
+  color: var(--text-primary);
+}
+
+.table td, .table th {
+  color: var(--text-primary);
 }
 
 .form-control, .form-select {
@@ -495,4 +537,247 @@ body {
 .card-cyber .card-body h4 {
     letter-spacing: 1px;
     text-shadow: 0 0 5px #00ff9d, 0 0 10px #00ff9d;
+}
+
+/* Cyberpunk Table */
+.table-cyber {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100%;
+  background: rgba(10, 14, 23, 0.6);
+  border: 1px solid var(--border-color);
+  position: relative;
+  overflow: hidden;
+}
+
+.table-cyber thead th {
+  background: rgba(0, 0, 0, 0.5);
+  color: var(--primary-color);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  padding: 15px;
+  font-size: 0.9rem;
+  border-bottom: 2px solid var(--primary-color);
+  text-shadow: 0 0 10px var(--glow-color);
+  position: relative;
+}
+
+.table-cyber tbody tr {
+  background: transparent;
+  transition: all 0.3s ease;
+  border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+}
+
+.table-cyber tbody tr:hover {
+  background: rgba(0, 255, 157, 0.05);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3), 0 0 5px var(--glow-color);
+}
+
+.table-cyber td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(0, 255, 157, 0.1);
+  position: relative;
+}
+
+.table-cyber td:before {
+  content: attr(data-terminal);
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 0.7rem;
+  opacity: 0.5;
+  color: var(--primary-color);
+}
+
+/* Neon Text */
+.text-neon {
+  color: var(--primary-color);
+  text-shadow: 0 0 5px var(--glow-color), 0 0 10px var(--glow-color);
+  letter-spacing: 1px;
+  position: relative;
+  display: inline-block;
+}
+
+/* Cyberpunk Button */
+.btn-cyber {
+  background: linear-gradient(45deg, var(--background-dark), var(--primary-dark));
+  border: 1px solid var(--primary-color);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  overflow: hidden;
+  padding: 10px 25px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(0, 255, 157, 0.3);
+  clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+}
+
+.btn-cyber:hover {
+  background: linear-gradient(45deg, var(--primary-dark), var(--background-dark));
+  box-shadow: 0 0 20px rgba(0, 255, 157, 0.5);
+  transform: translateY(-3px);
+}
+
+.btn-cyber:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: all 0.6s ease;
+}
+
+.btn-cyber:hover:before {
+  left: 100%;
+}
+
+/* Small Cyberpunk Button */
+.btn-cyber-sm {
+  padding: 5px 15px;
+  font-size: 0.8rem;
+  clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+}
+
+/* Cyberpunk Card */
+.card-cyber {
+  background: linear-gradient(135deg, var(--card-bg), rgba(10, 14, 23, 0.9));
+  border: 1px solid var(--border-color);
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(15px 0, 100% 0, 100% calc(100% - 15px), calc(100% - 15px) 100%, 0 100%, 0 15px);
+}
+
+.card-cyber:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--primary-color), transparent);
+  animation: scanline 4s linear infinite;
+}
+
+.card-cyber .card-header {
+  background: rgba(0, 0, 0, 0.4);
+  border-bottom: 1px solid var(--border-color);
+  padding: 15px 20px;
+}
+
+/* Cyberpunk Background */
+.bg-cyber {
+  background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 20, 0.9));
+  position: relative;
+  overflow: hidden;
+}
+
+.bg-cyber:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: 
+    linear-gradient(rgba(0, 255, 157, 0.1) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 157, 0.1) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+  opacity: 0.2;
+}
+
+/* Highlighted Text */
+.text-highlight {
+  color: var(--warning-color);
+  font-weight: bold;
+  text-shadow: 0 0 5px rgba(255, 157, 0, 0.6);
+  letter-spacing: 0.5px;
+}
+
+/* Form Styling for Cyberpunk Theme */
+.form-control, .form-select, .textInput, .select, .textarea, .numberInput, .dateInput {
+  background-color: rgba(10, 14, 23, 0.8) !important;
+  border: 1px solid var(--border-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 0 !important;
+  padding: 12px 15px !important;
+  transition: all 0.3s ease;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.form-control:focus, .form-select:focus, .textInput:focus, .select:focus, .textarea:focus, .numberInput:focus, .dateInput:focus {
+  background-color: rgba(16, 21, 34, 0.9) !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
+}
+
+.form-label, .control-label {
+  color: var(--text-secondary) !important;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.form-text, .help-block {
+  color: var(--text-muted) !important;
+  font-size: 0.8rem;
+}
+
+/* DatePicker Cyberpunk Styling */
+.datepicker-dropdown {
+  background-color: var(--card-bg) !important;
+  border: 1px solid var(--border-color) !important;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--glow-color) !important;
+  border-radius: 0 !important;
+  padding: 10px !important;
+}
+
+.datepicker table tr td, .datepicker table tr th {
+  color: var(--text-primary) !important;
+  border-radius: 0 !important;
+}
+
+.datepicker table tr td.active, .datepicker table tr td.active:hover {
+  background-color: var(--primary-color) !important;
+  color: var(--background-dark) !important;
+  text-shadow: none !important;
+}
+
+.datepicker table tr td:hover {
+  background-color: rgba(0, 255, 157, 0.2) !important;
+}
+
+.datepicker .datepicker-switch, .datepicker .prev, .datepicker .next {
+  color: var(--primary-color) !important;
+}
+
+.datepicker .datepicker-switch:hover, .datepicker .prev:hover, .datepicker .next:hover {
+  background-color: rgba(0, 255, 157, 0.1) !important;
+}
+
+/* Crispy Forms Styling */
+.asteriskField {
+  color: var(--danger-color);
+  margin-left: 3px;
+}
+
+.alert-block {
+  background-color: rgba(255, 42, 109, 0.1) !important;
+  border: 1px solid var(--danger-color) !important;
+  color: var(--text-primary) !important;
+  border-radius: 0 !important;
+}
+
+.invalid-feedback {
+  color: var(--danger-color) !important;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
 }
