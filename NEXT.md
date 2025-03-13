@@ -1,0 +1,11 @@
+- add ability to track portfolio value over time
+- add ability to prognose income / portfolio value.
+- improve portfolio allocation pie chart
+- add ability to track expenses.
+- improve cryptocurrency fetching
+- add settings page (set currency, set coingecko api token, set site name) 
+- remove that weird effect of line coming down
+- add ability to click on income in calendar to change it
+- fix breakdown in calendar page. (wrong currency)
+- client management
+- fetching crypto prices via coin gecko doesnt work well

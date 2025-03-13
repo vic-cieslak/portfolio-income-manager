@@ -162,3 +162,7 @@ cython_debug/
 # Nix
 /result
 /result-*
+
+# Django staticfiles
+/staticfiles/
+
