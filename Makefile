@@ -3,7 +3,7 @@
 # This Makefile provides commands for common Django development tasks.
 # Run 'make help' to see available commands.
 
-.PHONY: help install run shell collectstatic migrate makemigrations fake-data resetdb test lint clean
+.PHONY: help install run shell collectstatic migrate makemigrations fake-data resetdb superuser test lint clean
 
 # Variables
 PYTHON = python
@@ -31,6 +31,7 @@ help:
 	@echo "  $(GREEN)make makemigrations$(NC)- Create new migrations"
 	@echo "  $(GREEN)make fake-data$(NC)     - Generate fake data for testing"
 	@echo "  $(GREEN)make resetdb$(NC)       - Reset the database (drop and recreate)"
+	@echo "  $(GREEN)make superuser$(NC)     - Create a Django superuser"
 	@echo "  $(GREEN)make test$(NC)          - Run tests"
 	@echo "  $(GREEN)make lint$(NC)          - Run linting checks"
 	@echo "  $(GREEN)make clean$(NC)         - Clean temporary files"
@@ -83,6 +84,11 @@ resetdb:
 	else \
 		echo "$(YELLOW)Database reset aborted.$(NC)"; \
 	fi
+
+superuser:
+	@echo "$(BLUE)Creating superuser...$(NC)"
+	$(MANAGE) createsuperuser
+	@echo "$(GREEN)Superuser created.$(NC)"
 
 # Testing and maintenance
 test:

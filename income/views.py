@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from django.db.models import Sum
 from django.utils import timezone
 import calendar
@@ -160,7 +161,3 @@ def category_update(request, pk):
         form = IncomeCategoryForm(instance=category)
 
     return render(request, 'income/category_form.html', {'form': form, 'title': 'Update Category'})
-
-from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.shortcuts import redirect, get_object_or_404
