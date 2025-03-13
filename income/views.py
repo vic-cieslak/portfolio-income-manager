@@ -136,6 +136,7 @@ def update_income_ajax(request):
     income_id = request.POST.get('income_id')
     new_amount = request.POST.get('amount')
     new_date = request.POST.get('date')
+    new_description = request.POST.get('description', '')
 
     try:
         # Try to get the income object with user filter
@@ -152,12 +153,14 @@ def update_income_ajax(request):
     try:
         income.amount = float(new_amount)
         income.date = datetime.strptime(new_date, '%Y-%m-%d').date()
+        income.description = new_description
         income.save()
         return JsonResponse({
             'success': True,
             'id': income.id,
             'amount': str(income.amount),
-            'date': income.date.strftime('%Y-%m-%d')
+            'date': income.date.strftime('%Y-%m-%d'),
+            'description': income.description
         })
     except ValueError as e:
         return JsonResponse({'success': False, 'error': str(e)}, status=400)

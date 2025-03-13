@@ -63,6 +63,16 @@
               <input type="date" class="form-control custom-input bg-cyber" id="incomeDate" name="date" required>
             </div>
           </div>
+          <div class="mb-4">
+            <label for="incomeDescription" class="form-label text-neon">
+              <i class="fas fa-microchip me-2"></i>Description
+            </label>
+            <div class="description-container">
+              <textarea class="form-control custom-input bg-cyber" id="incomeDescription" name="description" rows="3"></textarea>
+              <div class="data-stream"></div>
+            </div>
+            <div class="character-counter" id="descriptionCounter">0 / 500</div>
+          </div>
         </form>
       </div>
       <div class="modal-footer custom-modal-footer">
@@ -198,6 +208,89 @@
     background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 20, 0.9));
     color: var(--text-primary);
   }
+
+  .description-container {
+    position: relative;
+    overflow: hidden;
+  }
+
+  #incomeDescription {
+    font-family: 'Courier New', monospace;
+    resize: vertical;
+    min-height: 100px;
+    background-image: linear-gradient(rgba(0, 255, 157, 0.05) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 255, 157, 0.05) 1px, transparent 1px);
+    background-size: 20px 20px;
+    background-position: center center;
+  }
+
+  .data-stream {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  .data-stream::before {
+    content: '01001010101110001010101010101010101';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    right: -50%;
+    bottom: -50%;
+    transform: rotate(45deg);
+    font-family: 'Courier New', monospace;
+    font-size: 10px;
+    line-height: 1;
+    color: rgba(0, 255, 157, 0.1);
+    white-space: nowrap;
+    animation: dataStream 20s linear infinite;
+  }
+
+  @keyframes dataStream {
+    0% {
+      transform: translateX(-50%) translateY(-50%) rotate(45deg);
+    }
+    100% {
+      transform: translateX(0%) translateY(0%) rotate(45deg);
+    }
+  }
+
+  .character-counter {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8em;
+    color: var(--text-secondary);
+    text-align: right;
+    margin-top: 0.5em;
+  }
+
+  #incomeDescription:focus {
+    animation: glitchEffect 0.3s infinite;
+  }
+
+  @keyframes glitchEffect {
+    0% {
+      transform: translate(0);
+    }
+    20% {
+      transform: translate(-2px, 2px);
+    }
+    40% {
+      transform: translate(-2px, -2px);
+    }
+    60% {
+      transform: translate(2px, 2px);
+    }
+    80% {
+      transform: translate(2px, -2px);
+    }
+    100% {
+      transform: translate(0);
+    }
+  }
 </style>
 {% endblock %}
 
@@ -210,6 +303,8 @@
     const editIncomeForm = document.getElementById('editIncomeForm');
     const saveIncomeChanges = document.getElementById('saveIncomeChanges');
     const modalBody = document.querySelector('.modal-body');
+    const descriptionTextarea = document.getElementById('incomeDescription');
+    const descriptionCounter = document.getElementById('descriptionCounter');
 
     console.log('Modal:', editIncomeModal);
     console.log('Form:', editIncomeForm);
@@ -224,15 +319,33 @@
         const incomeId = this.dataset.incomeId;
         const amount = this.dataset.amount;
         const date = this.dataset.date;
+        const description = this.dataset.description || '';
 
         document.getElementById('incomeId').value = incomeId;
         document.getElementById('incomeAmount').value = amount;
         document.getElementById('incomeDate').value = date;
+        descriptionTextarea.value = description;
+        updateCharacterCounter();
 
-        console.log('Modal values set:', {incomeId, amount, date});
+        console.log('Modal values set:', {incomeId, amount, date, description});
         editIncomeModal.show();
       });
     });
+
+    // Handle character counter
+    descriptionTextarea.addEventListener('input', updateCharacterCounter);
+
+    function updateCharacterCounter() {
+      const currentLength = descriptionTextarea.value.length;
+      const maxLength = 500; // Set this to match your database field length
+      descriptionCounter.textContent = `${currentLength} / ${maxLength}`;
+      
+      if (currentLength > maxLength) {
+        descriptionCounter.style.color = 'var(--danger-color)';
+      } else {
+        descriptionCounter.style.color = 'var(--text-secondary)';
+      }
+    }
 
     // Handle form submission
     saveIncomeChanges.addEventListener('click', function() {
@@ -264,6 +377,14 @@
           updatedEntry.textContent = `$${data.amount}`;
           updatedEntry.dataset.amount = data.amount;
           updatedEntry.dataset.date = data.date;
+          updatedEntry.dataset.description = data.description;
+
+          // Update description indicator
+          if (data.description) {
+            updatedEntry.classList.add('has-description');
+          } else {
+            updatedEntry.classList.remove('has-description');
+          }
 
           // Update total income
           updateTotalIncome();

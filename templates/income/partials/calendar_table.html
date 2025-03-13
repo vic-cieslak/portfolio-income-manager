@@ -23,12 +23,16 @@
             {% for income in month_incomes %}
               {% if income.date.day == day %}
               <div 
-                class="income-entry cursor-pointer" 
+                class="income-entry cursor-pointer {% if income.description %}has-description{% endif %}" 
                 data-income-id="{{ income.id }}"
                 data-amount="{{ income.amount }}"
                 data-date="{{ income.date|date:'Y-m-d' }}"
+                data-description="{{ income.description|default:'' }}"
               >
                 ${{ income.amount }}
+                {% if income.description %}
+                  <span class="description-indicator" title="Has description">•</span>
+                {% endif %}
               </div>
               {% endif %}
             {% endfor %}
@@ -104,5 +108,34 @@
 
   .text-muted {
     color: var(--text-muted) !important;
+  }
+
+  .income-entry.has-description {
+    position: relative;
+  }
+
+  .description-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px var(--glow-color);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
   }
 </style>

@@ -58,6 +58,8 @@
 - Modify existing apps (income, expenses, portfolio) to associate data with specific clients
 - Implement a client selection mechanism in the UI
 
+## 11. recalculation of currnecy USD -> PLN, PLN -> GBP, etc
+
 ## Priority Order
 1. Fix currency breakdown in calendar (critical bug fix)
 2. Improve cryptocurrency fetching (enhance existing core functionality)
