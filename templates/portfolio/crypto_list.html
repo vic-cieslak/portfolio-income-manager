@@ -98,6 +98,12 @@ const colors = [
     '#ff00ff', '#00ffff', '#7eff00', '#ff3e3e', '#ffe138', 
     '#3ec1ff', '#ff3ec9', '#3eff9e', '#a13eff', '#ff953e'
 ];
+
+// Ensure text is visible
+document.addEventListener('DOMContentLoaded', function() {
+    // This will be handled by charts.js, but we're ensuring text color settings are applied
+    Chart.defaults.color = '#e0e0ff';
+});
 </script>
 <script src="/static/js/charts.js"></script>w || 0;
                             const total = context.dataset.data.reduce((acc, val) => acc + val, 0);
