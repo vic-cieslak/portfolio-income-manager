@@ -15,4 +15,5 @@ urlpatterns = [
     path('categories/', views.category_list, name='category_list'),
     path('categories/new/', views.category_create, name='category_create'),
     path('categories/<int:pk>/edit/', views.category_update, name='category_update'),
+    path('update-income-ajax/', views.update_income_ajax, name='update_income_ajax'),
 ]

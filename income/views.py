@@ -6,11 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.db.models import Sum
 from django.utils import timezone
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
 import calendar
 from datetime import datetime, timedelta
 
 from .models import Income, IncomeCategory
-from .forms import IncomeForm, IncomeCategoryForm #Added import for IncomeCategoryForm
+from .forms import IncomeForm, IncomeCategoryForm
 
 
 class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
@@ -124,9 +126,43 @@ def income_calendar(request, year=None, month=None):
         'daily_income_list': daily_income_list,
         'total_income': total_income,
         'category_breakdown': category_breakdown,
-        'month_incomes': month_incomes, #Added this line to keep the original context
+        'month_incomes': month_incomes,
     }
     return render(request, 'income/income_calendar.html', context)
+
+@login_required
+@require_POST
+def update_income_ajax(request):
+    income_id = request.POST.get('income_id')
+    new_amount = request.POST.get('amount')
+    new_date = request.POST.get('date')
+
+    try:
+        # Try to get the income object with user filter
+        income = Income.objects.get(id=income_id, user=request.user)
+    except Income.DoesNotExist:
+        try:
+            # If not found, try without user filter (for backward compatibility)
+            income = Income.objects.get(id=income_id)
+            # Assign the current user to the income object
+            income.user = request.user
+        except Income.DoesNotExist:
+            return JsonResponse({'success': False, 'error': 'Income not found'}, status=404)
+    
+    try:
+        income.amount = float(new_amount)
+        income.date = datetime.strptime(new_date, '%Y-%m-%d').date()
+        income.save()
+        return JsonResponse({
+            'success': True,
+            'id': income.id,
+            'amount': str(income.amount),
+            'date': income.date.strftime('%Y-%m-%d')
+        })
+    except ValueError as e:
+        return JsonResponse({'success': False, 'error': str(e)}, status=400)
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': 'An unexpected error occurred'}, status=500)
 
 
 @login_required

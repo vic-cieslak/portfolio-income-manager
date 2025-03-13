@@ -22,10 +22,10 @@
 
   <div class="mt-4">
     <h3>Monthly Summary</h3>
-    <p>Total Income for {{ month_name }} {{ year }}: <strong>${{ total_income }}</strong></p>
+    <p>Total Income for {{ month_name }} {{ year }}: <strong>$<span id="total-income">{{ total_income }}</span></strong></p>
     
     <h4>Breakdown by Category</h4>
-    <ul class="list-group">
+    <ul class="list-group" id="category-breakdown">
       {% for category, amount in category_breakdown.items %}
         <li class="list-group-item d-flex justify-content-between align-items-center">
           {{ category }}
@@ -35,4 +35,311 @@
     </ul>
   </div>
 </div>
+
+<!-- Modal for editing income -->
+<div class="modal fade" id="editIncomeModal" tabindex="-1" aria-labelledby="editIncomeModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content custom-modal card-cyber">
+      <div class="modal-header custom-modal-header">
+        <h5 class="modal-title text-neon glitch-text" id="editIncomeModalLabel" data-text="Edit Income">
+          <i class="fas fa-edit me-2"></i>Edit Income
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body custom-modal-body">
+        <form id="editIncomeForm">
+          <input type="hidden" id="incomeId" name="income_id">
+          <div class="mb-4">
+            <label for="incomeAmount" class="form-label text-neon">Amount</label>
+            <div class="input-group">
+              <span class="input-group-text bg-cyber"><i class="fas fa-dollar-sign"></i></span>
+              <input type="number" class="form-control custom-input bg-cyber" id="incomeAmount" name="amount" step="0.01" required>
+            </div>
+          </div>
+          <div class="mb-4">
+            <label for="incomeDate" class="form-label text-neon">Date</label>
+            <div class="input-group">
+              <span class="input-group-text bg-cyber"><i class="fas fa-calendar-alt"></i></span>
+              <input type="date" class="form-control custom-input bg-cyber" id="incomeDate" name="date" required>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer custom-modal-footer">
+        <button type="button" class="btn btn-secondary custom-btn-secondary btn-cyber btn-cyber-sm" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary custom-btn-primary btn-cyber btn-cyber-sm" id="saveIncomeChanges">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  .custom-modal {
+    border: 1px solid var(--primary-color);
+    overflow: hidden;
+    box-shadow: 0 0 20px var(--glow-color);
+    background: linear-gradient(135deg, var(--card-bg), rgba(10, 14, 23, 0.9));
+  }
+  
+  .custom-modal-header {
+    background-color: var(--background-darker);
+    color: var(--primary-color);
+    border-bottom: 1px solid var(--border-color);
+    padding: 1.5rem;
+  }
+  
+  .custom-modal-body {
+    padding: 2rem;
+    background-color: var(--background-dark);
+  }
+  
+  .custom-modal-footer {
+    border-top: 1px solid var(--border-color);
+    padding: 1.5rem;
+    background-color: var(--background-darker);
+  }
+  
+  .custom-input {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    transition: all 0.3s ease;
+    color: var(--text-primary);
+  }
+  
+  .custom-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem var(--glow-color);
+  }
+  
+  .input-group-text {
+    background-color: var(--background-darker);
+    border: 1px solid var(--border-color);
+    color: var(--primary-color);
+  }
+  
+  .modal.fade .modal-dialog {
+    transform: scale(0.8) translateY(-50px);
+    opacity: 0;
+    transition: all 0.3s ease;
+  }
+  
+  .modal.show .modal-dialog {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+
+  .glitch-text {
+    position: relative;
+    display: inline-block;
+    color: var(--primary-color);
+  }
+
+  .glitch-text:before, .glitch-text:after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  .glitch-text:before {
+    left: 2px;
+    text-shadow: -2px 0 var(--secondary-color);
+    animation: glitch-1 2s infinite linear alternate-reverse;
+  }
+
+  .glitch-text:after {
+    left: -2px;
+    text-shadow: 2px 0 var(--info-color);
+    animation: glitch-2 3s infinite linear alternate-reverse;
+  }
+
+  @keyframes glitch-1 {
+    0% {
+      clip: rect(20px, 9999px, 51px, 0);
+    }
+    25% {
+      clip: rect(79px, 9999px, 94px, 0);
+    }
+    50% {
+      clip: rect(46px, 9999px, 33px, 0);
+    }
+    75% {
+      clip: rect(10px, 9999px, 78px, 0);
+    }
+    100% {
+      clip: rect(89px, 9999px, 55px, 0);
+    }
+  }
+
+  @keyframes glitch-2 {
+    0% {
+      clip: rect(28px, 9999px, 16px, 0);
+    }
+    25% {
+      clip: rect(73px, 9999px, 99px, 0);
+    }
+    50% {
+      clip: rect(65px, 9999px, 3px, 0);
+    }
+    75% {
+      clip: rect(56px, 9999px, 98px, 0);
+    }
+    100% {
+      clip: rect(14px, 9999px, 67px, 0);
+    }
+  }
+
+  .bg-cyber {
+    background: linear-gradient(135deg, rgba(0, 20, 40, 0.8), rgba(0, 10, 20, 0.9));
+    color: var(--text-primary);
+  }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  console.log('Income calendar script loaded');
+  document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM content loaded');
+    const editIncomeModal = new bootstrap.Modal(document.getElementById('editIncomeModal'));
+    const editIncomeForm = document.getElementById('editIncomeForm');
+    const saveIncomeChanges = document.getElementById('saveIncomeChanges');
+    const modalBody = document.querySelector('.modal-body');
+
+    console.log('Modal:', editIncomeModal);
+    console.log('Form:', editIncomeForm);
+    console.log('Save button:', saveIncomeChanges);
+
+    // Add click event listeners to income entries
+    const incomeEntries = document.querySelectorAll('.income-entry');
+    console.log('Income entries found:', incomeEntries.length);
+    incomeEntries.forEach(entry => {
+      entry.addEventListener('click', function() {
+        console.log('Income entry clicked:', this.dataset);
+        const incomeId = this.dataset.incomeId;
+        const amount = this.dataset.amount;
+        const date = this.dataset.date;
+
+        document.getElementById('incomeId').value = incomeId;
+        document.getElementById('incomeAmount').value = amount;
+        document.getElementById('incomeDate').value = date;
+
+        console.log('Modal values set:', {incomeId, amount, date});
+        editIncomeModal.show();
+      });
+    });
+
+    // Handle form submission
+    saveIncomeChanges.addEventListener('click', function() {
+      console.log('Save changes clicked');
+      const formData = new FormData(editIncomeForm);
+      console.log('Form data:', Object.fromEntries(formData));
+      
+      // Show loading indicator
+      saveIncomeChanges.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Saving...';
+      saveIncomeChanges.disabled = true;
+
+      fetch('{% url "income:update_income_ajax" %}', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken')
+        }
+      })
+      .then(response => {
+        console.log('AJAX response status:', response.status);
+        return response.json();
+      })
+      .then(data => {
+        console.log('AJAX response data:', data);
+        if (data.success) {
+          // Update the income entry in the calendar
+          const updatedEntry = document.querySelector(`.income-entry[data-income-id="${data.id}"]`);
+          console.log('Updated entry found:', updatedEntry);
+          updatedEntry.textContent = `$${data.amount}`;
+          updatedEntry.dataset.amount = data.amount;
+          updatedEntry.dataset.date = data.date;
+
+          // Update total income
+          updateTotalIncome();
+
+          // Update category breakdown
+          updateCategoryBreakdown();
+
+          // Show success message
+          showMessage('Income updated successfully!', 'success');
+
+          editIncomeModal.hide();
+        } else {
+          console.error('Error updating income:', data.error);
+          showMessage('Error updating income: ' + data.error, 'danger');
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        showMessage('An error occurred while updating the income.', 'danger');
+      })
+      .finally(() => {
+        // Reset button state
+        saveIncomeChanges.innerHTML = 'Save changes';
+        saveIncomeChanges.disabled = false;
+      });
+    });
+
+    function updateTotalIncome() {
+      console.log('Updating total income');
+      const incomeEntries = document.querySelectorAll('.income-entry');
+      let total = 0;
+      incomeEntries.forEach(entry => {
+        total += parseFloat(entry.dataset.amount);
+      });
+      document.getElementById('total-income').textContent = total.toFixed(2);
+      console.log('New total income:', total.toFixed(2));
+    }
+
+    function updateCategoryBreakdown() {
+      console.log('Updating category breakdown');
+      // This function would need to recalculate the category breakdown
+      // You may need to add more data attributes to the income entries or make an additional AJAX call to get updated category data
+    }
+
+    function showMessage(message, type) {
+      const alertDiv = document.createElement('div');
+      alertDiv.className = `alert alert-${type} alert-dismissible fade show mt-3`;
+      alertDiv.role = 'alert';
+      alertDiv.innerHTML = `
+        ${message}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      `;
+      modalBody.insertBefore(alertDiv, modalBody.firstChild);
+
+      // Auto-dismiss the alert after 5 seconds
+      setTimeout(() => {
+        alertDiv.classList.remove('show');
+        setTimeout(() => alertDiv.remove(), 300);
+      }, 5000);
+    }
+
+    // Function to get CSRF token from cookies
+    function getCookie(name) {
+      let cookieValue = null;
+      if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].trim();
+          if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+          }
+        }
+      }
+      return cookieValue;
+    }
+  });
+</script>
 {% endblock %}
