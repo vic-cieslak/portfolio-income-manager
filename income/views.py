@@ -200,3 +200,12 @@ def category_update(request, pk):
         form = IncomeCategoryForm(instance=category)
 
     return render(request, 'income/category_form.html', {'form': form, 'title': 'Update Category'})
+
+@login_required
+def category_delete(request, pk):
+    category = get_object_or_404(IncomeCategory, pk=pk)
+    if request.method == 'POST':
+        category.delete()
+        messages.success(request, 'Category deleted successfully!')
+        return redirect('income:category_list')
+    return render(request, 'income/category_confirm_delete.html', {'category': category})
