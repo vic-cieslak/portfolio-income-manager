@@ -12,11 +12,6 @@
 - Add views and forms for users to input variables affecting predictions
 - Create templates to display forecasts (possibly using charts.js)
 
-## 3. Improve portfolio allocation pie chart
-- Enhance portfolio/views.py and templates/portfolio/portfolio_summary.html
-- Modify static/js/charts.js to add interactivity (hover effects, click-to-drill-down)
-- Implement color coding based on asset types or performance
-- Add options to view allocation by different criteria (e.g., asset type, risk level)
 
 ## 4. Track expenses
 - Create a new 'expenses' app (similar structure to the income app)
@@ -38,12 +33,6 @@
 - Ensure settings are applied consistently across the application
 
 
-## 8. Click-to-edit income in calendar
-- Modify income/views.py and templates/income/income_calendar.html
-- Add JavaScript event listeners for income entries in the calendar
-- Implement a modal or inline form for quick editing of income entries
-- Update the calendar view dynamically after changes
-
 ## 9. Fix currency breakdown in calendar
 - Debug income/views.py and templates/income/income_calendar.html
 - Identify the source of the currency mismatch
@@ -59,6 +48,8 @@
 - Implement a client selection mechanism in the UI
 
 ## 11. recalculation of currnecy USD -> PLN, PLN -> GBP, etc
+
+
 
 ## Priority Order
 1. Fix currency breakdown in calendar (critical bug fix)

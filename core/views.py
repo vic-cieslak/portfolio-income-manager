@@ -56,16 +56,18 @@ def dashboard(request):
     portfolio_labels = ['Crypto', 'Bank/Cash']
     portfolio_data = [float(crypto_value), float(bank_value)]
 
+    import json
+
     context = {
         'monthly_income': monthly_income,
         'recent_income': recent_income,
         'total_net_worth': total_net_worth,
         'crypto_value': crypto_value,
         'bank_value': bank_value,
-        'months': months,
-        'income_data': income_data,
-        'portfolio_labels': portfolio_labels,
-        'portfolio_data': portfolio_data,
+        'months': json.dumps(months),
+        'income_data': json.dumps(income_data),
+        'portfolio_labels': json.dumps(portfolio_labels),
+        'portfolio_data': json.dumps(portfolio_data),
     }
 
     return render(request, 'core/dashboard.html', context)
