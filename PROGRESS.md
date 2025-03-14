@@ -1,5 +1,10 @@
 # Next Steps for Django Income Tracking Project
 
+### NEW
+
+- add ability to export/import data
+- add ability to have differetn potfolios?
+
 ## 1. Track portfolio value over time
 - Implement in the portfolio app
 - Create a new model (e.g., PortfolioHistory) to store historical data
@@ -62,3 +67,5 @@
 8. Track expenses (expands core functionality)
 9. Prognose income / portfolio value (advanced feature)
 10. Client management (major feature expansion)
+
+
