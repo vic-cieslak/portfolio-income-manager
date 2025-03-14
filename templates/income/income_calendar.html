@@ -28,7 +28,7 @@
 
   <div class="mt-4">
     <h3 class="responsive-text">Monthly Summary</h3>
-    <p class="responsive-text">Total Income for {{ month_name }} {{ year }}: <strong>$<span id="total-income">{{ total_income }}</span></strong></p>
+    <p class="responsive-text">Total Income for {{ month_name }} {{ year }}: <strong>PLN <span id="total-income">{{ total_income }}</span></strong></p>
     
     <h4 class="responsive-text">Breakdown by Category</h4>
     <div class="table-responsive">
@@ -43,7 +43,7 @@
           {% for category, amount in category_breakdown.items %}
             <tr>
               <td>{{ category }}</td>
-              <td>${{ amount }}</td>
+              <td>PLN {{ amount }}</td>
             </tr>
           {% endfor %}
         </tbody>
@@ -68,7 +68,7 @@
           <div class="mb-3">
             <label for="incomeAmount" class="form-label text-neon">Amount</label>
             <div class="input-group">
-              <span class="input-group-text bg-cyber"><i class="fas fa-dollar-sign"></i></span>
+              <span class="input-group-text bg-cyber">PLN</span>
               <input type="number" class="form-control custom-input bg-cyber" id="incomeAmount" name="amount" step="0.01" required>
             </div>
           </div>
@@ -461,7 +461,7 @@
           // Update the income entry in the calendar
           const updatedEntry = document.querySelector(`.income-entry[data-income-id="${data.id}"]`);
           console.log('Updated entry found:', updatedEntry);
-          updatedEntry.textContent = `$${data.amount}`;
+          updatedEntry.textContent = `PLN ${parseFloat(data.amount).toFixed(2)}`;
           updatedEntry.dataset.amount = data.amount;
           updatedEntry.dataset.date = data.date;
           updatedEntry.dataset.description = data.description;

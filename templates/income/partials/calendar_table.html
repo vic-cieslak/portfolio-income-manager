@@ -29,9 +29,9 @@
                   data-amount="{{ income.amount }}"
                   data-date="{{ income.date|date:'Y-m-d' }}"
                   data-description="{{ income.description|default:'' }}"
-                >
-                  ${{ income.amount }}
-                  {% if income.description %}
+>
+  PLN {{ income.amount }}
+  {% if income.description %}
                     <span class="description-indicator" title="Has description">•</span>
                   {% endif %}
                 </div>

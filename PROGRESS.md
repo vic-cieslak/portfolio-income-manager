@@ -17,6 +17,7 @@
 - Add views and forms for users to input variables affecting predictions
 - Create templates to display forecasts (possibly using charts.js)
 
+## 3. sometimes income wont be paid. we need an ability to mark it as such so its not included into the portfolio, OR it should be marked 'not-paid' as default and after I mark it as paid its included in the portfolio.
 
 ## 4. Track expenses
 - Create a new 'expenses' app (similar structure to the income app)
@@ -25,11 +26,12 @@
 - Add templates for expense management
 - Integrate expense data into existing dashboards and reports
 
-## 5. Improve cryptocurrency fetching
+## 5. Improve cryptocurrency fetching [done?]
 - Modify portfolio/services.py to optimize API calls to CoinGecko
 - Implement caching mechanism to reduce API calls and improve performance
 - Add support for more cryptocurrencies and detailed market data
 - Consider alternative data sources if CoinGecko continues to be unreliable
+
 
 ## 6. Add settings page [in progress]
 - Add new views and templates in the core app for settings management
@@ -62,7 +64,6 @@
 3. Track portfolio value over time (significant value add)
 4. Add settings page (improves customization, prepares for future features)
 5. Improve portfolio allocation pie chart (enhances existing visualization)
-6. Click-to-edit income in calendar (improves user interaction)
 7. Remove line effect (UI/UX improvement)
 8. Track expenses (expands core functionality)
 9. Prognose income / portfolio value (advanced feature)
