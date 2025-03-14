@@ -32,6 +32,10 @@ class IncomeCreateView(LoginRequiredMixin, CreateView): #Added LoginRequiredMixi
     template_name = 'income/income_form.html'
     success_url = reverse_lazy('income:list')
 
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
 class IncomeUpdateView(LoginRequiredMixin, UpdateView): #Added LoginRequiredMixin
     model = Income
     form_class = IncomeForm

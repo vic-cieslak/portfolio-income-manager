@@ -59,11 +59,9 @@
 
 
 ## Priority Order
-1. Fix currency breakdown in calendar (critical bug fix)
 2. Improve cryptocurrency fetching (enhance existing core functionality)
 3. Track portfolio value over time (significant value add)
 4. Add settings page (improves customization, prepares for future features)
-5. Improve portfolio allocation pie chart (enhances existing visualization)
 7. Remove line effect (UI/UX improvement)
 8. Track expenses (expands core functionality)
 9. Prognose income / portfolio value (advanced feature)
