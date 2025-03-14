@@ -16,6 +16,7 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body class="cyber-bg d-flex flex-column min-vh-100">
+    {% block navbar %}
     <nav class="navbar navbar-expand-lg navbar-dark bg-cyber">
         <div class="container-fluid">
             <a class="navbar-brand text-neon" href="/">CyberFinance</a>
@@ -46,6 +47,7 @@
             </div>
         </div>
     </nav>
+    {% endblock navbar %}
 
     <div class="container-fluid flex-grow-1">
         <div class="row h-100">

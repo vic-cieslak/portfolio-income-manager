@@ -1,0 +1,244 @@
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.cyberpunk-scanner {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(to bottom, transparent, var(--glow-color) 50%, transparent 100%);
+    background-size: 100% 5px;
+    animation: scan 8s linear infinite;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+@keyframes scan {
+    0% { transform: translateY(-100%); }
+    100% { transform: translateY(100%); }
+}
+
+.login-card {
+    width: 100%;
+    max-width: 400px;
+    background: rgba(10, 14, 23, 0.8);
+    backdrop-filter: blur(10px);
+    border: 2px solid var(--primary-color);
+    box-shadow: 0 0 20px var(--glow-color);
+}
+
+.card-header {
+    border-bottom: 2px solid var(--primary-color);
+    padding: 1.5rem;
+}
+
+.glitch-text {
+    position: relative;
+    font-size: 2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--primary-color);
+    text-shadow: 
+        0 0 5px var(--primary-color),
+        0 0 10px var(--primary-color),
+        0 0 15px var(--primary-color),
+        0 0 20px var(--primary-color);
+}
+
+.glitch-text::before,
+.glitch-text::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+}
+
+.glitch-text::before {
+    left: 2px;
+    text-shadow: -2px 0 var(--secondary-color);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim 5s infinite linear alternate-reverse;
+}
+
+.glitch-text::after {
+    left: -2px;
+    text-shadow: -2px 0 var(--info-color);
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim2 5s infinite linear alternate-reverse;
+}
+
+@keyframes glitch-anim {
+    0% { clip: rect(19px, 9999px, 42px, 0); }
+    5% { clip: rect(77px, 9999px, 99px, 0); }
+    10% { clip: rect(89px, 9999px, 16px, 0); }
+    15% { clip: rect(5px, 9999px, 70px, 0); }
+    20% { clip: rect(65px, 9999px, 87px, 0); }
+    25% { clip: rect(93px, 9999px, 34px, 0); }
+    30% { clip: rect(3px, 9999px, 3px, 0); }
+    35% { clip: rect(12px, 9999px, 2px, 0); }
+    40% { clip: rect(43px, 9999px, 97px, 0); }
+    45% { clip: rect(8px, 9999px, 36px, 0); }
+    50% { clip: rect(55px, 9999px, 69px, 0); }
+    55% { clip: rect(30px, 9999px, 88px, 0); }
+    60% { clip: rect(68px, 9999px, 18px, 0); }
+    65% { clip: rect(31px, 9999px, 63px, 0); }
+    70% { clip: rect(51px, 9999px, 95px, 0); }
+    75% { clip: rect(85px, 9999px, 32px, 0); }
+    80% { clip: rect(61px, 9999px, 77px, 0); }
+    85% { clip: rect(20px, 9999px, 35px, 0); }
+    90% { clip: rect(93px, 9999px, 91px, 0); }
+    95% { clip: rect(27px, 9999px, 4px, 0); }
+    100% { clip: rect(53px, 9999px, 83px, 0); }
+}
+
+@keyframes glitch-anim2 {
+    0% { clip: rect(65px, 9999px, 100px, 0); }
+    5% { clip: rect(52px, 9999px, 74px, 0); }
+    10% { clip: rect(79px, 9999px, 85px, 0); }
+    15% { clip: rect(75px, 9999px, 5px, 0); }
+    20% { clip: rect(67px, 9999px, 61px, 0); }
+    25% { clip: rect(14px, 9999px, 79px, 0); }
+    30% { clip: rect(1px, 9999px, 66px, 0); }
+    35% { clip: rect(86px, 9999px, 30px, 0); }
+    40% { clip: rect(23px, 9999px, 98px, 0); }
+    45% { clip: rect(85px, 9999px, 72px, 0); }
+    50% { clip: rect(71px, 9999px, 75px, 0); }
+    55% { clip: rect(2px, 9999px, 48px, 0); }
+    60% { clip: rect(30px, 9999px, 16px, 0); }
+    65% { clip: rect(59px, 9999px, 50px, 0); }
+    70% { clip: rect(41px, 9999px, 62px, 0); }
+    75% { clip: rect(2px, 9999px, 82px, 0); }
+    80% { clip: rect(47px, 9999px, 73px, 0); }
+    85% { clip: rect(3px, 9999px, 27px, 0); }
+    90% { clip: rect(26px, 9999px, 55px, 0); }
+    95% { clip: rect(42px, 9999px, 97px, 0); }
+    100% { clip: rect(38px, 9999px, 49px, 0); }
+}
+
+.card-body {
+    position: relative;
+    padding: 2rem;
+}
+
+.circuit-background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect fill="none" width="100" height="100"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="rgba(0,255,157,0.1)" stroke-width="0.5"/><circle cx="50" cy="50" r="3" fill="rgba(0,255,157,0.1)"/></svg>');
+    background-size: 50px 50px;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.cyberpunk-input {
+    margin-bottom: 1.5rem;
+}
+
+.cyberpunk-input input {
+    background-color: rgba(16, 21, 34, 0.8) !important;
+    border: 1px solid var(--primary-color) !important;
+    color: var(--text-primary) !important;
+    padding: 0.75rem 1rem !important;
+    font-family: 'Share Tech Mono', monospace;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.cyberpunk-input input:focus {
+    box-shadow: 0 0 15px var(--glow-color) !important;
+    border-color: var(--primary-light) !important;
+}
+
+.cyberpunk-input input::placeholder {
+    color: rgba(224, 224, 255, 0.5);
+}
+
+.btn-cyber {
+    position: relative;
+    background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+    border: none;
+    color: var(--background-dark);
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    padding: 1rem 2rem;
+    clip-path: polygon(10px 0, 100% 0, 100% calc(100% - 10px), calc(100% - 10px) 100%, 0 100%, 0 10px);
+    transition: all 0.3s ease;
+    overflow: hidden;
+}
+
+.btn-cyber:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-cyber::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: all 0.6s;
+}
+
+.btn-cyber:hover::before {
+    left: 100%;
+}
+
+.btn-glitch {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--primary-color);
+    filter: blur(5px);
+    opacity: 0;
+}
+
+.btn-cyber:hover .btn-glitch {
+    opacity: 0.3;
+    animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both infinite;
+}
+
+@keyframes glitch {
+    0% {
+        transform: translate(0);
+    }
+    20% {
+        transform: translate(-3px, 3px);
+    }
+    40% {
+        transform: translate(-3px, -3px);
+    }
+    60% {
+        transform: translate(3px, 3px);
+    }
+    80% {
+        transform: translate(3px, -3px);
+    }
+    100% {
+        transform: translate(0);
+    }
+}
+
+@media (max-width: 576px) {
+    .login-card {
+        max-width: 90%;
+    }
+}

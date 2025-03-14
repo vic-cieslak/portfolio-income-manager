@@ -693,6 +693,22 @@ body {
   box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
 }
 
+/* Login form specific styles */
+.login-form .form-control {
+  color: var(--text-primary) !important;
+  background-color: rgba(16, 21, 34, 0.9) !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.login-form .form-control::placeholder {
+  color: rgba(224, 224, 255, 0.5) !important;
+}
+
+.login-form .form-control:focus {
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 15px var(--glow-color), inset 0 0 10px rgba(0, 0, 0, 0.5) !important;
+}
+
 .form-label, .control-label {
   color: var(--text-secondary) !important;
   font-weight: 600;

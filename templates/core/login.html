@@ -1,21 +1,41 @@
 {% extends 'base/base.html' %}
 {% load crispy_forms_tags %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/login.css' %}">
+{% endblock %}
+
+{% block navbar %}
+{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center">
-    <div class="col-md-6">
-        <div class="card mt-5">
-            <div class="card-header bg-primary text-white">
-                <h3 class="mb-0">Login</h3>
-            </div>
-            <div class="card-body">
-                <form method="POST">
-                    {% csrf_token %}
-                    {{ form|crispy }}
-                    <button type="submit" class="btn btn-primary mt-3">Login</button>
-                </form>
-            </div>
+<div class="login-container">
+    <div class="cyberpunk-scanner"></div>
+    <div class="card-cyber login-card">
+        <div class="card-header bg-cyber">
+            <h3 class="mb-0 text-neon glitch-text" data-text="Login">Login</h3>
+        </div>
+        <div class="card-body">
+            <div class="circuit-background"></div>
+            <form method="POST" class="login-form">
+                {% csrf_token %}
+                <div class="form-group cyberpunk-input">
+                    {{ form.username|as_crispy_field }}
+                </div>
+                <div class="form-group cyberpunk-input">
+                    {{ form.password|as_crispy_field }}
+                </div>
+                <button type="submit" class="btn btn-cyber btn-block mt-4">
+                    <span class="btn-text">Login</span>
+                    <span class="btn-glitch"></span>
+                </button>
+            </form>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{% static 'js/login.js' %}"></script>
 {% endblock %}
