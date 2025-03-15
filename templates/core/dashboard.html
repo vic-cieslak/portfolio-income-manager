@@ -12,14 +12,13 @@
 
 <div class="row">
     <!-- Income Stats -->
-    <div class="col-md-12">
+    <div class="col-md-6">
         <div class="card">
             <div class="card-header bg-primary text-white">
                 <h5 class="mb-0">Income Summary</h5>
             </div>
             <div class="card-body text-white">
                 <h3>This Month: PLN {{ monthly_income }}</h3>
-
                 <h5 class="mt-4">Recent Income</h5>
                 <ul class="list-group">
                     {% for income in recent_income %}
@@ -35,18 +34,53 @@
         </div>
     </div>
 
-   
+    <!-- Expense Stats -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h5 class="mb-0">Expense Summary</h5>
+            </div>
+            <div class="card-body text-white">
+                <h3>This Month: PLN {{ monthly_expenses }}</h3>
+                <h5 class="mt-4">Recent Expenses</h5>
+                <ul class="list-group">
+                    {% for expense in recent_expenses %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {{ expense.description|default:expense.category.name }}
+                        <span class="badge bg-danger rounded-pill">PLN {{ expense.amount }}</span>
+                    </li>
+                    {% empty %}
+                    <li class="list-group-item">No recent expense entries</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="row mt-4">
-    <!-- Income Chart -->
+    <!-- Net Income -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0">Net Income</h5>
+            </div>
+            <div class="card-body">
+                <h3>This Month: PLN {{ net_income }}</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <!-- Income/Expense Chart -->
     <div class="col-md-7">
         <div class="card">
             <div class="card-header bg-info text-white">
-                <h5 class="mb-0">Monthly Income ({{ months.10 }} to {{ months.11 }})</h5>
+                <h5 class="mb-0">Monthly Income/Expense ({{ months.10 }} to {{ months.11 }})</h5>
             </div>
             <div class="card-body">
-                <canvas id="incomeChart" height="300"></canvas>
+                <canvas id="incomeExpenseChart" height="300"></canvas>
             </div>
         </div>
     </div>
@@ -80,7 +114,8 @@
                 portfolioLabels: JSON.parse('{{ portfolio_labels|escapejs }}'),
                 portfolioData: JSON.parse('{{ portfolio_data|escapejs }}'),
                 monthLabels: JSON.parse('{{ months|escapejs }}'),
-                incomeData: JSON.parse('{{ income_data|escapejs }}')
+                incomeData: JSON.parse('{{ income_data|escapejs }}'),
+                expenseData: JSON.parse('{{ expense_data|escapejs }}')
             };
             console.log('Chart data loaded:', window.chartData);
             console.log('Calling initCharts function');

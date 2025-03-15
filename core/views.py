@@ -6,6 +6,7 @@ from django.contrib import messages
 from django.db.models import Sum
 from django.utils import timezone
 from income.models import Income
+from expenses.models import Expense
 from portfolio.models import Cryptocurrency, BankAccount
 import calendar
 from datetime import datetime
@@ -15,14 +16,22 @@ def dashboard(request):
     current_month = timezone.now().month
     current_year = timezone.now().year
 
-    # Monthly income
+    # Monthly income and expenses
     monthly_income = Income.objects.filter(
         date__month=current_month,
         date__year=current_year
     ).aggregate(Sum('amount'))['amount__sum'] or 0
 
-    # Recent income entries
+    monthly_expenses = Expense.objects.filter(
+        date__month=current_month,
+        date__year=current_year
+    ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    net_income = monthly_income - monthly_expenses
+
+    # Recent income and expense entries
     recent_income = Income.objects.all().order_by('-date')[:5]
+    recent_expenses = Expense.objects.all().order_by('-date')[:5]
 
     # Portfolio value
     cryptocurrencies = Cryptocurrency.objects.all()
@@ -38,20 +47,27 @@ def dashboard(request):
     bank_value = BankAccount.objects.aggregate(Sum('balance'))['balance__sum'] or 0
     total_net_worth = crypto_value + bank_value
 
-    # Income by month for chart
+    # Income and expenses by month for chart
     months = []
     income_data = []
+    expense_data = []
 
     for month in range(1, 13):
         month_name = calendar.month_name[month]
         months.append(month_name)
 
-        monthly_amount = Income.objects.filter(
+        monthly_income = Income.objects.filter(
             date__month=month,
             date__year=current_year
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
-        income_data.append(float(monthly_amount))
+        monthly_expenses = Expense.objects.filter(
+            date__month=month,
+            date__year=current_year
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        income_data.append(float(monthly_income))
+        expense_data.append(float(monthly_expenses))
 
     # Portfolio allocation for chart
     portfolio_labels = ['Crypto', 'Bank/Cash']
@@ -61,12 +77,16 @@ def dashboard(request):
 
     context = {
         'monthly_income': monthly_income,
+        'monthly_expenses': monthly_expenses,
+        'net_income': net_income,
         'recent_income': recent_income,
+        'recent_expenses': recent_expenses,
         'total_net_worth': total_net_worth,
         'crypto_value': crypto_value,
         'bank_value': bank_value,
         'months': json.dumps(months),
         'income_data': json.dumps(income_data),
+        'expense_data': json.dumps(expense_data),
         'portfolio_labels': json.dumps(portfolio_labels),
         'portfolio_data': json.dumps(portfolio_data),
     }

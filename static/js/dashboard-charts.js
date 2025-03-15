@@ -7,7 +7,7 @@ function initCharts() {
     }
     try {
         initPortfolioChart();
-        initIncomeChart();
+        initIncomeExpenseChart();
     } catch (error) {
         console.error('Error initializing charts:', error);
         console.error('Error details:', error.message);
@@ -106,15 +106,15 @@ function initPortfolioChart() {
     createCustomLegend(portfolioChart, 'portfolioChartLegend');
 }
 
-function initIncomeChart() {
-    console.log('Initializing income chart...');
-    const ctx = document.getElementById('incomeChart');
+function initIncomeExpenseChart() {
+    console.log('Initializing income/expense chart...');
+    const ctx = document.getElementById('incomeExpenseChart');
     if (!ctx) {
-        console.error('Income chart canvas not found');
+        console.error('Income/Expense chart canvas not found');
         return;
     }
-    if (!window.chartData.monthLabels || !window.chartData.incomeData) {
-        console.error('Income chart data is missing');
+    if (!window.chartData.monthLabels || !window.chartData.incomeData || !window.chartData.expenseData) {
+        console.error('Income/Expense chart data is missing');
         return;
     }
     try {
@@ -122,24 +122,45 @@ function initIncomeChart() {
             type: 'bar',
             data: {
                 labels: window.chartData.monthLabels,
-                datasets: [{
-                    label: 'Monthly Income',
-                    data: window.chartData.incomeData,
-                    backgroundColor: 'rgba(0, 255, 157, 0.7)',
-                    borderColor: 'rgba(0, 255, 157, 1)',
-                    borderWidth: 0,
-                    borderRadius: 6,
-                    hoverBackgroundColor: 'rgba(0, 255, 157, 0.9)',
-                    barPercentage: 0.7,
-                    categoryPercentage: 0.8
-                }]
+                datasets: [
+                    {
+                        label: 'Income',
+                        data: window.chartData.incomeData,
+                        backgroundColor: 'rgba(0, 255, 157, 0.7)',
+                        borderColor: 'rgba(0, 255, 157, 1)',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        hoverBackgroundColor: 'rgba(0, 255, 157, 0.9)',
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    },
+                    {
+                        label: 'Expenses',
+                        data: window.chartData.expenseData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.7)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 0,
+                        borderRadius: 6,
+                        hoverBackgroundColor: 'rgba(255, 99, 132, 0.9)',
+                        barPercentage: 0.7,
+                        categoryPercentage: 0.8
+                    }
+                ]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
-                        display: false
+                        display: true,
+                        position: 'top',
+                        labels: {
+                            font: {
+                                family: 'Share Tech Mono, monospace',
+                                size: 12
+                            },
+                            color: '#e0e0ff'
+                        }
                     },
                     tooltip: {
                         backgroundColor: 'rgba(10, 14, 23, 0.9)',
@@ -156,7 +177,7 @@ function initIncomeChart() {
                         displayColors: false,
                         callbacks: {
                             label: function(context) {
-                                return 'PLN ' + context.raw.toLocaleString();
+                                return context.dataset.label + ': PLN ' + context.raw.toLocaleString();
                             }
                         }
                     }
@@ -200,7 +221,7 @@ function initIncomeChart() {
             }
         });
     } catch (error) {
-        console.error('Error creating income chart:', error);
+        console.error('Error creating income/expense chart:', error);
     }
 }
 

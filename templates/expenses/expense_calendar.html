@@ -1,0 +1,71 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Expense Calendar</h1>
+
+<div class="row mb-3">
+    <div class="col-md-4">
+        <a href="{% url 'expenses:calendar' prev_year prev_month %}" class="btn btn-primary">&lt; Previous Month</a>
+    </div>
+    <div class="col-md-4 text-center">
+        <h2>{{ month_name }} {{ year }}</h2>
+    </div>
+    <div class="col-md-4 text-right">
+        <a href="{% url 'expenses:calendar' next_year next_month %}" class="btn btn-primary">Next Month &gt;</a>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-md-12">
+        <h3>Total Expenses: PLN {{ total_expense }}</h3>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        {% include 'expenses/partials/calendar_table.html' %}
+    </div>
+    <div class="col-md-4">
+        <h4>Category Breakdown</h4>
+        <ul class="list-group">
+            {% for category, amount in category_breakdown.items %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                {{ category }}
+                <span class="badge bg-primary rounded-pill">PLN {{ amount }}</span>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="{% url 'expenses:list' %}" class="btn btn-secondary">Back to Expense List</a>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const cells = document.querySelectorAll('.calendar-cell');
+        cells.forEach(cell => {
+            cell.addEventListener('click', function() {
+                const date = this.dataset.date;
+                const expenses = JSON.parse(this.dataset.expenses);
+                let content = `<h5>Expenses for ${date}</h5>`;
+                if (expenses.length > 0) {
+                    content += '<ul>';
+                    expenses.forEach(expense => {
+                        content += `<li>${expense.category}: PLN ${expense.amount}</li>`;
+                    });
+                    content += '</ul>';
+                } else {
+                    content += '<p>No expenses for this day.</p>';
+                }
+                document.getElementById('expenseDetails').innerHTML = content;
+            });
+        });
+    });
+</script>
+{% endblock %}

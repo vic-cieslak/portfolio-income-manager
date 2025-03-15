@@ -1,0 +1,37 @@
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Mon</th>
+            <th>Tue</th>
+            <th>Wed</th>
+            <th>Thu</th>
+            <th>Fri</th>
+            <th>Sat</th>
+            <th>Sun</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for week in month_days %}
+            <tr>
+                {% for day, is_current_month in week %}
+                    {% if day != 0 %}
+                        <td class="calendar-cell {% if not is_current_month %}text-muted{% endif %}"
+                            data-date="{{ year }}-{{ month }}-{{ day }}"
+                            data-expenses="{{ daily_expense_list|default:'[]' }}">
+                            <div class="d-flex justify-content-between">
+                                <span>{{ day }}</span>
+                                {% if day in daily_expense %}
+                                    <span class="badge bg-danger">PLN {{ daily_expense|get_item:day }}</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                    {% else %}
+                        <td></td>
+                    {% endif %}
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<div id="expenseDetails" class="mt-3"></div>

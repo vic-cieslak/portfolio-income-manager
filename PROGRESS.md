@@ -5,12 +5,6 @@
 - add ability to export/import data [meh]
 - add ability to have different potfolios? [not needed]
 
-## 1. Track portfolio value over time
-- Implement in the portfolio app
-- Create a new model (e.g., PortfolioHistory) to store historical data
-- Modify portfolio views to record daily portfolio values
-- Add a new view and template to display historical data (possibly using charts.js)
-
 ## 2. Prognose income / portfolio value
 - Create a new 'forecasting' app
 - Implement simple linear regression model for basic predictions
@@ -65,7 +59,7 @@
 
 ### 15. show total income for current week.
 
-
+add to djano admin
 
 ## Priority Order
 2. Improve cryptocurrency fetching (enhance existing core functionality)

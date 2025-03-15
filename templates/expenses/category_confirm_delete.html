@@ -1,0 +1,19 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Delete Expense Category</h1>
+
+<div class="alert alert-danger" role="alert">
+    Are you sure you want to delete the expense category "{{ category.name }}"?
+    <br>
+    <strong>Warning:</strong> This will also delete all expenses associated with this category.
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger">Confirm Delete</button>
+    <a href="{% url 'expenses:category_list' %}" class="btn btn-secondary">Cancel</a>
+</form>
+
+{% endblock %}

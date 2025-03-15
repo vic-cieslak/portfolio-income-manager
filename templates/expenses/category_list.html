@@ -1,0 +1,38 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Expense Categories</h1>
+
+<div class="mb-3">
+    <a href="{% url 'expenses:category_create' %}" class="btn btn-primary">Add New Category</a>
+    <a href="{% url 'expenses:list' %}" class="btn btn-secondary">Back to Expenses</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for category in categories %}
+        <tr>
+            <td>{{ category.name }}</td>
+            <td>{{ category.description|default:"-" }}</td>
+            <td>
+                <a href="{% url 'expenses:category_update' category.id %}" class="btn btn-sm btn-warning">Edit</a>
+                <a href="{% url 'expenses:category_delete' category.id %}" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="3">No categories found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

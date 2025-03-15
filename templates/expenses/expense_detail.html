@@ -1,0 +1,21 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Expense Detail</h1>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">PLN {{ expense.amount }}</h5>
+        <h6 class="card-subtitle mb-2 text-muted">{{ expense.date }}</h6>
+        <p class="card-text"><strong>Category:</strong> {{ expense.category.name }}</p>
+        <p class="card-text"><strong>Description:</strong> {{ expense.description|default:"No description provided" }}</p>
+    </div>
+    <div class="card-footer">
+        <a href="{% url 'expenses:update' expense.id %}" class="btn btn-warning">Edit</a>
+        <a href="{% url 'expenses:delete' expense.id %}" class="btn btn-danger">Delete</a>
+        <a href="{% url 'expenses:list' %}" class="btn btn-secondary">Back to List</a>
+    </div>
+</div>
+
+{% endblock %}

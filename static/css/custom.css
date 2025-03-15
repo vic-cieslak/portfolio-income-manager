@@ -790,3 +790,44 @@ input[type="date"].form-control:focus {
 input[type="date"].form-control::-webkit-calendar-picker-indicator {
   filter: invert(1) hue-rotate(180deg);
 }
+
+/* Dropdown Menu Styling */
+.dropdown-menu {
+  background-color: var(--card-bg);
+  border: 1px solid var(--primary-color);
+  border-radius: 0;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5), 0 0 10px var(--glow-color);
+  padding: 0.5rem 0;
+  margin-top: 0.5rem;
+  min-width: 12rem;
+  z-index: 9999; /* Increased z-index value */
+  position: absolute; /* Ensure proper positioning */
+}
+
+/* Dropdown parent styling */
+.nav-item.dropdown {
+  position: relative; /* Ensure proper stacking context */
+}
+
+.dropdown-item {
+  color: var(--text-primary);
+  padding: 0.5rem 1rem;
+  transition: all 0.2s ease;
+}
+
+.dropdown-item:hover, .dropdown-item:focus {
+  background-color: rgba(0, 255, 157, 0.1);
+  color: var(--primary-color);
+}
+
+.dropdown-item.active {
+  background-color: rgba(0, 255, 157, 0.2);
+  color: var(--primary-color);
+}
+
+/* Override Bootstrap dropdown positioning */
+@media (min-width: 992px) {
+  .navbar-expand-lg .navbar-nav .dropdown-menu {
+    z-index: 1030;
+  }
+}

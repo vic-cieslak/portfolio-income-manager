@@ -28,23 +28,35 @@
                     <li class="nav-item">
                         <a class="nav-link{% if request.path == '/' %} active{% endif %}" href="/"><i class="fas fa-home"></i> Dashboard</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/crypto/' in request.path %} active{% endif %}" href="{% url 'crypto_list' %}"><i class="fab fa-bitcoin"></i> Cryptocurrencies</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if '/crypto/' in request.path or '/banks/' in request.path or '/portfolio/history/' in request.path %} active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-chart-pie"></i> Portfolio
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item{% if '/crypto/' in request.path %} active{% endif %}" href="{% url 'crypto_list' %}"><i class="fab fa-bitcoin"></i> Cryptocurrencies</a></li>
+                            <li><a class="dropdown-item{% if '/banks/' in request.path %} active{% endif %}" href="{% url 'bank_list' %}"><i class="fas fa-university"></i> Bank Accounts</a></li>
+                            <li><a class="dropdown-item{% if '/portfolio/history/' in request.path %} active{% endif %}" href="{% url 'portfolio_history' %}"><i class="fas fa-chart-line"></i> Portfolio History</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/banks/' in request.path %} active{% endif %}" href="{% url 'bank_list' %}"><i class="fas fa-university"></i> Bank Accounts</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if '/income/' in request.path %} active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-money-bill-wave"></i> Income
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item{% if '/income/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'income:list' %}"><i class="fas fa-list"></i> Income List</a></li>
+                            <li><a class="dropdown-item{% if '/income/categories/' in request.path %} active{% endif %}" href="{% url 'income:category_list' %}"><i class="fas fa-tags"></i> Categories</a></li>
+                            <li><a class="dropdown-item{% if '/income/calendar/' in request.path %} active{% endif %}" href="{% url 'income:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                        </ul>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/portfolio/history/' in request.path %} active{% endif %}" href="{% url 'portfolio_history' %}"><i class="fas fa-chart-line"></i> Portfolio History</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/income/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'income:list' %}"><i class="fas fa-money-bill-wave"></i> Income</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/income/categories/' in request.path %} active{% endif %}" href="{% url 'income:category_list' %}"><i class="fas fa-tags"></i> Categories</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link{% if '/calendar/' in request.path %} active{% endif %}" href="{% url 'income:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle{% if '/expenses/' in request.path %} active{% endif %}" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fas fa-receipt"></i> Expenses
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item{% if '/expenses/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'expenses:list' %}"><i class="fas fa-list"></i> Expense List</a></li>
+                            <li><a class="dropdown-item{% if '/expenses/categories/' in request.path %} active{% endif %}" href="{% url 'expenses:category_list' %}"><i class="fas fa-tags"></i> Categories</a></li>
+                            <li><a class="dropdown-item{% if '/expenses/calendar/' in request.path %} active{% endif %}" href="{% url 'expenses:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                        </ul>
                     </li>
                 </ul>
             </div>
@@ -94,9 +106,15 @@
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
+                const href = this.getAttribute('href');
+                if (href !== '#') {
+                    const targetElement = document.querySelector(href);
+                    if (targetElement) {
+                        targetElement.scrollIntoView({
+                            behavior: 'smooth'
+                        });
+                    }
+                }
             });
         });
 
@@ -108,8 +126,8 @@
             });
         });
 
-        // Close mobile menu when a link is clicked
-        document.querySelectorAll('.navbar-nav .nav-link').forEach(link => {
+        // Close mobile menu when a link is clicked (but not dropdown toggles)
+        document.querySelectorAll('.navbar-nav .nav-link:not(.dropdown-toggle)').forEach(link => {
             link.addEventListener('click', () => {
                 const navbarCollapse = document.querySelector('.navbar-collapse');
                 if (navbarCollapse.classList.contains('show')) {
@@ -117,6 +135,8 @@
                 }
             });
         });
+
+        // Bootstrap 5 handles dropdowns automatically, no manual initialization needed
     </script>
     {% block scripts %}{% endblock %}
 </body>
