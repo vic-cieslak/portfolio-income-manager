@@ -65,13 +65,15 @@
                 <h4 class="mb-0  text-white">Portfolio Distribution</h4>
             </div>
             <div class="card-body">
-                <canvas id="cryptoChart"></canvas>
+                <div class="chart-container" style="position: relative; height: 300px; width: 100%;">
+                    <canvas id="cryptoChart"></canvas>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.1/dist/chart.min.js"></script>
 <script>
 // Prepare data for chart
 document.addEventListener('DOMContentLoaded', function() {
@@ -92,6 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
     window.cryptoNames = cryptoNames;
     window.cryptoValues = cryptoValues;
     window.colors = colors;
+    
+    // Call the function to initialize the crypto chart
+    initCryptoChart();
 });
 </script>
 <script src="/static/js/charts.js"></script>
