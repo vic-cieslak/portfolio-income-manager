@@ -1,0 +1,186 @@
+{% extends 'base/base.html' %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="text-neon">Portfolio History</h1>
+</div>
+
+<div class="card card-cyber mb-4">
+    <div class="card-header bg-cyber text-white">
+        <h4 class="mb-0">Date Range Selection</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" class="row g-3 align-items-end">
+            {% csrf_token %}
+            <div class="col-md-4">
+                <label for="{{ form.start_date.id_for_label }}" class="form-label">{{ form.start_date.label }}</label>
+                {{ form.start_date }}
+            </div>
+            <div class="col-md-4">
+                <label for="{{ form.end_date.id_for_label }}" class="form-label">{{ form.end_date.label }}</label>
+                {{ form.end_date }}
+            </div>
+            <div class="col-md-4">
+                <button type="submit" class="btn btn-primary btn-cyber">Apply Filter</button>
+                <a href="{% url 'portfolio_history' %}" class="btn btn-secondary btn-cyber">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-cyber mb-4">
+    <div class="card-header bg-cyber text-white">
+        <h4 class="mb-0">Portfolio Value Over Time</h4>
+    </div>
+    <div class="card-body">
+        <canvas id="portfolioHistoryChart" height="300"></canvas>
+    </div>
+</div>
+
+<div class="card card-cyber">
+    <div class="card-header bg-cyber text-white">
+        <h4 class="mb-0">Historical Data</h4>
+    </div>
+    <div class="card-body">
+        <table class="table table-cyber table-hover">
+            <thead>
+                <tr>
+                    <th>Date</th>
+                    <th>Crypto Value</th>
+                    <th>Bank Value</th>
+                    <th>Total Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for record in history %}
+                <tr>
+                    <td>{{ record.date }}</td>
+                    <td>PLN {{ record.crypto_value|floatformat:2 }}</td>
+                    <td>PLN {{ record.bank_value|floatformat:2 }}</td>
+                    <td class="text-highlight">PLN {{ record.total_value|floatformat:2 }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center">No historical data available yet</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const ctx = document.getElementById('portfolioHistoryChart').getContext('2d');
+    
+    // Parse data from Django template
+    const dates = JSON.parse('{{ dates|safe }}');
+    const cryptoValues = JSON.parse('{{ crypto_values|safe }}');
+    const bankValues = JSON.parse('{{ bank_values|safe }}');
+    const totalValues = JSON.parse('{{ total_values|safe }}');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: dates,
+            datasets: [
+                {
+                    label: 'Total Value',
+                    data: totalValues,
+                    backgroundColor: 'rgba(255, 0, 255, 0.2)',
+                    borderColor: 'rgba(255, 0, 255, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: false,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Crypto Value',
+                    data: cryptoValues,
+                    backgroundColor: 'rgba(0, 255, 157, 0.2)',
+                    borderColor: 'rgba(0, 255, 157, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: false,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                },
+                {
+                    label: 'Bank Value',
+                    data: bankValues,
+                    backgroundColor: 'rgba(0, 184, 255, 0.2)',
+                    borderColor: 'rgba(0, 184, 255, 1)',
+                    borderWidth: 2,
+                    tension: 0.1,
+                    fill: false,
+                    pointRadius: 3,
+                    pointHoverRadius: 5
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        color: '#e0e0ff',
+                        font: {
+                            family: 'Share Tech Mono, monospace',
+                            size: 14
+                        }
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(10, 14, 23, 0.9)',
+                    titleFont: {
+                        family: 'Share Tech Mono, monospace',
+                        size: 14
+                    },
+                    bodyFont: {
+                        family: 'Share Tech Mono, monospace',
+                        size: 14
+                    },
+                    callbacks: {
+                        label: function(context) {
+                            return context.dataset.label + ': PLN ' + context.raw.toLocaleString();
+                        }
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#e0e0ff',
+                        font: {
+                            family: 'Share Tech Mono, monospace'
+                        }
+                    }
+                },
+                y: {
+                    grid: {
+                        color: 'rgba(255, 255, 255, 0.1)'
+                    },
+                    ticks: {
+                        color: '#e0e0ff',
+                        font: {
+                            family: 'Share Tech Mono, monospace'
+                        },
+                        callback: function(value) {
+                            return 'PLN ' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

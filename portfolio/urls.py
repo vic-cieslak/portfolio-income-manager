@@ -11,4 +11,5 @@ urlpatterns = [
     path('bank/add/', views.bank_create, name='bank_create'),
     path('bank/update/<int:pk>/', views.bank_update, name='bank_update'),
     path('bank/delete/<int:pk>/', views.bank_delete, name='bank_delete'),
+    path('history/', views.portfolio_history, name='portfolio_history'),
 ]

@@ -9,6 +9,36 @@ class CoinGeckoService:
     Service class for interacting with the CoinGecko API
     """
     BASE_URL = "https://api.coingecko.com/api/v3"
+
+    @classmethod
+    def record_portfolio_value(cls):
+        """
+        Record current portfolio value in the history table
+        Only records once per day
+        """
+        from portfolio.models import Cryptocurrency, BankAccount, PortfolioHistory
+        from django.db.models import Sum
+        
+        # Check if we already have a record for today
+        today = timezone.now().date()
+        if PortfolioHistory.objects.filter(date=today).exists():
+            return False
+        
+        # Get current values
+        cryptocurrencies = Cryptocurrency.objects.all()
+        cls.update_crypto_prices(cryptocurrencies)
+        
+        crypto_value = sum(crypto.current_value for crypto in cryptocurrencies)
+        bank_value = BankAccount.objects.aggregate(Sum('balance'))['balance__sum'] or 0
+        
+        # Create new history record
+        PortfolioHistory.objects.create(
+            date=today,
+            crypto_value=crypto_value,
+            bank_value=bank_value
+        )
+        
+        return True
     
     @classmethod
     def _handle_rate_limit(cls, response):

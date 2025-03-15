@@ -2,8 +2,8 @@
 
 ### NEW
 
-- add ability to export/import data
-- add ability to have differetn potfolios?
+- add ability to export/import data [meh]
+- add ability to have different potfolios? [not needed]
 
 ## 1. Track portfolio value over time
 - Implement in the portfolio app
@@ -55,6 +55,15 @@
 - Implement a client selection mechanism in the UI
 
 ## 11. recalculation of currnecy USD -> PLN, PLN -> GBP, etc
+
+## 12. income view is not listing all incomes, some better table should be better.
+
+# 13. income entry should allow to input RATE: XX and hours: XX and then calculate total income for that day.
+## ???? should i save those?
+
+### 14. more basic theme because its slow on some devices. create theme selector feature.
+
+### 15. show total income for current week.
 
 
 

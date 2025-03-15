@@ -27,11 +27,12 @@ def dashboard(request):
     # Portfolio value
     cryptocurrencies = Cryptocurrency.objects.all()
     try:
-        # Update crypto prices before calculating value
+        # Update crypto prices and record portfolio value
         from portfolio.services import CoinGeckoService
         CoinGeckoService.update_crypto_prices(cryptocurrencies)
+        CoinGeckoService.record_portfolio_value()
     except Exception as e:
-        messages.warning(request, f"Could not update cryptocurrency prices: {str(e)}")
+        messages.warning(request, f"Could not update portfolio data: {str(e)}")
     
     crypto_value = sum(crypto.current_value for crypto in cryptocurrencies)
     bank_value = BankAccount.objects.aggregate(Sum('balance'))['balance__sum'] or 0

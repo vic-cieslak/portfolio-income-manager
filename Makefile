@@ -35,6 +35,10 @@ help:
 	@echo "  $(GREEN)make test$(NC)          - Run tests"
 	@echo "  $(GREEN)make lint$(NC)          - Run linting checks"
 	@echo "  $(GREEN)make clean$(NC)         - Clean temporary files"
+	@echo "  $(GREEN)make manage cmd=<command>$(NC) - Run a custom Django management command"
+	@echo "  $(GREEN)make backfill-portfolio$(NC) - Backfill portfolio history data"
+	@echo "  $(GREEN)make dev$(NC)           - Alias for 'make run' (start development server)"
+	@echo "  $(GREEN)make setup$(NC)         - Install dependencies, apply migrations, and generate fake data"
 
 # Environment setup
 install:
@@ -117,6 +121,22 @@ clean:
 	find . -type f -name "coverage.xml" -delete
 	@echo "$(GREEN)Cleanup complete.$(NC)"
 
+# Custom management command
+manage:
+	@if [ -z "$(cmd)" ]; then \
+		echo "$(RED)Error: No command specified. Usage: make manage cmd=<command>$(NC)"; \
+		exit 1; \
+	fi
+	@echo "$(BLUE)Running management command: $(cmd)$(NC)"
+	$(MANAGE) $(cmd)
+	@echo "$(GREEN)Command completed.$(NC)"
+
 # Shorthand aliases
 dev: run
 setup: install migrate fake-data
+
+# Add backfill command for portfolio history
+backfill-portfolio:
+	@echo "$(BLUE)Backfilling portfolio history...$(NC)"
+	$(MAKE) manage cmd=backfill_portfolio_history
+	@echo "$(GREEN)Portfolio history backfilled.$(NC)"

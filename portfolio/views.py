@@ -151,3 +151,55 @@ def bank_delete(request, pk):
     return render(request, 'portfolio/bank_confirm_delete.html', {'account': account})
 
 # Removed update_crypto_prices function as it's now handled by CoinGeckoService
+
+@login_required
+def portfolio_history(request):
+    from .models import PortfolioHistory
+    from .forms import DateRangeForm
+    from datetime import timedelta
+    
+    # Default to last 90 days if no dates specified
+    end_date = timezone.now().date()
+    start_date = end_date - timedelta(days=90)
+    
+    # Process the date range form
+    if request.method == 'POST':
+        form = DateRangeForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data['start_date']:
+                start_date = form.cleaned_data['start_date']
+            if form.cleaned_data['end_date']:
+                end_date = form.cleaned_data['end_date']
+    else:
+        form = DateRangeForm(initial={'start_date': start_date, 'end_date': end_date})
+    
+    # Get history records filtered by date range
+    history = PortfolioHistory.objects.filter(
+        date__gte=start_date,
+        date__lte=end_date
+    ).order_by('-date')
+    
+    # Prepare data for chart
+    dates = []
+    crypto_values = []
+    bank_values = []
+    total_values = []
+    
+    for record in reversed(history):
+        dates.append(record.date.strftime('%Y-%m-%d'))
+        crypto_values.append(float(record.crypto_value))
+        bank_values.append(float(record.bank_value))
+        total_values.append(float(record.total_value))
+    
+    context = {
+        'form': form,
+        'history': history,
+        'dates': json.dumps(dates),
+        'crypto_values': json.dumps(crypto_values),
+        'bank_values': json.dumps(bank_values),
+        'total_values': json.dumps(total_values),
+        'start_date': start_date,
+        'end_date': end_date,
+    }
+    
+    return render(request, 'portfolio/portfolio_history.html', context)

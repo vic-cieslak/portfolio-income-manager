@@ -773,3 +773,20 @@ body {
   font-size: 0.8rem;
   margin-top: 0.25rem;
 }
+
+/* Date input cyberpunk styling */
+input[type="date"].form-control {
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid #00ff9d;
+  color: #e0e0ff;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+input[type="date"].form-control:focus {
+  box-shadow: 0 0 10px #00ff9d;
+  border-color: #00ff9d;
+}
+
+input[type="date"].form-control::-webkit-calendar-picker-indicator {
+  filter: invert(1) hue-rotate(180deg);
+}

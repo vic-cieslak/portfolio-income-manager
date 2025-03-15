@@ -2,6 +2,19 @@
 from django.db import models
 from django.utils import timezone
 
+class PortfolioHistory(models.Model):
+    date = models.DateField(default=timezone.now)
+    crypto_value = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    bank_value = models.DecimalField(max_digits=14, decimal_places=2, default=0)
+    
+    class Meta:
+        ordering = ['-date']
+        verbose_name_plural = 'Portfolio History'
+    
+    @property
+    def total_value(self):
+        return self.crypto_value + self.bank_value
+
 class Cryptocurrency(models.Model):
     # CoinGecko ID (e.g., 'bitcoin', 'ethereum')
     coin_id = models.CharField(max_length=100, null=True, blank=True)

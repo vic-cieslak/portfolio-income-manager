@@ -35,6 +35,9 @@
                         <a class="nav-link{% if '/banks/' in request.path %} active{% endif %}" href="{% url 'bank_list' %}"><i class="fas fa-university"></i> Bank Accounts</a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link{% if '/portfolio/history/' in request.path %} active{% endif %}" href="{% url 'portfolio_history' %}"><i class="fas fa-chart-line"></i> Portfolio History</a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link{% if '/income/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'income:list' %}"><i class="fas fa-money-bill-wave"></i> Income</a>
                     </li>
                     <li class="nav-item">
