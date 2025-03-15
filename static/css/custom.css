@@ -831,3 +831,20 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
     z-index: 1030;
   }
 }
+
+/* Fix for dropdown menus being cut off */
+.dropdown-menu {
+  position: absolute !important;
+  transform: none !important;
+  overflow: visible !important;
+}
+
+.nav-item.dropdown {
+  position: relative !important;
+  overflow: visible !important;
+}
+
+/* Ensure parent containers don't cut off dropdowns */
+.navbar, .navbar-collapse, .container-fluid {
+  overflow: visible !important;
+}
