@@ -4,6 +4,8 @@
 
 - add ability to export/import data [meh]
 - add ability to have different potfolios? [not needed]
+- add tracking token usage for AI, create pie chart (open router, claude3.7, gemini, chatgpt, replit)
+- built in XMR wallet / ETH wallet / BTC wallet
 
 ## 2. Prognose income / portfolio value
 - Create a new 'forecasting' app
