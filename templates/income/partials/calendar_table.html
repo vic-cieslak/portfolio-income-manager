@@ -30,7 +30,7 @@
                   data-date="{{ income.date|date:'Y-m-d' }}"
                   data-description="{{ income.description|default:'' }}"
 >
-  PLN {{ income.amount }}
+  PLN <span class="income-amount">{{ income.amount }}</span>
   {% if income.description %}
                     <span class="description-indicator" title="Has description">•</span>
                   {% endif %}

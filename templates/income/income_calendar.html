@@ -43,7 +43,7 @@
           {% for category, amount in category_breakdown.items %}
             <tr>
               <td>{{ category }}</td>
-              <td>PLN {{ amount }}</td>
+              <td>PLN <span class="amount-value">{{ amount }}</span></td>
             </tr>
           {% endfor %}
         </tbody>
@@ -385,6 +385,45 @@
   console.log('Income calendar script loaded');
   document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM content loaded');
+    
+    // Function to format currency values (e.g., 1300 -> 1.3k)
+    function formatCurrency(value) {
+      value = parseFloat(value);
+      // Always display in 'k' format
+      return (value / 1000).toFixed(1) + 'k';
+    }
+    
+    // Format all income amounts on page load
+    function formatAllAmounts() {
+      // Format income entries in the calendar
+      document.querySelectorAll('.income-amount').forEach(element => {
+        const entry = element.closest('.income-entry');
+        if (entry) {
+          const amount = parseFloat(entry.dataset.amount);
+          element.textContent = formatCurrency(amount);
+        }
+      });
+      
+      // Format total income
+      const totalIncomeElement = document.getElementById('total-income');
+      if (totalIncomeElement) {
+        const totalAmount = parseFloat(totalIncomeElement.textContent);
+        if (!isNaN(totalAmount)) {
+          totalIncomeElement.textContent = formatCurrency(totalAmount);
+        }
+      }
+      
+      // Format amounts in category breakdown
+      document.querySelectorAll('.amount-value').forEach(element => {
+        const amount = parseFloat(element.textContent);
+        if (!isNaN(amount)) {
+          element.textContent = formatCurrency(amount);
+        }
+      });
+    }
+    
+    // Run formatting on page load
+    formatAllAmounts();
     const editIncomeModal = new bootstrap.Modal(document.getElementById('editIncomeModal'));
     const editIncomeForm = document.getElementById('editIncomeForm');
     const saveIncomeChanges = document.getElementById('saveIncomeChanges');
@@ -461,7 +500,18 @@
           // Update the income entry in the calendar
           const updatedEntry = document.querySelector(`.income-entry[data-income-id="${data.id}"]`);
           console.log('Updated entry found:', updatedEntry);
-          updatedEntry.textContent = `PLN ${parseFloat(data.amount).toFixed(2)}`;
+          // Find or create the income-amount span
+          let amountSpan = updatedEntry.querySelector('.income-amount');
+          if (!amountSpan) {
+            // If the span doesn't exist, clear the entry and create it
+            updatedEntry.textContent = 'PLN ';
+            amountSpan = document.createElement('span');
+            amountSpan.className = 'income-amount';
+            updatedEntry.appendChild(amountSpan);
+          }
+          
+          // Update the amount
+          amountSpan.textContent = formatCurrency(parseFloat(data.amount));
           updatedEntry.dataset.amount = data.amount;
           updatedEntry.dataset.date = data.date;
           updatedEntry.dataset.description = data.description;
@@ -469,8 +519,21 @@
           // Update description indicator
           if (data.description) {
             updatedEntry.classList.add('has-description');
+            // Check if description indicator exists, if not create it
+            if (!updatedEntry.querySelector('.description-indicator')) {
+              const indicator = document.createElement('span');
+              indicator.className = 'description-indicator';
+              indicator.title = 'Has description';
+              indicator.textContent = '•';
+              updatedEntry.appendChild(indicator);
+            }
           } else {
             updatedEntry.classList.remove('has-description');
+            // Remove description indicator if it exists
+            const indicator = updatedEntry.querySelector('.description-indicator');
+            if (indicator) {
+              indicator.remove();
+            }
           }
 
           // Update total income
@@ -506,7 +569,7 @@
       incomeEntries.forEach(entry => {
         total += parseFloat(entry.dataset.amount);
       });
-      document.getElementById('total-income').textContent = total.toFixed(2);
+      document.getElementById('total-income').textContent = formatCurrency(total);
       console.log('New total income:', total.toFixed(2));
     }
 
