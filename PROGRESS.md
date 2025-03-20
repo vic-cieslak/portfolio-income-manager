@@ -1,11 +1,17 @@
 # Next Steps for Django Income Tracking Project
 
+## need fast
+claculator in income input for
+type ( number of hours ) muliplty by current USD exchange rate
+
 ### NEW
 
-- add ability to export/import data [meh]
+- add ability to export/import data 
 - add ability to have different potfolios? [not needed]
 - add tracking token usage for expenses for AI, create pie chart (open router, claude3.7, gemini, chatgpt, replit)
 - built in XMR wallet / ETH wallet / BTC wallet ??
+- sync or deploy as web app?
+
 
 ## 2. Prognose income / portfolio value
 - Create a new 'forecasting' app
@@ -22,7 +28,7 @@
 - Add templates for expense management
 - Integrate expense data into existing dashboards and reports
 
-## 5. Improve cryptocurrency fetching [done?]
+## 5. Improve cryptocurrency fetching - DONE ? There are some issue at startup sometimes 
 - Modify portfolio/services.py to optimize API calls to CoinGecko
 - Implement caching mechanism to reduce API calls and improve performance
 - Add support for more cryptocurrencies and detailed market data
@@ -45,6 +51,10 @@
 ## 10. Client management
 - Create a new 'clients' app
 - Implement Client model
+- add place to add note/list features delivered within given period, asses how much value / work was delivered.
+- add place to add what features were promised to delivered for given price / time
+- add place to add what was promised to deliver.
+
 - Create views for CRUD operations on clients
 - Add templates for client management
 - Modify existing apps (income, expenses, portfolio) to associate data with specific clients
@@ -65,7 +75,9 @@ add to djano admin
 
 ## Priority Order
 2. Improve cryptocurrency fetching (enhance existing core functionality)
-3. Track portfolio value over time (significant value add)
+
+3. Track portfolio value over time (significant value add) - COMPLETED
+
 4. Add settings page (improves customization, prepares for future features)
 7. Remove line effect (UI/UX improvement)
 8. Track expenses (expands core functionality)
