@@ -43,7 +43,7 @@
                             <i class="fas fa-money-bill-wave"></i> Income
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item{% if '/income/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'income:list' %}"><i class="fas fa-list"></i> Income List</a></li>
+                            <li><a class="dropdown-item{% if '/income/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'income:list' %}"><i class="fas fa-list"></i> Income</a></li>
                             <li><a class="dropdown-item{% if '/income/categories/' in request.path %} active{% endif %}" href="{% url 'income:category_list' %}"><i class="fas fa-tags"></i> Categories</a></li>
                             <li><a class="dropdown-item{% if '/income/calendar/' in request.path %} active{% endif %}" href="{% url 'income:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
                         </ul>

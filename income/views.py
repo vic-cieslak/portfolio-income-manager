@@ -20,6 +20,135 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
     template_name = 'income/income_list.html'
     context_object_name = 'incomes'
     paginate_by = 10
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        # Get current user
+        user = self.request.user
+        
+        # Get current date info
+        today = timezone.now().date()
+        current_month_start = today.replace(day=1)
+        last_month_end = current_month_start - timedelta(days=1)
+        last_month_start = last_month_end.replace(day=1)
+        year_start = today.replace(month=1, day=1)
+        
+        # Current month total
+        current_month_income = Income.objects.filter(
+            user=user,
+            date__gte=current_month_start,
+            date__lte=today
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        # Previous month total
+        previous_month_income = Income.objects.filter(
+            user=user,
+            date__gte=last_month_start,
+            date__lte=last_month_end
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        # Calculate month-over-month change
+        if previous_month_income > 0:
+            month_change_pct = ((current_month_income - previous_month_income) / previous_month_income) * 100
+        else:
+            month_change_pct = 100 if current_month_income > 0 else 0
+        
+        # Year-to-date income
+        ytd_income = Income.objects.filter(
+            user=user,
+            date__gte=year_start,
+            date__lte=today
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
+        # Calculate average monthly income (last 6 months)
+        six_months_ago = today.replace(day=1) - timedelta(days=1)
+        six_months_ago = six_months_ago.replace(day=1)
+        for _ in range(5):  # Go back 5 more months
+            six_months_ago = (six_months_ago.replace(day=1) - timedelta(days=1)).replace(day=1)
+        
+        monthly_incomes = []
+        current = six_months_ago
+        
+        # Get income for each of the last 6 months
+        for _ in range(6):
+            month_end = (current.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
+            month_income = Income.objects.filter(
+                user=user,
+                date__gte=current,
+                date__lte=month_end
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            monthly_incomes.append({
+                'month': current.strftime('%b'),
+                'amount': float(month_income)
+            })
+            
+            current = month_end + timedelta(days=1)
+        
+        # Calculate average (excluding months with zero income)
+        non_zero_months = [m['amount'] for m in monthly_incomes if m['amount'] > 0]
+        avg_monthly_income = sum(non_zero_months) / len(non_zero_months) if non_zero_months else 0
+        
+        # Get income by category
+        categories = IncomeCategory.objects.all()
+        category_data = []
+        
+        for category in categories:
+            category_sum = Income.objects.filter(
+                user=user,
+                category=category,
+                date__gte=current_month_start,
+                date__lte=today
+            ).aggregate(Sum('amount'))['amount__sum'] or 0
+            
+            if category_sum > 0:
+                category_data.append({
+                    'name': category.name,
+                    'amount': float(category_sum)
+                })
+        
+        # Sort categories by amount (descending)
+        category_data.sort(key=lambda x: x['amount'], reverse=True)
+        
+        # Extract month names and amounts into separate lists for the chart
+        month_labels = [item['month'] for item in monthly_incomes]
+        month_values = [item['amount'] for item in monthly_incomes]
+        
+        # Convert to JSON for the chart
+        import json
+        # Ensure we have valid data before converting to JSON
+        if month_labels and month_values:
+            month_labels_json = json.dumps(month_labels)
+            month_values_json = json.dumps(month_values)
+        else:
+            # Provide empty arrays if no data
+            month_labels_json = json.dumps([])
+            month_values_json = json.dumps([])
+            
+        # Add debug info to context
+        print(f"DEBUG - Labels: {month_labels}")
+        print(f"DEBUG - Values: {month_values}")
+        print(f"DEBUG - Labels JSON: {month_labels_json}")
+        print(f"DEBUG - Values JSON: {month_values_json}")
+        
+        # Add all data to context
+        context.update({
+            'current_month_income': current_month_income,
+            'previous_month_income': previous_month_income,
+            'month_change_pct': month_change_pct,
+            'ytd_income': ytd_income,
+            'avg_monthly_income': avg_monthly_income,
+            'category_data': category_data,
+            'monthly_income_data': monthly_incomes,
+            'month_labels': month_labels,
+            'month_values': month_values,
+            'month_labels_json': month_labels_json,
+            'month_values_json': month_values_json,
+            'today': today,
+        })
+        
+        return context
 
 class IncomeDetailView(LoginRequiredMixin, DetailView): #Added LoginRequiredMixin
     model = Income

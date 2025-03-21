@@ -618,6 +618,19 @@ body {
   padding: 5px 15px;
   font-size: 0.8rem;
   clip-path: polygon(5px 0, 100% 0, 100% calc(100% - 5px), calc(100% - 5px) 100%, 0 100%, 0 5px);
+  background: linear-gradient(45deg, var(--background-dark), var(--primary-dark));
+  border: 1px solid var(--primary-color);
+  color: var(--text-primary) !important;
+  text-shadow: 0 0 5px var(--glow-color);
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+}
+
+.btn-cyber-sm:hover {
+  background: linear-gradient(45deg, var(--primary-dark), var(--background-dark));
+  box-shadow: 0 0 15px rgba(0, 255, 157, 0.4);
+  transform: translateY(-2px);
+  color: white !important;
 }
 
 /* Cyberpunk Card */
@@ -847,4 +860,46 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 /* Ensure parent containers don't cut off dropdowns */
 .navbar, .navbar-collapse, .container-fluid {
   overflow: visible !important;
+}
+
+/* Income amount styling */
+.income-high {
+  opacity: 1;
+  text-shadow: 0 0 10px var(--glow-color), 0 0 15px var(--glow-color);
+  font-weight: bold;
+}
+
+.income-normal {
+  opacity: 0.7;
+}
+
+/* Improved text visibility for small text */
+.text-cyber-muted {
+  color: #a0a0c0 !important;
+  text-shadow: 0 0 2px rgba(160, 160, 192, 0.3);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+/* Cyberpunk Pagination */
+.pagination .page-link {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  margin: 0 3px;
+  transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+  background-color: rgba(0, 255, 157, 0.1);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+  box-shadow: 0 0 10px var(--glow-color);
+}
+
+.pagination .page-item.active .page-link {
+  background-color: var(--primary-dark);
+  border-color: var(--primary-color);
+  color: var(--background-dark);
+  box-shadow: 0 0 15px var(--glow-color);
 }

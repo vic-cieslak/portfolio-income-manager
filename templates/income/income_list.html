@@ -1,18 +1,119 @@
-
 {% extends 'base/base.html' %}
+{% load static %}
+
+{% block extrahead %}
+<script src="{% static 'js/income-charts.js' %}"></script>
+{% endblock %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>Income Entries</h1>
-    <a href="{% url 'income:create' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i> Add Income
-    </a>
+    <h1 class="page-title">Income</h1>
+    <div class="d-flex gap-2">
+        <a href="{% url 'income:create' %}" class="btn btn-cyber">
+            <i class="fas fa-plus me-1"></i> Add Income
+        </a>
+        <a href="{% url 'income:calendar' %}" class="btn btn-cyber-sm">
+            <i class="fas fa-calendar-alt me-1"></i> Calendar
+        </a>
+        <a href="{% url 'income:category_list' %}" class="btn btn-cyber-sm">
+            <i class="fas fa-tags me-1"></i> Categories
+        </a>
+    </div>
 </div>
 
-<div class="card">
+<!-- Summary Cards -->
+<div class="row mb-4">
+    <!-- Current Month Income -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Current Month</h5>
+                <h3 class="text-neon mb-0">PLN {{ current_month_income }}</h3>
+                {% if month_change_pct > 0 %}
+                <small class="text-success"><i class="fas fa-arrow-up"></i> {{ month_change_pct|floatformat:1 }}% from last month</small>
+                {% elif month_change_pct < 0 %}
+                <small class="text-danger"><i class="fas fa-arrow-down"></i> {{ month_change_pct|floatformat:1 }}% from last month</small>
+                {% else %}
+                <small class="text-cyber-muted">No change from last month</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    
+    <!-- Year-to-Date Income -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Year to Date</h5>
+                <h3 class="text-neon mb-0">PLN {{ ytd_income }}</h3>
+                <small class="text-cyber-muted">Total for {{ today.year }}</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Average Monthly Income -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Monthly Average</h5>
+                <h3 class="text-neon mb-0">PLN {{ avg_monthly_income|floatformat:2 }}</h3>
+                <small class="text-cyber-muted">Based on last 6 months</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Top Income Category -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Top Category</h5>
+                {% if category_data %}
+                <h3 class="text-neon mb-0">{{ category_data.0.name }}</h3>
+                <small class="text-cyber-muted">PLN {{ category_data.0.amount }} this month</small>
+                {% else %}
+                <h3 class="text-neon mb-0">N/A</h3>
+                <small class="text-cyber-muted">No income this month</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Income Trend Chart -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-cyber">
+            <div class="card-header bg-dark">
+                <h5 class="mb-0 text-neon">Income Trend - Last 6 Months</h5>
+            </div>
+            <div class="card-body">
+                <div style="height: 200px;">
+                    {% if month_labels and month_values %}
+                    <canvas id="incomeChart"></canvas>
+                    <script>
+                        // Make chart data available globally
+                        window.chartLabels = {{ month_labels_json|safe }};
+                        window.chartValues = {{ month_values_json|safe }};
+                    </script>
+                    {% else %}
+                    <div class="text-center text-cyber-muted py-5">
+                        <i class="fas fa-chart-line me-2"></i> No income data available for chart
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Income Table -->
+<div class="card card-cyber">
+    <div class="card-header bg-dark">
+        <h5 class="mb-0 text-neon">Income Entries</h5>
+    </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-striped table-hover">
+            <table class="table table-cyber">
                 <thead>
                     <tr>
                         <th>Date</th>
@@ -26,16 +127,35 @@
                     {% for income in incomes %}
                     <tr>
                         <td>{{ income.date }}</td>
-                        <td>PLN {{ income.amount }}</td>
-                        <td>{{ income.category.name }}</td>
+                        <td class="text-neon {% if income.amount >= 1000 %}income-high{% else %}income-normal{% endif %}">
+                            PLN {{ income.amount }}
+                        </td>
+                        <td>
+                            <span class="badge bg-dark">
+                                {% if income.category.name == 'Salary' %}
+                                <i class="fas fa-briefcase me-1"></i>
+                                {% elif income.category.name == 'Investment' %}
+                                <i class="fas fa-chart-line me-1"></i>
+                                {% elif income.category.name == 'Gift' %}
+                                <i class="fas fa-gift me-1"></i>
+                                {% elif income.category.name == 'Bonus' %}
+                                <i class="fas fa-award me-1"></i>
+                                {% else %}
+                                <i class="fas fa-money-bill-wave me-1"></i>
+                                {% endif %}
+                                {{ income.category.name }}
+                            </span>
+                        </td>
                         <td>{{ income.description|default:"-" }}</td>
                         <td>
-                            <a href="{% url 'income:update' income.id %}" class="btn btn-sm btn-info">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <a href="{% url 'income:delete' income.id %}" class="btn btn-sm btn-danger">
-                                <i class="fas fa-trash"></i>
-                            </a>
+                            <div class="btn-group">
+                                <a href="{% url 'income:update' income.id %}" class="btn btn-cyber-sm">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <a href="{% url 'income:delete' income.id %}" class="btn btn-cyber-sm" style="--primary-color: #ff2a6d; --glow-color: rgba(255, 42, 109, 0.6);">
+                                    <i class="fas fa-trash"></i>
+                                </a>
+                            </div>
                         </td>
                     </tr>
                     {% empty %}
@@ -48,4 +168,35 @@
         </div>
     </div>
 </div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item">
+            <a class="page-link bg-cyber text-neon" href="?page={{ page_obj.previous_page_number }}">&laquo; Previous</a>
+        </li>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+        <li class="page-item active">
+            <a class="page-link bg-cyber text-neon" href="#">{{ num }}</a>
+        </li>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <li class="page-item">
+            <a class="page-link bg-cyber text-neon" href="?page={{ num }}">{{ num }}</a>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <li class="page-item">
+            <a class="page-link bg-cyber text-neon" href="?page={{ page_obj.next_page_number }}">Next &raquo;</a>
+        </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
 {% endblock %}
