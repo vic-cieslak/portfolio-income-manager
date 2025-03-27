@@ -21,12 +21,6 @@ type ( number of hours ) muliplty by current USD exchange rate
 
 ## 3. sometimes income wont be paid. we need an ability to mark it as such so its not included into the portfolio, OR it should be marked 'not-paid' as default and after I mark it as paid its included in the portfolio.
 
-## 4. Track expenses
-- Create a new 'expenses' app (similar structure to the income app)
-- Implement models for Expense and ExpenseCategory
-- Create views for CRUD operations on expenses
-- Add templates for expense management
-- Integrate expense data into existing dashboards and reports
 
 ## 5. Improve cryptocurrency fetching - DONE ? There are some issue at startup sometimes 
 - Modify portfolio/services.py to optimize API calls to CoinGecko
@@ -76,11 +70,9 @@ add to djano admin
 ## Priority Order
 2. Improve cryptocurrency fetching (enhance existing core functionality)
 
-3. Track portfolio value over time (significant value add) - COMPLETED
 
 4. Add settings page (improves customization, prepares for future features)
 7. Remove line effect (UI/UX improvement)
-8. Track expenses (expands core functionality)
 9. Prognose income / portfolio value (advanced feature)
 10. Client management (major feature expansion)
 

@@ -132,6 +132,29 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         print(f"DEBUG - Labels JSON: {month_labels_json}")
         print(f"DEBUG - Values JSON: {month_values_json}")
         
+        # Get current week (Monday to Sunday)
+        today = timezone.now().date()
+        current_week_start = today - timedelta(days=today.weekday())  # Monday
+        current_week_end = current_week_start + timedelta(days=6)  # Sunday
+
+        # Get last week
+        last_week_start = current_week_start - timedelta(days=7)
+        last_week_end = current_week_end - timedelta(days=7)
+
+        # Current week total
+        current_week_income = Income.objects.filter(
+            user=user,
+            date__gte=current_week_start,
+            date__lte=current_week_end
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        # Last week total
+        last_week_income = Income.objects.filter(
+            user=user,
+            date__gte=last_week_start,
+            date__lte=last_week_end
+        ).aggregate(Sum('amount'))['amount__sum'] or 0
+        
         # Add all data to context
         context.update({
             'current_month_income': current_month_income,
@@ -146,6 +169,12 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
             'month_labels_json': month_labels_json,
             'month_values_json': month_values_json,
             'today': today,
+            'current_week_income': current_week_income,
+            'last_week_income': last_week_income,
+            'current_week_start': current_week_start,
+            'current_week_end': current_week_end,
+            'last_week_start': last_week_start,
+            'last_week_end': last_week_end,
         })
         
         return context

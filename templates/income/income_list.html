@@ -23,8 +23,30 @@
 
 <!-- Summary Cards -->
 <div class="row mb-4">
+    <!-- This Week Income -->
+    <div class="col-md-2">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">This Week</h5>
+                <h3 class="text-neon mb-0">PLN {{ current_week_income }}</h3>
+                <small class="text-cyber-muted">{{ current_week_start|date:"M d" }} - {{ current_week_end|date:"M d" }}</small>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Last Week Income -->
+    <div class="col-md-2">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Last Week</h5>
+                <h3 class="text-neon mb-0">PLN {{ last_week_income }}</h3>
+                <small class="text-cyber-muted">{{ last_week_start|date:"M d" }} - {{ last_week_end|date:"M d" }}</small>
+            </div>
+        </div>
+    </div>
+    
     <!-- Current Month Income -->
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Current Month</h5>
@@ -41,7 +63,7 @@
     </div>
     
     <!-- Year-to-Date Income -->
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Year to Date</h5>
@@ -52,7 +74,7 @@
     </div>
     
     <!-- Average Monthly Income -->
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Monthly Average</h5>
@@ -63,7 +85,7 @@
     </div>
     
     <!-- Top Income Category -->
-    <div class="col-md-3">
+    <div class="col-md-2">
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Top Category</h5>
