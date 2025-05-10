@@ -737,6 +737,7 @@ body {
 }
 
 /* DatePicker Cyberpunk Styling */
+.datepicker,
 .datepicker-dropdown {
   background-color: var(--card-bg) !important;
   border: 1px solid var(--border-color) !important;
@@ -766,6 +767,14 @@ body {
 
 .datepicker .datepicker-switch:hover, .datepicker .prev:hover, .datepicker .next:hover {
   background-color: rgba(0, 255, 157, 0.1) !important;
+}
+
+.datepicker .datepicker-days,
+.datepicker .datepicker-months,
+.datepicker .datepicker-years,
+.datepicker .datepicker-decades,
+.datepicker .datepicker-centuries {
+  background-color: transparent !important;
 }
 
 /* Crispy Forms Styling */
