@@ -2,10 +2,11 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
-from .models import Cryptocurrency, BankAccount
-from .forms import CryptocurrencyForm, BankAccountForm
+from .models import Cryptocurrency, BankAccount, PortfolioHistory
+from .forms import CryptocurrencyForm, BankAccountForm, PortfolioHistoryManualAddForm # Removed RefreshPortfolioHistoryDateForm
 from .services import CoinGeckoService
 import json
+from django.views.decorators.http import require_POST # Import for require_POST
 
 @login_required
 def crypto_list(request):
@@ -203,3 +204,35 @@ def portfolio_history(request):
     }
     
     return render(request, 'portfolio/portfolio_history.html', context)
+
+@login_required
+def add_portfolio_history_manual(request):
+    if request.method == 'POST':
+        form = PortfolioHistoryManualAddForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Portfolio history record added successfully.')
+            return redirect('portfolio_history')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = PortfolioHistoryManualAddForm()
+    
+    return render(request, 'portfolio/portfolio_history_manual_form.html', {
+        'form': form,
+        'title': 'Manually Add Portfolio History'
+    })
+
+@login_required
+@require_POST # Ensure this view only accepts POST requests
+def refresh_portfolio_history_today(request):
+    target_date = timezone.now().date()
+    try:
+        _, created = CoinGeckoService.update_or_create_portfolio_history_for_date(target_date)
+        if created:
+            messages.success(request, f'Portfolio history for {target_date} (Today) created successfully.')
+        else:
+            messages.success(request, f'Portfolio history for {target_date} (Today) refreshed successfully.')
+    except Exception as e:
+        messages.error(request, f"Could not refresh portfolio history for today: {str(e)}")
+    return redirect('portfolio_history')

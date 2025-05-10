@@ -1,6 +1,7 @@
 from django import forms
-from .models import Cryptocurrency, BankAccount
+from .models import Cryptocurrency, BankAccount, PortfolioHistory
 from .services import CoinGeckoService
+from django.utils import timezone
 
 class DateRangeForm(forms.Form):
     start_date = forms.DateField(
@@ -60,3 +61,21 @@ class BankAccountForm(forms.ModelForm):
     class Meta:
         model = BankAccount
         fields = ['name', 'balance']
+
+class PortfolioHistoryManualAddForm(forms.ModelForm):
+    class Meta:
+        model = PortfolioHistory
+        fields = ['date', 'crypto_value', 'bank_value']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'crypto_value': forms.NumberInput(attrs={'class': 'form-control'}),
+            'bank_value': forms.NumberInput(attrs={'class': 'form-control'}),
+        }
+
+    def clean_date(self):
+        date = self.cleaned_data.get('date')
+        if PortfolioHistory.objects.filter(date=date).exists():
+            raise forms.ValidationError("A history record for this date already exists. Please use the 'refresh' functionality or edit if available.")
+        if date and date > timezone.now().date():
+            raise forms.ValidationError("Cannot add history for a future date.")
+        return date

@@ -4,6 +4,17 @@
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
     <h1 class="text-neon">Portfolio History</h1>
+    <div class="d-flex gap-2">
+        <a href="{% url 'add_portfolio_history_manual' %}" class="btn btn-success btn-cyber">
+            <i class="fas fa-plus-circle"></i> Manually Add History
+        </a>
+        <form method="post" action="{% url 'refresh_portfolio_history_today' %}" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-info btn-cyber">
+                <i class="fas fa-sync-alt"></i> Refresh Today's History
+            </button>
+        </form>
+    </div>
 </div>
 
 <div class="card card-cyber mb-4">

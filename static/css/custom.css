@@ -912,3 +912,8 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
   color: var(--background-dark);
   box-shadow: 0 0 15px var(--glow-color);
 }
+
+/* Ensure form labels are visible in dark theme */
+.form-label, label {
+  color: var(--text-primary) !important; /* Use a light color for labels */
+}

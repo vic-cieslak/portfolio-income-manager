@@ -1,0 +1,18 @@
+{% extends 'base/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="text-neon mb-4">{{ title }}</h1>
+    <div class="card card-cyber">
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                {{ form|crispy }}
+                <button type="submit" class="btn btn-primary btn-cyber mt-3">Save Record</button>
+                <a href="{% url 'portfolio_history' %}" class="btn btn-secondary btn-cyber mt-3">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

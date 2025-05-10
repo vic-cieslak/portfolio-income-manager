@@ -216,3 +216,31 @@ class CoinGeckoService:
                     crypto.save()
         except Exception as e:
             print(f"Error updating crypto prices: {str(e)}")
+
+    @classmethod
+    def update_or_create_portfolio_history_for_date(cls, target_date):
+        """
+        Calculates portfolio value using current crypto prices and bank balances,
+        then updates or creates a PortfolioHistory record for the target_date.
+        """
+        from portfolio.models import Cryptocurrency, BankAccount, PortfolioHistory # Ensure all are imported
+        from django.db.models import Sum # Ensure Sum is imported
+        
+        # Get current crypto values
+        cryptocurrencies = Cryptocurrency.objects.all()
+        if cryptocurrencies.exists(): # Only update if there are cryptos to track
+            cls.update_crypto_prices(cryptocurrencies) # Updates current_price on each crypto instance
+        
+        crypto_value = sum(crypto.current_value for crypto in cryptocurrencies if crypto.current_value is not None)
+        
+        # Get current bank values
+        bank_value = BankAccount.objects.aggregate(total_balance=Sum('balance'))['total_balance'] or Decimal('0.00')
+        
+        history_record, created = PortfolioHistory.objects.update_or_create(
+            date=target_date,
+            defaults={
+                'crypto_value': crypto_value,
+                'bank_value': bank_value
+            }
+        )
+        return history_record, created
