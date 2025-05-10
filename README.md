@@ -4,6 +4,9 @@ A comprehensive financial management web application built with Django that help
 
 ![Dashboard Screenshot](generated-icon.png)
 
+[![Check the video](https://img.youtube.com/vi/piMv2jAwbo8/maxresdefault.jpg)](https://www.youtube.com/watch?v=piMv2jAwbo8)
+
+
 ## Overview
 
 Django Income Tracking is a personal finance management system that provides tools for tracking income sources, managing expenses, monitoring cryptocurrency investments, and overseeing bank accounts. The application features a modern, cyberpunk-themed UI with interactive charts and visualizations to help you understand your financial situation at a glance.
