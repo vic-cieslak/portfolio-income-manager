@@ -102,6 +102,79 @@
     </div>
 </div>
 
+<!-- Additional Summary Cards -->
+<div class="row mb-4">
+    <!-- Total Working Days -->
+    <div class="col-md-2">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Working Days</h5>
+                <h3 class="text-neon mb-0">{{ total_working_days }}</h3>
+                <small class="text-cyber-muted">All time</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Average Daily Rate -->
+    <div class="col-md-2">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Avg Daily Rate</h5>
+                <h3 class="text-neon mb-0">PLN {{ average_daily_rate|floatformat:2 }}</h3>
+                <small class="text-cyber-muted">All time</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Income Day - Week -->
+    <div class="col-md-2">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Top Day (Week)</h5>
+                {% if top_day_week_data %}
+                <h3 class="text-neon mb-0">PLN {{ top_day_week_data.daily_sum|humanize_k }}</h3>
+                <small class="text-cyber-muted">{{ top_day_week_data.date|date:"M d" }}</small>
+                {% else %}
+                <h3 class="text-neon mb-0">N/A</h3>
+                <small class="text-cyber-muted">No income this week</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Income Day - Month -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Top Day (Month)</h5>
+                {% if top_day_month_data %}
+                <h3 class="text-neon mb-0">PLN {{ top_day_month_data.daily_sum|humanize_k }}</h3>
+                <small class="text-cyber-muted">{{ top_day_month_data.date|date:"M d, Y" }}</small>
+                {% else %}
+                <h3 class="text-neon mb-0">N/A</h3>
+                <small class="text-cyber-muted">No income this month</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Income Day - Year -->
+    <div class="col-md-3">
+        <div class="card card-cyber">
+            <div class="card-body p-3">
+                <h5 class="text-secondary mb-1">Top Day (Year)</h5>
+                {% if top_day_year_data %}
+                <h3 class="text-neon mb-0">PLN {{ top_day_year_data.daily_sum|humanize_k }}</h3>
+                <small class="text-cyber-muted">{{ top_day_year_data.date|date:"M d, Y" }}</small>
+                {% else %}
+                <h3 class="text-neon mb-0">N/A</h3>
+                <small class="text-cyber-muted">No income this year</small>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
 <!-- Income Trend Chart -->
 <div class="row mb-4">
     <div class="col-12">

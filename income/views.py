@@ -4,7 +4,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
-from django.db.models import Sum
+from django.db.models import Sum, Count, Max
 from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
@@ -27,6 +27,9 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         # Get current user
         user = self.request.user
         
+        # Get all incomes for the user for efficiency
+        all_user_incomes = Income.objects.filter(user=user)
+        
         # Get current date info
         today = timezone.now().date()
         current_month_start = today.replace(day=1)
@@ -35,15 +38,13 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         year_start = today.replace(month=1, day=1)
         
         # Current month total
-        current_month_income = Income.objects.filter(
-            user=user,
+        current_month_income = all_user_incomes.filter(
             date__gte=current_month_start,
             date__lte=today
         ).aggregate(Sum('amount'))['amount__sum'] or 0
         
         # Previous month total
-        previous_month_income = Income.objects.filter(
-            user=user,
+        previous_month_income = all_user_incomes.filter(
             date__gte=last_month_start,
             date__lte=last_month_end
         ).aggregate(Sum('amount'))['amount__sum'] or 0
@@ -55,8 +56,7 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
             month_change_pct = 100 if current_month_income > 0 else 0
         
         # Year-to-date income
-        ytd_income = Income.objects.filter(
-            user=user,
+        ytd_income = all_user_incomes.filter(
             date__gte=year_start,
             date__lte=today
         ).aggregate(Sum('amount'))['amount__sum'] or 0
@@ -73,8 +73,7 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         # Get income for each of the last 6 months
         for _ in range(6):
             month_end = (current.replace(day=28) + timedelta(days=4)).replace(day=1) - timedelta(days=1)
-            month_income = Income.objects.filter(
-                user=user,
+            month_income = all_user_incomes.filter(
                 date__gte=current,
                 date__lte=month_end
             ).aggregate(Sum('amount'))['amount__sum'] or 0
@@ -95,8 +94,7 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         category_data = []
         
         for category in categories:
-            category_sum = Income.objects.filter(
-                user=user,
+            category_sum = all_user_incomes.filter(
                 category=category,
                 date__gte=current_month_start,
                 date__lte=today
@@ -142,19 +140,38 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
         last_week_end = current_week_end - timedelta(days=7)
 
         # Current week total
-        current_week_income = Income.objects.filter(
-            user=user,
+        current_week_income = all_user_incomes.filter(
             date__gte=current_week_start,
             date__lte=current_week_end
         ).aggregate(Sum('amount'))['amount__sum'] or 0
 
         # Last week total
-        last_week_income = Income.objects.filter(
-            user=user,
+        last_week_income = all_user_incomes.filter(
             date__gte=last_week_start,
             date__lte=last_week_end
         ).aggregate(Sum('amount'))['amount__sum'] or 0
+
+        # --- New Stats: Working Days & ADR ---
+        total_income_all_time = all_user_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+        total_working_days = all_user_incomes.values('date').distinct().count()
+        average_daily_rate = total_income_all_time / total_working_days if total_working_days > 0 else 0
+
+        # --- New Stats: Highest Income Days ---
+        # Highest income day - Current Week
+        top_day_week_data = all_user_incomes.filter(
+            date__gte=current_week_start, date__lte=current_week_end
+        ).values('date').annotate(daily_sum=Sum('amount')).order_by('-daily_sum').first()
         
+        # Highest income day - Current Month
+        top_day_month_data = all_user_incomes.filter(
+            date__gte=current_month_start, date__lte=today
+        ).values('date').annotate(daily_sum=Sum('amount')).order_by('-daily_sum').first()
+
+        # Highest income day - Current Year
+        top_day_year_data = all_user_incomes.filter(
+            date__gte=year_start, date__lte=today
+        ).values('date').annotate(daily_sum=Sum('amount')).order_by('-daily_sum').first()
+
         # Add all data to context
         context.update({
             'current_month_income': current_month_income,
@@ -175,6 +192,12 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
             'current_week_end': current_week_end,
             'last_week_start': last_week_start,
             'last_week_end': last_week_end,
+            # New stats
+            'total_working_days': total_working_days,
+            'average_daily_rate': average_daily_rate,
+            'top_day_week_data': top_day_week_data,
+            'top_day_month_data': top_day_month_data,
+            'top_day_year_data': top_day_year_data,
         })
         
         return context
