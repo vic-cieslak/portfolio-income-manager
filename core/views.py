@@ -104,6 +104,7 @@ def dashboard(request):
 
 
     context = {
+        'title': 'Dashboard',
         'monthly_income': total_monthly_income,
         'monthly_expenses': total_monthly_expenses,
         'net_income': net_income,
@@ -139,9 +140,16 @@ def login_view(request):
             messages.error(request, "Invalid username or password.")
     else:
         form = AuthenticationForm()
-    return render(request, 'core/login.html', {'form': form})
+    context = {
+        'form': form,
+        'title': 'Login'
+    }
+    return render(request, 'core/login.html', context)
 
 def logout_view(request):
     logout(request)
     messages.info(request, "You have successfully logged out.")
-    return render(request, 'core/logout.html')
+    context = {
+        'title': 'Logged Out'
+    }
+    return render(request, 'core/logout.html', context)

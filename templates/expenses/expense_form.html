@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% block title %}{% if form.instance.pk %}Edit Expense{% else %}Add Expense{% endif %} - CyberFinance{% endblock title %}
 {% load static %}
 {% load crispy_forms_tags %}
 

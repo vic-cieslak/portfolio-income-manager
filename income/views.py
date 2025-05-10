@@ -23,6 +23,7 @@ class IncomeListView(LoginRequiredMixin, ListView): #Added LoginRequiredMixin
     
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['title'] = 'Income List'
         
         # Get current user
         user = self.request.user
@@ -207,11 +208,21 @@ class IncomeDetailView(LoginRequiredMixin, DetailView): #Added LoginRequiredMixi
     template_name = 'income/income_detail.html'
     context_object_name = 'income'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Income Detail - {self.object.description}'
+        return context
+
 class IncomeCreateView(LoginRequiredMixin, CreateView): #Added LoginRequiredMixin
     model = Income
     form_class = IncomeForm
     template_name = 'income/income_form.html'
     success_url = reverse_lazy('income:list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Income'
+        return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -223,10 +234,20 @@ class IncomeUpdateView(LoginRequiredMixin, UpdateView): #Added LoginRequiredMixi
     template_name = 'income/income_form.html'
     success_url = reverse_lazy('income:list')
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Edit Income - {self.object.description}'
+        return context
+
 class IncomeDeleteView(LoginRequiredMixin, DeleteView): #Added LoginRequiredMixin
     model = Income
     template_name = 'income/income_confirm_delete.html'
     success_url = reverse_lazy('income:list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f'Delete Income - {self.object.description}'
+        return context
 
 def income_calendar(request, year=None, month=None):
     now = timezone.now()

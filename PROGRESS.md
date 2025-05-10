@@ -1,3 +1,11 @@
+
+You will be working on implementing new features to this project. You are a rockstar engineer. Check the required task and plan the implementation:
+
+- update titles of pages in browser (we dont know what page when looking at the tabs in the browser)
+(HTML TITLES are not configured)
+
+
+
 # Next Steps for Django Income Tracking Project
 
 ## need fast
@@ -53,6 +61,9 @@ type ( number of hours ) muliplty by current USD exchange rate
 - Add templates for client management
 - Modify existing apps (income, expenses, portfolio) to associate data with specific clients
 - Implement a client selection mechanism in the UI
+
+
+### Liablities management, what is owed to whom, or who owes me something.
 
 ## 11. recalculation of currnecy USD -> PLN, PLN -> GBP, etc
 

@@ -20,16 +20,37 @@ class ExpenseListView(LoginRequiredMixin, ListView):
     context_object_name = 'expenses'
     paginate_by = 10
 
+    def get_queryset(self): # Filter expenses by user
+        return Expense.objects.filter(user=self.request.user).order_by('-date')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Expenses'
+        return context
+
 class ExpenseDetailView(LoginRequiredMixin, DetailView):
     model = Expense
     template_name = 'expenses/expense_detail.html'
     context_object_name = 'expense'
+
+    def get_queryset(self): # Filter by user
+        return Expense.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f"Expense: {self.object.description[:20] or self.object.category.name}"
+        return context
 
 class ExpenseCreateView(LoginRequiredMixin, CreateView):
     model = Expense
     form_class = ExpenseForm
     template_name = 'expenses/expense_form.html'
     success_url = reverse_lazy('expenses:list')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Add Expense'
+        return context
 
     def form_valid(self, form):
         form.instance.user = self.request.user
@@ -41,10 +62,26 @@ class ExpenseUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'expenses/expense_form.html'
     success_url = reverse_lazy('expenses:list')
 
+    def get_queryset(self): # Filter by user
+        return Expense.objects.filter(user=self.request.user)
+        
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f"Edit Expense: {self.object.description[:20] or self.object.category.name}"
+        return context
+
 class ExpenseDeleteView(LoginRequiredMixin, DeleteView):
     model = Expense
     template_name = 'expenses/expense_confirm_delete.html'
     success_url = reverse_lazy('expenses:list')
+    
+    def get_queryset(self): # Filter by user
+        return Expense.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = f"Delete Expense: {self.object.description[:20] or self.object.category.name}"
+        return context
 
 @login_required
 def expense_calendar(request, year=None, month=None):
@@ -68,7 +105,7 @@ def expense_calendar(request, year=None, month=None):
     start_date = datetime(year, month, 1).date()
     end_date = (datetime(year, month + 1, 1) if month < 12 else datetime(year + 1, 1, 1)).date() - timedelta(days=1)
 
-    month_expenses = Expense.objects.filter(date__gte=start_date, date__lte=end_date)
+    month_expenses = Expense.objects.filter(user=request.user, date__gte=start_date, date__lte=end_date)
     total_expense = month_expenses.aggregate(Sum('amount'))['amount__sum'] or 0
 
     daily_expense = {}
@@ -86,6 +123,7 @@ def expense_calendar(request, year=None, month=None):
     calendar_weeks = [[(day, True) if day > 0 else (0, False) for day in week] for week in cal]
 
     context = {
+        'title': f'Expense Calendar - {month_name} {year}',
         'month_days': calendar_weeks,
         'month_name': month_name,
         'year': year,
@@ -133,25 +171,34 @@ def update_expense_ajax(request):
 
 @login_required
 def category_list(request):
-    categories = ExpenseCategory.objects.all()
-    return render(request, 'expenses/category_list.html', {'categories': categories})
+    categories = ExpenseCategory.objects.all() # Removed user filter
+    context = {
+        'categories': categories,
+        'title': 'Expense Categories'
+    }
+    return render(request, 'expenses/category_list.html', context)
 
 @login_required
 def category_create(request):
     if request.method == 'POST':
         form = ExpenseCategoryForm(request.POST)
         if form.is_valid():
+            # category = form.save(commit=False) # No user to assign
+            # category.user = request.user 
             form.save()
             messages.success(request, 'Category added successfully!')
             return redirect('expenses:category_list')
     else:
         form = ExpenseCategoryForm()
-
-    return render(request, 'expenses/category_form.html', {'form': form, 'title': 'Add Category'})
+    context = {
+        'form': form, 
+        'title': 'Add Expense Category'
+    }
+    return render(request, 'expenses/category_form.html', context)
 
 @login_required
 def category_update(request, pk):
-    category = get_object_or_404(ExpenseCategory, pk=pk)
+    category = get_object_or_404(ExpenseCategory, pk=pk) # Removed user filter
 
     if request.method == 'POST':
         form = ExpenseCategoryForm(request.POST, instance=category)
@@ -161,14 +208,21 @@ def category_update(request, pk):
             return redirect('expenses:category_list')
     else:
         form = ExpenseCategoryForm(instance=category)
-
-    return render(request, 'expenses/category_form.html', {'form': form, 'title': 'Update Category'})
+    context = {
+        'form': form, 
+        'title': f'Update Expense Category: {category.name}'
+    }
+    return render(request, 'expenses/category_form.html', context)
 
 @login_required
 def category_delete(request, pk):
-    category = get_object_or_404(ExpenseCategory, pk=pk)
+    category = get_object_or_404(ExpenseCategory, pk=pk) # Removed user filter
     if request.method == 'POST':
         category.delete()
         messages.success(request, 'Category deleted successfully!')
         return redirect('expenses:category_list')
-    return render(request, 'expenses/category_confirm_delete.html', {'category': category})
+    context = {
+        'category': category,
+        'title': f'Delete Expense Category: {category.name}'
+    }
+    return render(request, 'expenses/category_confirm_delete.html', context)
