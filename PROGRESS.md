@@ -1,9 +1,7 @@
+random ideas for extending the project. please ignore.
 
-You will be working on implementing new features to this project. You are a rockstar engineer. Check the required task and plan the implementation:
-
-- update titles of pages in browser (we dont know what page when looking at the tabs in the browser)
-(HTML TITLES are not configured)
-
+- client management 
+- liability managment
 
 
 # Next Steps for Django Income Tracking Project
@@ -12,7 +10,7 @@ You will be working on implementing new features to this project. You are a rock
 claculator in income input for
 type ( number of hours ) muliplty by current USD exchange rate
 
-### NEW
+### NEW to be implemented
 
 - add ability to export/import data 
 - add ability to have different potfolios? [not needed]
