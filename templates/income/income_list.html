@@ -1,5 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
+{% load core_extras %}
 
 {% block extrahead %}
 <script src="{% static 'js/income-charts.js' %}"></script>
@@ -28,7 +29,7 @@
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">This Week</h5>
-                <h3 class="text-neon mb-0">PLN {{ current_week_income }}</h3>
+                <h3 class="text-neon mb-0">PLN {{ current_week_income|humanize_k }}</h3>
                 <small class="text-cyber-muted">{{ current_week_start|date:"M d" }} - {{ current_week_end|date:"M d" }}</small>
             </div>
         </div>
@@ -39,7 +40,7 @@
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Last Week</h5>
-                <h3 class="text-neon mb-0">PLN {{ last_week_income }}</h3>
+                <h3 class="text-neon mb-0">PLN {{ last_week_income|humanize_k }}</h3>
                 <small class="text-cyber-muted">{{ last_week_start|date:"M d" }} - {{ last_week_end|date:"M d" }}</small>
             </div>
         </div>
@@ -50,7 +51,7 @@
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Current Month</h5>
-                <h3 class="text-neon mb-0">PLN {{ current_month_income }}</h3>
+                <h3 class="text-neon mb-0">PLN {{ current_month_income|humanize_k }}</h3>
                 {% if month_change_pct > 0 %}
                 <small class="text-success"><i class="fas fa-arrow-up"></i> {{ month_change_pct|floatformat:1 }}% from last month</small>
                 {% elif month_change_pct < 0 %}
@@ -67,7 +68,7 @@
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Year to Date</h5>
-                <h3 class="text-neon mb-0">PLN {{ ytd_income }}</h3>
+                <h3 class="text-neon mb-0">PLN {{ ytd_income|humanize_k }}</h3>
                 <small class="text-cyber-muted">Total for {{ today.year }}</small>
             </div>
         </div>
@@ -78,7 +79,7 @@
         <div class="card card-cyber">
             <div class="card-body p-3">
                 <h5 class="text-secondary mb-1">Monthly Average</h5>
-                <h3 class="text-neon mb-0">PLN {{ avg_monthly_income|floatformat:2 }}</h3>
+                <h3 class="text-neon mb-0">PLN {{ avg_monthly_income|humanize_k }}</h3>
                 <small class="text-cyber-muted">Based on last 6 months</small>
             </div>
         </div>
@@ -91,7 +92,7 @@
                 <h5 class="text-secondary mb-1">Top Category</h5>
                 {% if category_data %}
                 <h3 class="text-neon mb-0">{{ category_data.0.name }}</h3>
-                <small class="text-cyber-muted">PLN {{ category_data.0.amount }} this month</small>
+                <small class="text-cyber-muted">PLN {{ category_data.0.amount|humanize_k }} this month</small>
                 {% else %}
                 <h3 class="text-neon mb-0">N/A</h3>
                 <small class="text-cyber-muted">No income this month</small>
@@ -150,7 +151,7 @@
                     <tr>
                         <td>{{ income.date }}</td>
                         <td class="text-neon {% if income.amount >= 1000 %}income-high{% else %}income-normal{% endif %}">
-                            PLN {{ income.amount }}
+                            PLN {{ income.amount|humanize_k }}
                         </td>
                         <td>
                             <span class="badge bg-dark">

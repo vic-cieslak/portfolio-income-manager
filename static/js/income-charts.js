@@ -29,7 +29,7 @@ function initIncomeChart() {
         gradientFill.addColorStop(1, 'rgba(0, 255, 157, 0.1)');
     
         new Chart(ctx, {
-            type: 'line',
+            type: 'bar',
             data: {
                 labels: chartLabels,
                 datasets: [{
@@ -41,11 +41,11 @@ function initIncomeChart() {
                     pointBorderColor: '#00ff9d',
                     pointHoverBackgroundColor: '#fff',
                     pointHoverBorderColor: '#00ff9d',
-                    pointRadius: 4,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    backgroundColor: gradientFill,
-                    tension: 0.3
+                    // pointRadius: 4, // Not applicable for bar charts
+                    // pointHoverRadius: 6, // Not applicable for bar charts
+                    // fill: true, // Fill is generally handled differently or not needed for bar charts
+                    backgroundColor: gradientFill, // For bar charts, this often sets the bar color
+                    // tension: 0.3 // Not applicable for bar charts
                 }]
             },
             options: {

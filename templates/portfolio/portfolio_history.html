@@ -1,4 +1,5 @@
 {% extends 'base/base.html' %}
+{% load core_extras %}
 
 {% block content %}
 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -55,9 +56,9 @@
                 {% for record in history %}
                 <tr>
                     <td>{{ record.date }}</td>
-                    <td>PLN {{ record.crypto_value|floatformat:2 }}</td>
-                    <td>PLN {{ record.bank_value|floatformat:2 }}</td>
-                    <td class="text-highlight">PLN {{ record.total_value|floatformat:2 }}</td>
+                    <td>PLN {{ record.crypto_value|humanize_k }}</td>
+                    <td>PLN {{ record.bank_value|humanize_k }}</td>
+                    <td class="text-highlight">PLN {{ record.total_value|humanize_k }}</td>
                 </tr>
                 {% empty %}
                 <tr>
@@ -83,7 +84,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const totalValues = JSON.parse('{{ total_values|safe }}');
     
     new Chart(ctx, {
-        type: 'line',
+        type: 'bar',
         data: {
             labels: dates,
             datasets: [
@@ -93,10 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(255, 0, 255, 0.2)',
                     borderColor: 'rgba(255, 0, 255, 1)',
                     borderWidth: 2,
-                    tension: 0.1,
-                    fill: false,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
+                    // tension: 0.1, // Not applicable for bar charts
+                    // fill: false, // Not applicable for bar charts
+                    // pointRadius: 3, // Not applicable for bar charts
+                    // pointHoverRadius: 5 // Not applicable for bar charts
                 },
                 {
                     label: 'Crypto Value',
@@ -104,10 +105,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(0, 255, 157, 0.2)',
                     borderColor: 'rgba(0, 255, 157, 1)',
                     borderWidth: 2,
-                    tension: 0.1,
-                    fill: false,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
+                    // tension: 0.1, // Not applicable for bar charts
+                    // fill: false, // Not applicable for bar charts
+                    // pointRadius: 3, // Not applicable for bar charts
+                    // pointHoverRadius: 5 // Not applicable for bar charts
                 },
                 {
                     label: 'Bank Value',
@@ -115,10 +116,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     backgroundColor: 'rgba(0, 184, 255, 0.2)',
                     borderColor: 'rgba(0, 184, 255, 1)',
                     borderWidth: 2,
-                    tension: 0.1,
-                    fill: false,
-                    pointRadius: 3,
-                    pointHoverRadius: 5
+                    // tension: 0.1, // Not applicable for bar charts
+                    // fill: false, // Not applicable for bar charts
+                    // pointRadius: 3, // Not applicable for bar charts
+                    // pointHoverRadius: 5 // Not applicable for bar charts
                 }
             ]
         },
