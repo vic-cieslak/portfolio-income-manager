@@ -2,7 +2,7 @@
 
 A comprehensive financial management web application built with Django that helps you track income and expenses, manage cryptocurrencies, and monitor bank accounts.
 
-![Dashboard Screenshot](generated-icon.png)
+Click on the image below to see the demo.
 
 [![Check the video](https://img.youtube.com/vi/piMv2jAwbo8/maxresdefault.jpg)](https://www.youtube.com/watch?v=piMv2jAwbo8)
 
