@@ -21,8 +21,8 @@ class Cryptocurrency(models.Model):
     name = models.CharField(max_length=100)
     symbol = models.CharField(max_length=10)
     quantity = models.DecimalField(max_digits=18, decimal_places=8)
-    acquisition_cost = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
-    current_price = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    acquisition_cost = models.DecimalField(max_digits=18, decimal_places=10, null=True, blank=True)  # Increased precision
+    current_price = models.DecimalField(max_digits=20, decimal_places=10, null=True, blank=True)  # Increased precision
     last_updated = models.DateTimeField(default=timezone.now)
     
     def __str__(self):
