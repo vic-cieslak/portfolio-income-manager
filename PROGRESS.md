@@ -4,7 +4,6 @@ random ideas for extending the project. please ignore.
 - liability managment
 
 
-
 # Next Steps for Django Income Tracking Project
 
 ## need fast

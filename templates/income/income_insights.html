@@ -1,0 +1,346 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load core_extras %} {# For currency formatting if needed, or general formatting #}
+
+{% block title %}{{ title }} - CyberFinance{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="insights-page-title mb-4">{{ title }}</h1>
+
+    <!-- Summary Statistics Row 1 -->
+    <div class="row mb-4 summary-card-row">
+        <div class="col-md-4">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-current">Current Month Income</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h3 class="value-amount">PLN {{ total_current_month|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-last">Last Month Income</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h3 class="value-amount">PLN {{ total_last_month|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-ytd">Year-to-Date Income</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h3 class="value-amount">PLN {{ total_ytd|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Summary Statistics Row 2 (New Insights) -->
+    <div class="row mb-4 summary-card-row">
+        <div class="col-md-3">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-subtle">Avg. Daily Rate</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h4 class="value-amount">PLN {{ average_daily_rate|floatformat:2 }}</h4>
+                    <small class="text-cyber-muted">All Time</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-subtle">Total Working Days</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    <h4 class="value-amount">{{ total_working_days }}</h4>
+                    <small class="text-cyber-muted">All Time</small>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-subtle">Top Day (Month)</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                    {% if top_day_month_data %}
+                        <h4 class="value-amount">PLN {{ top_day_month_data.daily_sum|floatformat:2 }}</h4>
+                        <small class="text-cyber-muted">{{ top_day_month_data.date|date:"M d, Y" }}</small>
+                    {% else %}
+                        <h4 class="value-amount">N/A</h4>
+                        <small class="text-cyber-muted">No income this month</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card card-cyber h-100">
+                <div class="card-header summary-card-header-subtle">Top Day (Year)</div>
+                <div class="card-body text-center d-flex flex-column justify-content-center">
+                     {% if top_day_year_data %}
+                        <h4 class="value-amount">PLN {{ top_day_year_data.daily_sum|floatformat:2 }}</h4>
+                        <small class="text-cyber-muted">{{ top_day_year_data.date|date:"M d, Y" }}</small>
+                    {% else %}
+                        <h4 class="value-amount">N/A</h4>
+                        <small class="text-cyber-muted">No income this year</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card card-cyber h-100 chart-card">
+                <div class="card-header">Income Sources (Current Month)</div>
+                <div class="card-body">
+                    <canvas id="incomeSourcesPieChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card card-cyber h-100 chart-card">
+                <div class="card-header">Monthly Income (Last 6 Months)</div>
+                <div class="card-body">
+                    <canvas id="monthlyIncomeLineChart"></canvas> <!-- Renamed for clarity -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top 5 Categories Bar Chart (moved to a new row if needed, or keep as is) -->
+    <div class="row mt-4">
+        <div class="col-lg-12 mb-4">
+            <div class="card card-cyber chart-card">
+                <div class="card-header">Top 5 Income Categories (Current Month) - Bar Chart</div>
+                <div class="card-body">
+                    <canvas id="topIncomeCategoriesBarChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+{# Assuming Chart.js is loaded globally from base.html or another script file #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cyberpunkChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                top: 5,
+                left: 10,
+                right: 10,
+                bottom: 5
+            }
+        },
+        plugins: {
+            legend: {
+                display: true,
+                position: 'bottom',
+                labels: {
+                    color: 'var(--text-secondary)', // Softer color for legend
+                    font: {
+                        size: 13, // Slightly larger
+                        family: "'Consolas', 'Menlo', 'monospace'"
+                    },
+                    padding: 20,
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded',
+                    boxWidth: 15 // Width of the colored box
+                }
+            },
+            tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(0, 0, 0, 0.85)', // Darker, more opaque
+                titleColor: 'var(--primary-light)', // Brighter title
+                titleFont: { weight: 'bold', size: 15, family: "'Consolas', 'Menlo', 'monospace'" },
+                bodyColor: 'var(--text-light)', // Lighter body text
+                bodyFont: { size: 13, family: "'Consolas', 'Menlo', 'monospace'" },
+                borderColor: 'var(--primary-color)',
+                borderWidth: 1.5, // Slightly thicker border
+                padding: 12, // More padding
+                displayColors: true,
+                boxPadding: 5,
+                cornerRadius: 4, // Rounded corners for tooltip
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null && context.chart.config.type !== 'pie' && context.chart.config.type !== 'doughnut') {
+                            label += 'PLN ' + context.parsed.y.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        } else if (context.parsed !== null && (context.chart.config.type === 'pie' || context.chart.config.type === 'doughnut')) {
+                             label += 'PLN ' + context.parsed.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                        }
+                        return label;
+                    },
+                    title: function(tooltipItems) {
+                        if (tooltipItems.length > 0) {
+                            return tooltipItems[0].label;
+                        }
+                        return '';
+                    }
+                }
+            }
+        },
+        scales: { // Scales are not applicable for pie/doughnut but needed for bar/line
+            y: {
+                border: {
+                    color: 'var(--border-color-strong)'
+                },
+                ticks: {
+                    color: 'var(--text-secondary)',
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return 'PLN ' + value.toLocaleString();
+                    },
+                    font: { size: 12, family: "'Consolas', 'Menlo', 'monospace'" },
+                    padding: 8
+                },
+                grid: {
+                    color: 'rgba(0, 255, 157, 0.1)',
+                    borderDash: [4, 4], 
+                    drawBorder: false,
+                }
+            },
+            x: {
+                border: {
+                    color: 'var(--border-color-strong)'
+                },
+                ticks: {
+                    color: 'var(--text-secondary)',
+                    font: { size: 12, family: "'Consolas', 'Menlo', 'monospace'" },
+                    maxRotation: 45,
+                    minRotation: 0
+                },
+                grid: {
+                    display: false,
+                }
+            }
+        }
+    };
+    
+    // Specific options for Pie/Doughnut charts (no scales)
+    const cyberpunkPieChartOptions = JSON.parse(JSON.stringify(cyberpunkChartOptions)); // Deep copy
+    delete cyberpunkPieChartOptions.scales; // Remove scales for pie/doughnut
+
+    // Income Sources Pie Chart (Current Month)
+    const incomeSourcesCtx = document.getElementById('incomeSourcesPieChart').getContext('2d');
+    const allCategoriesLabels = JSON.parse('{{ all_categories_current_month_labels|safe }}');
+    const allCategoriesData = JSON.parse('{{ all_categories_current_month_data|safe }}');
+
+    // Define a broader palette for the pie chart
+    const pieChartColors = [
+        'rgba(0, 255, 157, 0.7)',  // --primary-color
+        'rgba(0, 184, 255, 0.7)',  // --info-color
+        'rgba(255, 157, 0, 0.7)',  // --warning-color
+        'rgba(255, 0, 170, 0.7)',   // --secondary-color
+        'rgba(128, 255, 0, 0.7)', // Lime green
+        'rgba(255, 42, 109, 0.7)', // --danger-color
+        'rgba(100, 100, 255, 0.7)', // Indigo-ish
+        'rgba(255, 100, 100, 0.7)', // Salmon-ish
+        'rgba(0, 200, 200, 0.7)',   // Teal-ish
+        'rgba(200, 0, 200, 0.7)'    // Purple-ish
+    ];
+    const pieChartBorderColors = pieChartColors.map(color => color.replace('0.7', '1'));
+
+
+    if (allCategoriesLabels.length > 0) {
+        new Chart(incomeSourcesCtx, {
+            type: 'doughnut', // Or 'pie'
+            data: {
+                labels: allCategoriesLabels,
+                datasets: [{
+                    label: 'Income Source (PLN)',
+                    data: allCategoriesData,
+                    backgroundColor: pieChartColors,
+                    borderColor: pieChartBorderColors,
+                    borderWidth: 1.5,
+                    hoverBorderWidth: 2.5,
+                    hoverBorderColor: 'var(--primary-light)'
+                }]
+            },
+            options: cyberpunkPieChartOptions // Use options without scales
+        });
+    } else {
+        document.getElementById('incomeSourcesPieChart').parentElement.innerHTML = '<p class="text-center text-muted">No income source data for the current month.</p>';
+    }
+
+    // Monthly Income Line Chart (Last 6 Months)
+    const monthlyIncomeLineCtx = document.getElementById('monthlyIncomeLineChart').getContext('2d');
+    const monthlyTotalsLabels = JSON.parse('{{ monthly_totals_labels|safe }}');
+    const monthlyTotalsData = JSON.parse('{{ monthly_totals_data|safe }}');
+
+    if (monthlyTotalsLabels.length > 0) {
+        new Chart(monthlyIncomeLineCtx, {
+            type: 'line',
+            data: {
+                labels: monthlyTotalsLabels,
+                datasets: [{
+                    label: 'Total Income (PLN)',
+                    data: monthlyTotalsData,
+                    borderColor: 'var(--primary-color)',
+                    borderWidth: 2.5,
+                    backgroundColor: 'rgba(0, 255, 157, 0.2)', 
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'var(--primary-color)',
+                    pointBorderColor: 'var(--background-darker)',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: 'var(--text-primary)',
+                    pointHoverBorderColor: 'var(--primary-color)'
+                }]
+            },
+            options: cyberpunkChartOptions // Bar/Line options with scales
+        });
+    } else {
+        document.getElementById('monthlyIncomeLineChart').parentElement.innerHTML = '<p class="text-center text-muted">No monthly income data available for the last 6 months.</p>';
+    }
+
+    // Top 5 Income Categories Bar Chart (Current Month) - Kept for comparison or if preferred
+    const topIncomeCategoriesBarCtx = document.getElementById('topIncomeCategoriesBarChart').getContext('2d');
+    const topCategoriesLabels = JSON.parse('{{ top_categories_labels|safe }}');
+    const topCategoriesData = JSON.parse('{{ top_categories_data|safe }}');
+
+    if (topCategoriesLabels.length > 0) {
+        new Chart(topIncomeCategoriesBarCtx, {
+            type: 'bar',
+            data: {
+                labels: topCategoriesLabels,
+                datasets: [{
+                    label: 'Amount (PLN)',
+                    data: topCategoriesData,
+                    backgroundColor: [ // Use first 5 colors from pie chart palette for consistency
+                        pieChartColors[0], 
+                        pieChartColors[1], 
+                        pieChartColors[2], 
+                        pieChartColors[3], 
+                        pieChartColors[4]  
+                    ],
+                    borderColor: [
+                        pieChartBorderColors[0],
+                        pieChartBorderColors[1],
+                        pieChartBorderColors[2],
+                        pieChartBorderColors[3],
+                        pieChartBorderColors[4]
+                    ],
+                    borderWidth: 1.5,
+                    hoverBorderWidth: 2.5,
+                    hoverBorderColor: 'var(--primary-light)'
+                }]
+            },
+            options: cyberpunkChartOptions // Bar/Line options with scales
+        });
+    } else {
+        document.getElementById('topIncomeCategoriesBarChart').parentElement.innerHTML = '<p class="text-center text-muted">No top category income data for the current month.</p>';
+    }
+});
+</script>
+{% endblock %}

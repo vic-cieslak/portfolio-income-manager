@@ -415,3 +415,117 @@ def category_delete(request, pk):
         messages.success(request, 'Category deleted successfully!')
         return redirect('income:category_list')
     return render(request, 'income/category_confirm_delete.html', {'category': category})
+
+@login_required
+def income_insights_view(request):
+    user = request.user
+    now = timezone.now()
+    current_year = now.year
+    current_month = now.month
+    today = now.date()
+
+    # Get all incomes for the user for efficiency
+    all_user_incomes = Income.objects.filter(user=user)
+
+    # --- Standard Date Ranges ---
+    start_current_month = today.replace(day=1)
+    # Correctly calculate end_current_month as the last day of the current month
+    if current_month == 12:
+        end_current_month = today.replace(year=current_year + 1, month=1, day=1) - timedelta(days=1)
+    else:
+        end_current_month = today.replace(month=current_month + 1, day=1) - timedelta(days=1)
+
+    if current_month == 1:
+        last_month_val, last_month_year = 12, current_year - 1
+    else:
+        last_month_val, last_month_year = current_month - 1, current_year
+    start_last_month = datetime(last_month_year, last_month_val, 1).date()
+    if last_month_val == 12:
+        end_last_month = datetime(last_month_year, last_month_val, 31).date()
+    else:
+        end_last_month = datetime(last_month_year, last_month_val, calendar.monthrange(last_month_year, last_month_val)[1]).date()
+    
+    start_ytd = today.replace(month=1, day=1)
+
+    # --- Basic Aggregations ---
+    total_current_month = all_user_incomes.filter(date__gte=start_current_month, date__lte=end_current_month).aggregate(Sum('amount'))['amount__sum'] or 0
+    total_last_month = all_user_incomes.filter(date__gte=start_last_month, date__lte=end_last_month).aggregate(Sum('amount'))['amount__sum'] or 0
+    total_ytd = all_user_incomes.filter(date__gte=start_ytd, date__lte=today).aggregate(Sum('amount'))['amount__sum'] or 0
+
+    # --- Top 5 Income Categories (Bar Chart - Current Month) ---
+    current_month_incomes_qs = all_user_incomes.filter(date__gte=start_current_month, date__lte=end_current_month)
+    category_income_current_month = {}
+    for income_item in current_month_incomes_qs:
+        cat_name = income_item.category.name
+        category_income_current_month[cat_name] = category_income_current_month.get(cat_name, 0) + income_item.amount
+    
+    top_categories = sorted(category_income_current_month.items(), key=lambda item: item[1], reverse=True)[:5]
+    top_categories_labels = [item[0] for item in top_categories]
+    top_categories_data = [float(item[1]) for item in top_categories]
+
+    # --- Monthly Total Income (Line Chart - Last 6 Months) ---
+    monthly_totals_data = []
+    month_labels = []
+    import json # Ensure json is imported
+
+    for i in range(5, -1, -1): # Iterate from 5 down to 0 (for last 6 months including current)
+        # Calculate month and year for the iteration
+        iter_month = current_month - i
+        iter_year = current_year
+        if iter_month <= 0:
+            iter_month += 12
+            iter_year -= 1
+        
+        month_start_iter = datetime(iter_year, iter_month, 1).date()
+        if iter_month == 12:
+            month_end_iter = datetime(iter_year, iter_month, 31).date()
+        else:
+            month_end_iter = datetime(iter_year, iter_month, calendar.monthrange(iter_year, iter_month)[1]).date()
+
+        total_for_month = all_user_incomes.filter(date__gte=month_start_iter, date__lte=month_end_iter).aggregate(Sum('amount'))['amount__sum'] or 0
+        monthly_totals_data.append(float(total_for_month))
+        month_labels.append(calendar.month_abbr[iter_month])
+
+    # --- Additional Insights ---
+    # Average Daily Rate (ADR) - All Time
+    total_income_all_time = all_user_incomes.aggregate(Sum('amount'))['amount__sum'] or 0
+    total_working_days = all_user_incomes.values('date').distinct().count()
+    average_daily_rate = total_income_all_time / total_working_days if total_working_days > 0 else 0
+
+    # Top Income Day - Current Month
+    top_day_month_data = all_user_incomes.filter(
+        date__gte=start_current_month, date__lte=end_current_month
+    ).values('date').annotate(daily_sum=Sum('amount')).order_by('-daily_sum').first()
+
+    # Top Income Day - Current Year
+    top_day_year_data = all_user_incomes.filter(
+        date__gte=start_ytd, date__lte=today
+    ).values('date').annotate(daily_sum=Sum('amount')).order_by('-daily_sum').first()
+
+    # Income Breakdown by All Categories (Pie/Doughnut Chart - Current Month)
+    all_categories_current_month_labels = list(category_income_current_month.keys())
+    all_categories_current_month_data = [float(value) for value in category_income_current_month.values()]
+
+
+    context = {
+        'title': 'Income Insights',
+        'total_current_month': total_current_month,
+        'total_last_month': total_last_month,
+        'total_ytd': total_ytd,
+        
+        'top_categories_labels': json.dumps(top_categories_labels), # For Bar chart
+        'top_categories_data': json.dumps(top_categories_data),   # For Bar chart
+        
+        'monthly_totals_labels': json.dumps(month_labels),
+        'monthly_totals_data': json.dumps(monthly_totals_data),
+        
+        'average_daily_rate': average_daily_rate,
+        'total_working_days': total_working_days,
+        'top_day_month_data': top_day_month_data,
+        'top_day_year_data': top_day_year_data,
+        
+        'all_categories_current_month_labels': json.dumps(all_categories_current_month_labels), # For Pie/Doughnut
+        'all_categories_current_month_data': json.dumps(all_categories_current_month_data),     # For Pie/Doughnut
+        'today': today, # For displaying date ranges if needed
+    }
+    return render(request, 'income/income_insights.html', context)

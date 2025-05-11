@@ -918,3 +918,98 @@ input[type="date"].form-control::-webkit-calendar-picker-indicator {
 .form-label, label {
   color: var(--text-primary) !important; /* Use a light color for labels */
 }
+
+/* Insights Page Specific Styling */
+.insights-page-title {
+  font-size: 2.25rem; /* Larger title */
+  color: var(--primary-light);
+  text-shadow: 0 0 8px var(--glow-color), 0 0 12px var(--glow-color);
+  margin-bottom: 2rem; /* More space below title */
+}
+.insights-page-title:after { /* Match existing .page-title underline */
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: -10px; /* Adjusted for larger font */
+  width: 60px; /* Wider underline */
+  height: 4px;
+  background: var(--primary-light);
+  box-shadow: 0 0 12px var(--glow-color);
+}
+
+.summary-card-row .card-cyber {
+  transition: all 0.3s ease-in-out;
+}
+.summary-card-row .card-cyber:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.4), 0 0 15px var(--glow-color);
+}
+
+.summary-card-row .card-header {
+  font-size: 0.9rem;
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color) !important; /* Ensure border is applied */
+}
+
+/* Specific header styles for top row cards based on screenshot */
+.summary-card-header-current { /* For Current Month */
+  background: var(--primary-dark) !important;
+  color: var(--text-primary) !important; /* Corrected to light text color */
+  text-shadow: 0 0 3px rgba(0,0,0,0.7); /* Darker shadow for light text on vibrant bg */
+}
+.summary-card-header-last { /* For Last Month */
+  background: var(--info-color) !important;
+  color: var(--text-primary) !important; /* Corrected to light text color */
+  text-shadow: 0 0 3px rgba(0,0,0,0.7);
+}
+.summary-card-header-ytd { /* For YTD */
+  background: var(--secondary-color) !important;
+  color: var(--text-primary) !important; /* Corrected to light text color */
+  text-shadow: 0 0 3px rgba(0,0,0,0.7);
+}
+
+/* More subtle headers for the second row of summary cards */
+.summary-card-header-subtle {
+  background: rgba(0,0,0,0.3) !important;
+  color: var(--text-secondary) !important;
+  text-shadow: none !important;
+  border-top: 2px solid var(--border-color); /* Add a top border for definition */
+}
+
+
+.summary-card-row .card-body .value-amount {
+  font-size: 1.75rem; /* Slightly smaller for second row if needed, or keep consistent */
+  color: var(--primary-light); /* Brighter value */
+  margin-bottom: 0.25rem;
+}
+.summary-card-row .card-body .text-cyber-muted {
+  font-size: 0.8rem; /* Smaller muted text */
+  color: var(--text-secondary); /* Slightly brighter muted text */
+}
+
+.chart-card .card-header {
+  color: var(--primary-light);
+  text-shadow: 0 0 7px var(--glow-color);
+  font-size: 1.1rem;
+  padding: 0.75rem 1.25rem;
+}
+
+.chart-card .card-body {
+  padding: 1.5rem; /* More padding around charts */
+  min-height: 350px; /* Ensure charts have enough space */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chart-card canvas {
+  max-width: 100%;
+  max-height: 320px; /* Max height for canvas */
+}
+
+/* Ensure h-100 works well with flex for card bodies */
+.card.h-100 .card-body.d-flex {
+    flex-grow: 1;
+}
