@@ -1,0 +1,210 @@
+{% extends 'base/base.html' %}
+{% load static %}
+{% load core_extras %} {# For currency formatting if needed, or general formatting #}
+
+{% block title %}{{ title }} - CyberFinance{% endblock title %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="page-title mb-4">{{ title }}</h1>
+
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card card-cyber">
+                <div class="card-header bg-primary text-white">Current Month Expenses</div>
+                <div class="card-body text-center">
+                    <h3 class="value-amount">PLN {{ total_current_month|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-cyber">
+                <div class="card-header bg-info text-white">Last Month Expenses</div>
+                <div class="card-body text-center">
+                    <h3 class="value-amount">PLN {{ total_last_month|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card card-cyber">
+                <div class="card-header" style="background-color: var(--secondary-color); color: white;">Year-to-Date Expenses</div>
+                <div class="card-body text-center">
+                    <h3 class="value-amount">PLN {{ total_ytd|floatformat:2 }}</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card card-cyber">
+                <div class="card-header text-neon">Top 5 Spending Categories (Current Month)</div>
+                <div class="card-body">
+                    <canvas id="topCategoriesChart"></canvas>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card card-cyber">
+                <div class="card-header text-neon">Monthly Expenses (Last 6 Months)</div>
+                <div class="card-body">
+                    <canvas id="monthlyExpensesChart"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ block.super }}
+{# Assuming Chart.js is loaded globally from base.html or another script file #}
+{# If not, uncomment and adjust: <script src="https://cdn.jsdelivr.net/npm/chart.js"></script> #}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cyberpunkChartOptions = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            legend: {
+                display: true, // Ensure legend is explicitly set to display
+                position: 'top',
+                labels: {
+                    color: 'var(--primary-color)', // Changed to --primary-color for high visibility
+                    font: {
+                        size: 12
+                    },
+                    padding: 15,
+                    usePointStyle: true,
+                    pointStyle: 'rectRounded'
+                }
+            },
+            tooltip: {
+                enabled: true,
+                backgroundColor: 'rgba(10, 14, 23, 0.9)', // var(--background-dark)
+                titleColor: 'var(--primary-color)',
+                titleFont: { weight: 'bold', size: 14 },
+                bodyColor: 'var(--text-primary)',
+                bodyFont: { size: 12 },
+                borderColor: 'var(--primary-color)',
+                borderWidth: 1,
+                padding: 10,
+                displayColors: true,
+                boxPadding: 4,
+                callbacks: {
+                    label: function(context) {
+                        let label = context.dataset.label || '';
+                        if (label) {
+                            label += ': ';
+                        }
+                        if (context.parsed.y !== null) {
+                            label += 'PLN ' + context.parsed.y.toFixed(2);
+                        }
+                        return label;
+                    }
+                }
+            }
+        },
+        scales: {
+            y: {
+                ticks: {
+                    color: 'var(--text-primary)',
+                    beginAtZero: true,
+                    callback: function(value) {
+                        return 'PLN ' + value;
+                    },
+                    font: { size: 11 }
+                },
+                grid: {
+                    color: 'rgba(0, 255, 157, 0.15)', // var(--border-color) with adjusted alpha
+                    borderDash: [3, 3], 
+                    drawBorder: false, 
+                }
+            },
+            x: {
+                ticks: {
+                    color: 'var(--text-primary)',
+                    font: { size: 11 } 
+                },
+                grid: {
+                    display: false, 
+                }
+            }
+        }
+    };
+
+    // Top Categories Chart (Bar)
+    const topCategoriesCtx = document.getElementById('topCategoriesChart').getContext('2d');
+    const topCategoriesLabels = JSON.parse('{{ top_categories_labels|safe }}');
+    const topCategoriesData = JSON.parse('{{ top_categories_data|safe }}');
+
+    if (topCategoriesLabels.length > 0) {
+        new Chart(topCategoriesCtx, {
+            type: 'bar',
+            data: {
+                labels: topCategoriesLabels,
+                datasets: [{
+                    label: 'Amount (PLN)',
+                    data: topCategoriesData,
+                    backgroundColor: [
+                        'rgba(255, 42, 109, 0.7)', // var(--danger-color)
+                        'rgba(255, 157, 0, 0.7)',  // var(--warning-color)
+                        'rgba(0, 184, 255, 0.7)',  // var(--info-color)
+                        'rgba(0, 255, 157, 0.7)',  // var(--primary-color)
+                        'rgba(255, 0, 170, 0.7)'   // var(--secondary-color)
+                    ],
+                    borderColor: [ // Using slightly darker or more defined borders
+                        'rgba(255, 42, 109, 1)', 
+                        'rgba(255, 157, 0, 1)',  
+                        'rgba(0, 184, 255, 1)',  
+                        'rgba(0, 255, 157, 1)',  
+                        'rgba(255, 0, 170, 1)'   
+                    ],
+                    borderWidth: 1.5,
+                    hoverBorderWidth: 2.5,
+                    hoverBorderColor: 'var(--primary-light)'
+                }]
+            },
+            options: cyberpunkChartOptions
+        });
+    } else {
+        document.getElementById('topCategoriesChart').parentElement.innerHTML = '<p class="text-center text-muted">No category spending data for the current month.</p>';
+    }
+
+    // Monthly Expenses Chart (Line)
+    const monthlyExpensesCtx = document.getElementById('monthlyExpensesChart').getContext('2d');
+    const monthlyExpensesLabels = JSON.parse('{{ monthly_totals_labels|safe }}');
+    const monthlyExpensesData = JSON.parse('{{ monthly_totals_data|safe }}');
+
+    if (monthlyExpensesLabels.length > 0) {
+        new Chart(monthlyExpensesCtx, {
+            type: 'line',
+            data: {
+                labels: monthlyExpensesLabels,
+                datasets: [{
+                    label: 'Total Expenses (PLN)',
+                    data: monthlyExpensesData,
+                    borderColor: 'var(--primary-color)',
+                    borderWidth: 2.5,
+                    backgroundColor: 'rgba(0, 255, 157, 0.2)',
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: 'var(--primary-color)',
+                    pointBorderColor: 'var(--background-darker)',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6,
+                    pointHoverBackgroundColor: 'var(--text-primary)',
+                    pointHoverBorderColor: 'var(--primary-color)'
+                }]
+            },
+            options: cyberpunkChartOptions
+        });
+    } else {
+        document.getElementById('monthlyExpensesChart').parentElement.innerHTML = '<p class="text-center text-muted">No monthly spending data available for the last 6 months.</p>';
+    }
+});
+</script>
+{% endblock %}

@@ -53,9 +53,10 @@
                             <i class="fas fa-receipt"></i> Expenses
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a class="dropdown-item{% if '/expenses/' in request.path and not '/calendar/' in request.path and not '/categories/' in request.path %} active{% endif %}" href="{% url 'expenses:list' %}"><i class="fas fa-list"></i> Expense List</a></li>
+                            <li><a class="dropdown-item{% if request.resolver_match.view_name == 'expenses:list' %} active{% endif %}" href="{% url 'expenses:list' %}"><i class="fas fa-list"></i> Expense List</a></li>
                             <li><a class="dropdown-item{% if '/expenses/categories/' in request.path %} active{% endif %}" href="{% url 'expenses:category_list' %}"><i class="fas fa-tags"></i> Categories</a></li>
                             <li><a class="dropdown-item{% if '/expenses/calendar/' in request.path %} active{% endif %}" href="{% url 'expenses:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
+                            <li><a class="dropdown-item{% if '/expenses/insights/' in request.path %} active{% endif %}" href="{% url 'expenses:insights' %}"><i class="fas fa-chart-line"></i> Expense Insights</a></li>
                         </ul>
                     </li>
                 </ul>
