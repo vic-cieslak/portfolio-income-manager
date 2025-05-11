@@ -4,6 +4,7 @@ random ideas for extending the project. please ignore.
 - liability managment
 
 
+
 # Next Steps for Django Income Tracking Project
 
 ## need fast
@@ -26,7 +27,7 @@ type ( number of hours ) muliplty by current USD exchange rate
 - Create templates to display forecasts (possibly using charts.js)
 
 ## 3. sometimes income wont be paid. we need an ability to mark it as such so its not included into the portfolio, OR it should be marked 'not-paid' as default and after I mark it as paid its included in the portfolio.
-
+- transfer / invoice managment
 
 ## 5. Improve cryptocurrency fetching - DONE ? There are some issue at startup sometimes 
 - Modify portfolio/services.py to optimize API calls to CoinGecko
@@ -85,4 +86,5 @@ add to djano admin
 9. Prognose income / portfolio value (advanced feature)
 10. Client management (major feature expansion)
 
+track crypto prices (or pull historical data) to calculcate / suggest swing trades or trade / portfolio recommendations
 
