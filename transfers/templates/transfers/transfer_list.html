@@ -1,0 +1,136 @@
+{% extends 'base/base.html' %}
+{% block title %}Transfers - CyberFinance{% endblock title %}
+{% load static %}
+{% load core_extras %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="page-title">Transfers</h1>
+    <a href="{% url 'transfers:create_mock' %}" class="btn btn-cyber"> {# Assuming 'transfers:create_mock' will be the URL name #}
+        <i class="fas fa-plus me-1"></i> Add New Transfer
+    </a>
+</div>
+
+<!-- Mock Filters (Optional for mock UI) -->
+<div class="card card-cyber mb-4">
+    <div class="card-body">
+        <form class="row g-3 align-items-end">
+            <div class="col-md-2">
+                <label for="filterDirection" class="form-label text-neon">Direction</label>
+                <select id="filterDirection" class="form-select form-select-sm bg-dark text-neon border-cyber">
+                    <option selected>Any</option>
+                    <option value="INCOMING">Incoming</option>
+                    <option value="OUTGOING">Outgoing</option>
+                    <option value="INTERNAL">Internal</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label for="filterStatus" class="form-label text-neon">Status</label>
+                <select id="filterStatus" class="form-select form-select-sm bg-dark text-neon border-cyber">
+                    <option selected>Any</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="PENDING">Pending</option>
+                    <option value="CANCELLED">Cancelled</option>
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label for="filterDateRange" class="form-label text-neon">Date Range</label>
+                <input type="text" class="form-control form-control-sm bg-dark text-neon border-cyber" id="filterDateRange" placeholder="e.g., YYYY-MM-DD - YYYY-MM-DD">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-cyber-sm w-100"><i class="fas fa-filter me-1"></i> Filter</button>
+            </div>
+            <div class="col-md-2">
+                <button type="reset" class="btn btn-secondary btn-sm w-100"><i class="fas fa-undo me-1"></i> Reset</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card card-cyber">
+    <div class="card-header bg-dark">
+        <h5 class="mb-0 text-neon">Transfer Log</h5>
+    </div>
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-cyber">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Direction</th>
+                        <th>Amount (PLN)</th>
+                        <th>From Account</th>
+                        <th>To Account</th>
+                        <th>Status</th>
+                        <th>Income Link</th>
+                        <th>Description</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for transfer in mock_transfers %}
+                    <tr>
+                        <td>{{ transfer.date|date:"Y-m-d" }}</td>
+                        <td>
+                            {% if transfer.direction == 'INCOMING' %}
+                                <span class="badge bg-success"><i class="fas fa-arrow-down me-1"></i> Incoming</span>
+                            {% elif transfer.direction == 'OUTGOING' %}
+                                <span class="badge bg-danger"><i class="fas fa-arrow-up me-1"></i> Outgoing</span>
+                            {% else %}
+                                <span class="badge bg-info"><i class="fas fa-exchange-alt me-1"></i> Internal</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-neon">{{ transfer.amount|humanize_k }}</td>
+                        <td>{{ transfer.source_account_name|default:"N/A" }}</td>
+                        <td>{{ transfer.destination_account_name|default:"N/A" }}</td>
+                        <td>
+                            {% if transfer.status == 'COMPLETED' %}
+                                <span class="badge bg-success">Completed</span>
+                            {% elif transfer.status == 'PENDING' %}
+                                <span class="badge bg-warning text-dark">Pending</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ transfer.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if transfer.applied_to_income_category_name %}
+                                Cat: {{ transfer.applied_to_income_category_name }}
+                            {% elif transfer.direct_linked_income_id %}
+                                Income #{{ transfer.direct_linked_income_id }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ transfer.description|default:"-"|truncatewords:5 }}</td>
+                        <td>
+                            <div class="btn-group">
+                                <a href="#" class="btn btn-cyber-sm" title="View Details"><i class="fas fa-eye"></i></a>
+                                <a href="#" class="btn btn-cyber-sm" title="Edit"><i class="fas fa-edit"></i></a>
+                                <a href="#" class="btn btn-cyber-sm" title="Delete" style="--primary-color: #ff2a6d; --glow-color: rgba(255, 42, 109, 0.6);"><i class="fas fa-trash"></i></a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="9" class="text-center">No transfers recorded yet.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if is_paginated %}
+<!-- Pagination (mock or real if view supports it) -->
+<nav aria-label="Page navigation" class="mt-4">
+    <ul class="pagination justify-content-center">
+        <li class="page-item disabled"><a class="page-link bg-cyber text-neon" href="#">&laquo; Previous</a></li>
+        <li class="page-item active"><a class="page-link bg-cyber text-neon" href="#">1</a></li>
+        <li class="page-item"><a class="page-link bg-cyber text-neon" href="#">2</a></li>
+        <li class="page-item"><a class="page-link bg-cyber text-neon" href="#">Next &raquo;</a></li>
+    </ul>
+</nav>
+{% endif %}
+
+{% endblock %}

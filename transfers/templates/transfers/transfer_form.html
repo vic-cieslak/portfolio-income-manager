@@ -1,0 +1,197 @@
+{% extends 'base/base.html' %}
+{% block title %}Add/Edit Transfer - CyberFinance{% endblock title %}
+{% load crispy_forms_tags %} {# Assuming crispy_forms will be used if a real form is passed #}
+
+{% block extrahead %}
+{# Add DatePickerInput media if using it in a real form later #}
+{# {{ form.media }} #}
+<style>
+    .conditional-field {
+        display: none; /* Hidden by default */
+        margin-top: 1rem;
+        padding: 1rem;
+        background-color: rgba(var(--cyber-secondary-rgb), 0.1);
+        border-left: 3px solid var(--cyber-glow-color);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card card-cyber">
+            <div class="card-header bg-cyber">
+                <h3 class="mb-0 text-neon">{{ view.title|default:"New Transfer" }}</h3>
+            </div>
+            <div class="card-body text-neon">
+                {# For mock, we'll define form structure here. Later, use {{ form|crispy }} #}
+                <form method="POST" id="mockTransferForm">
+                    {% csrf_token %}
+
+                    <!-- Direction -->
+                    <div class="mb-3">
+                        <label for="id_direction" class="form-label">Direction</label>
+                        <select name="direction" id="id_direction" class="form-select bg-dark text-neon border-cyber">
+                            <option value="">---------</option>
+                            <option value="INCOMING">Incoming</option>
+                            <option value="OUTGOING">Outgoing</option>
+                            <option value="INTERNAL">Internal</option>
+                        </select>
+                    </div>
+
+                    <!-- Amount -->
+                    <div class="mb-3">
+                        <label for="id_amount" class="form-label">Amount (PLN)</label>
+                        <input type="number" name="amount" id="id_amount" class="form-control bg-dark text-neon border-cyber" step="0.01">
+                    </div>
+
+                    <!-- Transfer Date -->
+                    <div class="mb-3">
+                        <label for="id_transfer_date" class="form-label">Transfer Date</label>
+                        <input type="date" name="transfer_date" id="id_transfer_date" class="form-control bg-dark text-neon border-cyber">
+                    </div>
+                    
+                    <!-- Description -->
+                    <div class="mb-3">
+                        <label for="id_description" class="form-label">Description</label>
+                        <textarea name="description" id="id_description" class="form-control bg-dark text-neon border-cyber" rows="3"></textarea>
+                    </div>
+
+                    <!-- Source Account (Conditional) -->
+                    <div class="mb-3 conditional-field" id="div_id_source_account">
+                        <label for="id_source_account" class="form-label">Source Account</label>
+                        <select name="source_account" id="id_source_account" class="form-select bg-dark text-neon border-cyber">
+                            <option value="">---------</option>
+                            {% for acc in mock_bank_accounts %}
+                            <option value="{{ acc.id }}">{{ acc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Destination Account (Conditional) -->
+                    <div class="mb-3 conditional-field" id="div_id_destination_account">
+                        <label for="id_destination_account" class="form-label">Destination Account</label>
+                        <select name="destination_account" id="id_destination_account" class="form-select bg-dark text-neon border-cyber">
+                            <option value="">---------</option>
+                            {% for acc in mock_bank_accounts %}
+                            <option value="{{ acc.id }}">{{ acc.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <!-- Income Linking Section (Conditional for INCOMING) -->
+                    <div class="conditional-field" id="div_id_income_linking">
+                        <h5 class="text-neon mb-3">Link to Income (Optional)</h5>
+                        
+                        <!-- Apply to Income Category -->
+                        <div class="mb-3">
+                            <label for="id_apply_to_income_category" class="form-label">Apply to Income Category</label>
+                            <select name="apply_to_income_category" id="id_apply_to_income_category" class="form-select bg-dark text-neon border-cyber">
+                                <option value="">---------</option>
+                                {% for cat in mock_income_categories %}
+                                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                                {% endfor %}
+                            </select>
+                            <small class="form-text text-cyber-muted">If selected, transfer amount will be auto-allocated to unpaid incomes in this category.</small>
+                        </div>
+
+                        <p class="text-center my-2 text-neon">OR</p>
+
+                        <!-- Direct Linked Income -->
+                        <div class="mb-3">
+                            <label for="id_direct_linked_income" class="form-label">Directly Link to a Specific Income</label>
+                            {# For mock, a text input. Later, could be a select or search input #}
+                            <input type="text" name="direct_linked_income_id" id="id_direct_linked_income" class="form-control bg-dark text-neon border-cyber" placeholder="Enter Income ID">
+                             <small class="form-text text-cyber-muted">Manually link this transfer to one income item.</small>
+                        </div>
+                    </div>
+
+                    <!-- Status -->
+                     <div class="mb-3">
+                        <label for="id_status" class="form-label">Status</label>
+                        <select name="status" id="id_status" class="form-select bg-dark text-neon border-cyber">
+                            <option value="COMPLETED" selected>Completed</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+
+                    <!-- Reference Number -->
+                    <div class="mb-3">
+                        <label for="id_reference_number" class="form-label">Reference Number (Optional)</label>
+                        <input type="text" name="reference_number" id="id_reference_number" class="form-control bg-dark text-neon border-cyber">
+                    </div>
+
+                    <div class="mt-4">
+                        <button type="submit" class="btn btn-cyber">
+                            <i class="fas fa-save me-2"></i> Save Transfer
+                        </button>
+                        <a href="{% url 'transfers:list_mock' %}" class="btn btn-secondary"> {# Assuming 'transfers:list_mock' #}
+                            <i class="fas fa-times me-2"></i> Cancel
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const directionSelect = document.getElementById('id_direction');
+    const sourceAccountDiv = document.getElementById('div_id_source_account');
+    const destinationAccountDiv = document.getElementById('div_id_destination_account');
+    const incomeLinkingDiv = document.getElementById('div_id_income_linking');
+    const applyToCategorySelect = document.getElementById('id_apply_to_income_category');
+    const directLinkInput = document.getElementById('id_direct_linked_income');
+
+    function toggleTransferFields() {
+        const direction = directionSelect.value;
+
+        // Reset visibility
+        sourceAccountDiv.style.display = 'none';
+        destinationAccountDiv.style.display = 'none';
+        incomeLinkingDiv.style.display = 'none';
+
+        if (direction === 'INCOMING') {
+            destinationAccountDiv.style.display = 'block';
+            incomeLinkingDiv.style.display = 'block';
+        } else if (direction === 'OUTGOING') {
+            sourceAccountDiv.style.display = 'block';
+        } else if (direction === 'INTERNAL') {
+            sourceAccountDiv.style.display = 'block';
+            destinationAccountDiv.style.display = 'block';
+        }
+    }
+
+    function handleIncomeLinkExclusivity() {
+        if (applyToCategorySelect.value !== '') {
+            directLinkInput.disabled = true;
+            directLinkInput.value = ''; // Clear if category is selected
+        } else {
+            directLinkInput.disabled = false;
+        }
+
+        if (directLinkInput.value !== '') {
+            applyToCategorySelect.disabled = true;
+            applyToCategorySelect.value = ''; // Clear if direct link is filled
+        } else {
+            applyToCategorySelect.disabled = false;
+        }
+    }
+
+    if (directionSelect) {
+        directionSelect.addEventListener('change', toggleTransferFields);
+        toggleTransferFields(); // Initial call
+    }
+    if (applyToCategorySelect && directLinkInput) {
+        applyToCategorySelect.addEventListener('change', handleIncomeLinkExclusivity);
+        directLinkInput.addEventListener('input', handleIncomeLinkExclusivity); // Or 'change'
+        handleIncomeLinkExclusivity(); // Initial call
+    }
+});
+</script>
+{% endblock extra_scripts %}

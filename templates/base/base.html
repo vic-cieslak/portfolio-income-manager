@@ -58,6 +58,9 @@
                             <li><a class="dropdown-item{% if '/expenses/calendar/' in request.path %} active{% endif %}" href="{% url 'expenses:calendar' %}"><i class="fas fa-calendar-alt"></i> Calendar</a></li>
                         </ul>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link{% if '/transfers/' in request.path %} active{% endif %}" href="{% url 'transfers:list_mock' %}"><i class="fas fa-exchange-alt"></i> Transfers</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -139,5 +142,6 @@
         // Bootstrap 5 handles dropdowns automatically, no manual initialization needed
     </script>
     {% block scripts %}{% endblock %}
+    {% block extra_scripts %}{% endblock %} {# Added for consistency with other templates #}
 </body>
 </html>

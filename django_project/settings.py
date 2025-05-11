@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'income',
     'portfolio',
     'expenses',
+    'transfers', # Added transfers app
 ]
 
 MIDDLEWARE = [

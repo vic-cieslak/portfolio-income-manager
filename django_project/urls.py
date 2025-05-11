@@ -23,4 +23,5 @@ urlpatterns = [
     path('income/', include('income.urls')),
     path('portfolio/', include('portfolio.urls')),
     path('expenses/', include('expenses.urls')),
+    path('transfers/', include('transfers.urls')), # Added transfers app
 ]
