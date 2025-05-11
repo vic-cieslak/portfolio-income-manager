@@ -1,6 +1,7 @@
 {% load income_extras %}
+{% load core_extras %} {# For get_item if not in income_extras, or just keep income_extras if it has it #}
 
-<table class="table table-bordered">
+<table class="table table-bordered table-cyber">
     <thead>
         <tr>
             <th>Mon</th>
@@ -19,16 +20,18 @@
                     {% if day != 0 %}
                         <td class="calendar-cell {% if not is_current_month %}text-muted{% endif %}"
                             data-date="{{ year }}-{{ month }}-{{ day }}"
-                            data-expenses="{{ daily_expense_list|default:'[]' }}">
-                            <div class="d-flex justify-content-between">
-                                <span>{{ day }}</span>
-                                {% if day in daily_expense %}
-                                    <span class="badge bg-danger">PLN {{ daily_expense|get_item:day }}</span>
+                            data-expenses="{{ daily_expense_list|get_item:day|default:'[]' }}">
+                            <div class="day-number">{{ day }}</div>
+                            {% with daily_total=daily_expense|get_item:day %}
+                                {% if daily_total %}
+                                    <div class="expense-entry">
+                                        PLN <span class="expense-amount">{{ daily_total }}</span>
+                                    </div>
                                 {% endif %}
-                            </div>
+                            {% endwith %}
                         </td>
                     {% else %}
-                        <td></td>
+                        <td class="calendar-cell"></td> {# Add class for consistent empty cell styling #}
                     {% endif %}
                 {% endfor %}
             </tr>
@@ -37,3 +40,157 @@
 </table>
 
 <div id="expenseDetails" class="mt-3"></div>
+
+<style>
+  .table-cyber {
+    background-color: var(--background-darker);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 0 20px var(--glow-color);
+  }
+
+  .table-cyber th {
+    background-color: var(--background-dark);
+    color: var(--primary-color);
+    text-transform: uppercase;
+    font-weight: bold;
+    border-bottom: 2px solid var(--primary-color);
+    padding: 10px;
+    text-shadow: 0 0 5px var(--glow-color);
+  }
+
+  .calendar-cell {
+    height: 100px;
+    width: 14.28%; /* Approx 1/7th */
+    position: relative;
+    border: 1px solid var(--border-color);
+    background-color: var(--background-dark);
+    transition: all 0.3s ease;
+    vertical-align: top; /* Align day number to top */
+    padding: 5px; /* Add some padding */
+  }
+
+  .calendar-cell:hover {
+    background-color: var(--card-bg-hover);
+    box-shadow: inset 0 0 10px var(--glow-color);
+  }
+
+  .day-number {
+    /* position: absolute; remove absolute to allow content flow */
+    /* top: 5px; */
+    /* left: 5px; */
+    font-weight: bold;
+    color: var(--text-secondary);
+    margin-bottom: 5px; /* Space between day number and entries */
+  }
+
+  .income-entry { /* Keep for reference or if income styles are mixed */
+    background-color: var(--primary-color);
+    color: var(--background-dark);
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin-top: 5px; /* Adjusted from 30px */
+    margin-bottom: 2px;
+    font-size: 0.9em;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px var(--glow-color);
+  }
+
+  .income-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px var(--glow-color);
+  }
+  
+  .expense-entry {
+    background-color: var(--danger-color); /* Cyberpunk red/orange */
+    color: var(--text-primary); /* Use defined text primary color */
+    border-radius: 4px;
+    padding: 2px 5px;
+    margin-top: 5px; /* Align with day number changes */
+    margin-bottom: 2px;
+    font-size: 0.9em;
+    text-align: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 5px var(--danger-glow-color);
+  }
+
+  .expense-entry:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 10px var(--danger-glow-color);
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
+  }
+
+  .text-muted .day-number { /* Ensure day number in muted cells is also muted */
+    color: var(--text-muted, #6c757d) !important;
+  }
+  
+  .text-muted { /* General muted style for out-of-month days */
+      background-color: var(--background-darker, #222) !important; /* Darken out-of-month cells slightly */
+  }
+
+
+  .income-entry.has-description {
+    position: relative;
+  }
+
+  .description-indicator {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+    font-size: 1.2em;
+    color: var(--secondary-color);
+    text-shadow: 0 0 5px var(--glow-color);
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.2);
+      opacity: 0.7;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive styles for mobile devices */
+  @media (max-width: 768px) {
+    .calendar-cell {
+      height: 80px; /* Adjusted height */
+      font-size: 0.9em;
+    }
+
+    .day-number {
+      font-size: 0.8em;
+    }
+
+    .income-entry, .expense-entry { /* Apply to both */
+      font-size: 0.8em;
+      padding: 1px 3px;
+      margin-top: 3px; /* Adjusted */
+    }
+
+    .description-indicator {
+      font-size: 1em;
+    }
+  }
+
+  /* Touch-friendly styles for mobile */
+  @media (hover: none) and (pointer: coarse) {
+    .income-entry:hover, .expense-entry:hover { /* Apply to both */
+      transform: none;
+    }
+
+    .income-entry:active, .expense-entry:active { /* Apply to both */
+      transform: scale(0.95);
+    }
+  }
+</style>

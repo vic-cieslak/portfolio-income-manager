@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 import calendar
+import json # Added import for json
 from datetime import datetime, timedelta
 
 from .models import Expense, ExpenseCategory
@@ -113,7 +114,22 @@ def expense_calendar(request, year=None, month=None):
         day = expense.date.day
         daily_expense[day] = daily_expense.get(day, 0) + expense.amount
 
-    daily_expense_list = [(day, amount) for day, amount in daily_expense.items()]
+    # New daily_expense_list for detailed expenses per day (JSON strings)
+    expenses_by_day_for_json = {}
+    for expense in month_expenses:
+        day = expense.date.day
+        expense_detail = {
+            'category': expense.category.name,
+            'amount': str(expense.amount), # Ensure amount is string for JSON
+            'description': expense.description or ""
+        }
+        if day not in expenses_by_day_for_json:
+            expenses_by_day_for_json[day] = []
+        expenses_by_day_for_json[day].append(expense_detail)
+
+    daily_expense_list_json_strings = {
+        day: json.dumps(details) for day, details in expenses_by_day_for_json.items()
+    }
 
     category_breakdown = {}
     for expense in month_expenses:
@@ -131,8 +147,8 @@ def expense_calendar(request, year=None, month=None):
         'prev_year': prev_year,
         'next_month': next_month,
         'next_year': next_year,
-        'daily_expense': daily_expense,
-        'daily_expense_list': daily_expense_list,
+        'daily_expense': daily_expense, # For displaying total in cell
+        'daily_expense_list': daily_expense_list_json_strings, # For data-expenses attribute
         'total_expense': total_expense,
         'category_breakdown': category_breakdown,
         'month_expenses': month_expenses,

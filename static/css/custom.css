@@ -16,6 +16,7 @@
   --danger-color: #ff2a6d;
   --info-color: #00b8ff;
   --glow-color: rgba(0, 255, 157, 0.6);
+  --danger-glow-color: rgba(255, 42, 109, 0.6); /* Glow for danger elements */
 }
 
 body {
