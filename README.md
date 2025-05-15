@@ -4,7 +4,7 @@ A comprehensive financial management web application built with Django that help
 
 Click on the image below to see the demo.
 
-[![Check the video](https://img.youtube.com/vi/piMv2jAwbo8/maxresdefault.jpg)](https://www.youtube.com/watch?v=piMv2jAwbo8)
+[![Check the video](https://img.youtube.com/vi/_0UK1o4asmA/maxresdefault.jpg)](https://www.youtube.com/watch?v=_0UK1o4asmA)
 
 
 ## Overview
